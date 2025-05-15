@@ -14,6 +14,6 @@ struct Player {
   glm::vec3 get_pos();
 
 private:
-  float     _speed = 2.5f;
+  float     _speed = 5.0f;
   glm::vec3 _position;
 };

@@ -1,15 +1,16 @@
+#include "Common/defines.h"
 #include "Player/player.h"
+#include "Util/util.h"
 #include "camera.h"
 #include "model.h"
 #include "shader.h"
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-// #define GLM_ENABLE_EXPERIMENTAL
-// #include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image/stb_image.h"
@@ -55,11 +56,22 @@ int main(void) {
     return -2;
   }
 
-  // Shaders
-  Shader shader("shaders/vert.glsl", "shaders/frag.glsl");
+  /* Shaders */
+  Shader shader_model("shaders/model.vert", "shaders/model.frag");
 
-  // Models
+  /* Models */
   Model scene("res/objects/Map_v1/Map_v1.obj");
+
+  /* Objects */
+
+  // Test Sphere
+  float                 radius   = 0.5f;
+  int                   segments = 64;
+  std::vector<Vertex>   sphere_v = Util::generate_sphere_vertices(radius, segments);
+  std::vector<uint32_t> sphere_i = Util::generate_sphere_indices(segments);
+  std::vector<Texture>  sphere_t = std::vector<Texture>();
+
+  Mesh test_sphere = Mesh(sphere_v, sphere_i, sphere_t);
 
   while (!glfwWindowShouldClose(state->window)) {
     float currentFrame = static_cast<float>(glfwGetTime());
@@ -68,26 +80,43 @@ int main(void) {
 
     process_input(state->window);
 
-    /* Render */
-
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    /* Transforms */
-    shader.use();
-    glm::mat4 model = glm::mat4(1.0f);
-    // View Matrix
-    glm::mat4 view = glm::lookAt(
-        state->player.get_pos(), state->player.get_pos() + state->camera.Front, state->camera.Up);
+    /* Render */
+
+    // Shaders
+    shader_model.use();
+
+    // Light Uniforms
+    shader_model.setVec3("viewPos", state->player.get_pos());
+    shader_model.setVec3("direction", -0.2f, -1.0f, -0.3f);
+    shader_model.setVec3("ambient", 0.1f, 0.1f, 0.1f);
+    shader_model.setVec3("diffuse", 0.8f, 0.8f, 0.8f);
+    shader_model.setVec3("specular", 0.5f, 0.5f, 0.5f);
+    shader_model.setFloat("shininess", 32.0f);
+
+    // Per Frame Transformations
     glm::mat4 projection = glm::perspective(
         glm::radians(state->camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-    shader.setMat4("model", model);
-    shader.setMat4("view", view);
-    shader.setMat4("projection", projection);
+    glm::mat4 view = glm::lookAt(
+        state->player.get_pos(), state->player.get_pos() + state->camera.Front, state->camera.Up);
+    shader_model.setMat4("projection", projection);
+    shader_model.setMat4("view", view);
 
-    // Draw call
-    scene.Draw(shader);
+    // Scene
+    glm::mat4 model_scene = glm::mat4(1.0f);
+    shader_model.setMat4("model", model_scene);
+    scene.Draw(shader_model);
 
+    // Test Sphere
+    glm::mat4 model_test_sphere = glm::mat4(1.0f);
+    model_test_sphere           = glm::translate(model_test_sphere, glm::vec3(PLAYER_SPAWN_POS));
+    model_test_sphere           = glm::translate(model_test_sphere, glm::vec3(0.0f, 0.0f, -3.0f));
+    shader_model.setMat4("model", model_test_sphere);
+    test_sphere.Draw(shader_model);
+
+    /* -- */
     glfwSwapBuffers(state->window);
     glfwPollEvents();
   }
@@ -139,7 +168,7 @@ void init_state() {
   state = new game_state{};
 
   // Player
-  state->player.init(glm::vec3(10.0f, 2.0f, 0.0f));
+  state->player.init(PLAYER_SPAWN_POS);
 
   // Camera
   state->camera = Camera(state->player.get_pos());

@@ -12,11 +12,11 @@ using namespace std;
 #define MAX_BONE_INFLUENCE 4
 
 struct Vertex {
-  glm::vec3 Position;
-  glm::vec3 Normal;
-  glm::vec2 TexCoords;
-  glm::vec3 Tangent;
-  glm::vec3 Bitangent;
+  glm::vec3 position;
+  glm::vec3 normal;
+  glm::vec2 texcoords;
+  glm::vec3 tangent;
+  glm::vec3 bitangent;
   int       m_BoneIDs[MAX_BONE_INFLUENCE];
   float     m_Weights[MAX_BONE_INFLUENCE];
 };
@@ -97,22 +97,22 @@ private:
     // Vertex Normals
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(
-        1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, Normal));
+        1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, normal));
 
     // Vertex Texcoords
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(
-        2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, TexCoords));
+        2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, texcoords));
 
     // Vertex Tangent
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(
-        3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, Tangent));
+        3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, tangent));
 
     // Vertex Bitangent
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(
-        4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, Bitangent));
+        4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, bitangent));
 
     // Ids
     glEnableVertexAttribArray(5);

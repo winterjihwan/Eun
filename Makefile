@@ -9,7 +9,7 @@ OBJFILES     := $(patsubst $(SRC_DIR)/%, $(OBJ_DIR)/%.o, $(basename $(SRCFILES))
 
 CC           := clang++
 CXXFLAGS     := -std=c++20 -g -Wall -Wno-deprecated 
-INCLUDES     := -Isrc -Ivendor/glad/include -Ivendor -I/opt/homebrew/include -I/opt/homebrew/include
+INCLUDES     := -Isrc -Isrc/Common -Ivendor/glad/include -Ivendor -I/opt/homebrew/include -I/opt/homebrew/include
 LDFLAGS      := \
 	vendor/glad/src/glad.c \
 	-framework OpenGL \

@@ -6,13 +6,17 @@ void Player::init(glm::vec3 position) {
 }
 
 void Player::pressed_move_forward(float delta_time, Camera camera) {
-  float velocity = _speed * delta_time;
-  _position += camera.Front * velocity;
+  float     velocity = _speed * delta_time;
+  glm::vec3 front    = camera.Front;
+  front.y            = 0.0f;
+  _position += front * velocity;
 }
 
 void Player::pressed_move_backward(float delta_time, Camera camera) {
-  float velocity = _speed * delta_time;
-  _position -= camera.Front * velocity;
+  float     velocity = _speed * delta_time;
+  glm::vec3 front    = camera.Front;
+  front.y            = 0.0f;
+  _position -= front * velocity;
 }
 
 void Player::pressed_move_left(float delta_time, Camera camera) {
