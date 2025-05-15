@@ -1,9 +1,11 @@
-#include "Common/defines.h"
-#include "Player/player.h"
-#include "Util/util.h"
-#include "camera.h"
-#include "model.h"
-#include "shader.h"
+#include "Camera.h"
+#include "Common/Defines.h"
+#include "Input/Input.h"
+#include "Keycodes.h"
+#include "Model.h"
+#include "Player/Player.h"
+#include "Shader.h"
+#include "Util/Util.h"
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
@@ -18,7 +20,7 @@
 #include <GLFW/glfw3.h>
 
 bool init_window();
-void init_state();
+void init_game();
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void process_input(GLFWwindow *window);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
@@ -50,11 +52,13 @@ struct game_state {
 static game_state *state;
 
 int main(void) {
-  init_state();
+  state = new game_state{};
 
   if (!init_window()) {
-    return -2;
+    return -1;
   }
+
+  init_game();
 
   /* Shaders */
   Shader shader_model("shaders/model.vert", "shaders/model.frag");
@@ -78,12 +82,15 @@ int main(void) {
     state->delta_time  = currentFrame - state->last_frame;
     state->last_frame  = currentFrame;
 
-    process_input(state->window);
+    /* Update Game */
+
+    Input::update();
+    state->player.update(state->delta_time, state->camera);
+
+    /* Render Game */
 
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-    /* Render */
 
     // Shaders
     shader_model.use();
@@ -135,7 +142,7 @@ bool init_window() {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-  state->window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", NULL, NULL);
+  state->window = glfwCreateWindow(WIDTH, HEIGHT, "Simple FPS", NULL, NULL);
   if (state->window == NULL) {
     std::cout << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
@@ -164,32 +171,19 @@ bool init_window() {
   return true;
 }
 
-void init_state() {
-  state = new game_state{};
-
+void init_game() {
   // Player
   state->player.init(PLAYER_SPAWN_POS);
 
   // Camera
   state->camera = Camera(state->player.get_pos());
+
+  // Input
+  Input::init(state->window);
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
-}
-
-void process_input(GLFWwindow *window) {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    glfwSetWindowShouldClose(window, true);
-
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    state->player.pressed_move_forward(state->delta_time, state->camera);
-  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    state->player.pressed_move_backward(state->delta_time, state->camera);
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    state->player.pressed_move_left(state->delta_time, state->camera);
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    state->player.pressed_move_right(state->delta_time, state->camera);
 }
 
 void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {

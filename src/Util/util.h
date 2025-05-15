@@ -1,4 +1,4 @@
-#include "mesh.h"
+#include "Mesh.h"
 #include <vector>
 
 namespace Util {

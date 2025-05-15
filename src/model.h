@@ -2,8 +2,8 @@
 
 #include <glad/glad.h>
 
-#include "mesh.h"
-#include "shader.h"
+#include "Mesh.h"
+#include "Shader.h"
 #include "stb_image/stb_image.h"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>

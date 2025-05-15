@@ -1,4 +1,4 @@
-#include "util.h"
+#include "Util.h"
 
 namespace Util {
 std::vector<Vertex> generate_sphere_vertices(float radius, int segments) {
