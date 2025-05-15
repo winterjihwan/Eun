@@ -96,12 +96,25 @@ int main(void) {
     shader_model.use();
 
     // Light Uniforms
+    // Directional
     shader_model.setVec3("viewPos", state->player.get_pos());
-    shader_model.setVec3("direction", -0.2f, -1.0f, -0.3f);
-    shader_model.setVec3("ambient", 0.1f, 0.1f, 0.1f);
-    shader_model.setVec3("diffuse", 0.8f, 0.8f, 0.8f);
-    shader_model.setVec3("specular", 0.5f, 0.5f, 0.5f);
     shader_model.setFloat("shininess", 32.0f);
+    shader_model.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+    shader_model.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+    shader_model.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+    shader_model.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+
+    // SpotLight
+    shader_model.setVec3("spotLight.position", state->player.get_pos());
+    shader_model.setVec3("spotLight.direction", state->camera.Front);
+    shader_model.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+    shader_model.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+    shader_model.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+    shader_model.setFloat("spotLight.constant", 1.0f);
+    shader_model.setFloat("spotLight.linear", 0.09f);
+    shader_model.setFloat("spotLight.quadratic", 0.032f);
+    shader_model.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+    shader_model.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
     // Per Frame Transformations
     glm::mat4 projection = glm::perspective(
@@ -126,6 +139,11 @@ int main(void) {
     /* -- */
     glfwSwapBuffers(state->window);
     glfwPollEvents();
+
+    // Shutdown
+    if (Input::key_down(SFPS_KEY_ESCAPE)) {
+      break;
+    }
   }
 
   glfwTerminate();

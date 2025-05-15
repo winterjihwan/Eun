@@ -7,7 +7,9 @@ struct Player {
   void init(glm::vec3 position);
   void update(float delta_time, Camera camera);
 
-  // Getter, Setter
+  void update_flashlight() {
+  }
+
   glm::vec3 get_pos();
 
 private:
