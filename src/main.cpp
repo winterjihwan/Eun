@@ -104,17 +104,18 @@ int main(void) {
     shader_model.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
     shader_model.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
 
-    // SpotLight
-    shader_model.setVec3("spotLight.position", state->player.get_pos());
-    shader_model.setVec3("spotLight.direction", state->camera.Front);
-    shader_model.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-    shader_model.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-    shader_model.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
-    shader_model.setFloat("spotLight.constant", 1.0f);
-    shader_model.setFloat("spotLight.linear", 0.09f);
-    shader_model.setFloat("spotLight.quadratic", 0.032f);
-    shader_model.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-    shader_model.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+    // FlashLight
+    shader_model.setBool("flashLight.is_on", state->player.get_flashlight_on());
+    shader_model.setVec3("flashLight.position", state->player.get_pos());
+    shader_model.setVec3("flashLight.direction", state->camera.Front);
+    shader_model.setVec3("flashLight.ambient", 0.0f, 0.0f, 0.0f);
+    shader_model.setVec3("flashLight.diffuse", 1.0f, 1.0f, 1.0f);
+    shader_model.setVec3("flashLight.specular", 1.0f, 1.0f, 1.0f);
+    shader_model.setFloat("flashLight.constant", 1.0f);
+    shader_model.setFloat("flashLight.linear", 0.09f);
+    shader_model.setFloat("flashLight.quadratic", 0.032f);
+    shader_model.setFloat("flashLight.cutOff", glm::cos(glm::radians(12.5f)));
+    shader_model.setFloat("flashLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
     // Per Frame Transformations
     glm::mat4 projection = glm::perspective(
@@ -141,7 +142,7 @@ int main(void) {
     glfwPollEvents();
 
     // Shutdown
-    if (Input::key_down(SFPS_KEY_ESCAPE)) {
+    if (Input::key_pressed(SFPS_KEY_ESCAPE)) {
       break;
     }
   }

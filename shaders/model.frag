@@ -13,7 +13,7 @@ struct DirLight {
     vec3 specular;
 };
 
-struct SpotLight {
+struct FlashLight {
     vec3 position;
     vec3 direction;
     float cutOff;
@@ -26,16 +26,18 @@ struct SpotLight {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    bool is_on;
 };
 
 uniform vec3 viewPos;
 uniform sampler2D texture_diffuse1;
 uniform float shininess;
 uniform DirLight dirLight;
-uniform SpotLight spotLight;
+uniform FlashLight flashLight;
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+vec3 CalcFlashLight(FlashLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
@@ -45,8 +47,10 @@ void main()
     // Directional
     vec3 result = CalcDirLight(dirLight, norm, viewDir);
 
-    // Spotlight
-    result += CalcSpotLight(spotLight, norm, FragPos, viewDir);
+    // Flashlight
+    if (flashLight.is_on) {
+        result += CalcFlashLight(flashLight, norm, FragPos, viewDir);
+    }
 
     FragColor = vec4(result, 1.0);
 }
@@ -68,7 +72,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
     return (ambient + diffuse + specular);
 }
 
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 CalcFlashLight(FlashLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
     vec3 lightDir = normalize(light.position - fragPos);
 

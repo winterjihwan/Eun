@@ -7,12 +7,14 @@ struct Player {
   void init(glm::vec3 position);
   void update(float delta_time, Camera camera);
 
-  void update_flashlight() {
-  }
+  void update_movement(float delta_time, Camera camera);
+  void update_flashlight();
 
   glm::vec3 get_pos();
+  bool      get_flashlight_on();
 
 private:
   float     _speed = 5.0f;
   glm::vec3 _position;
+  bool      _flashlight_on = false;
 };
