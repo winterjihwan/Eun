@@ -1,4 +1,3 @@
-#include "Camera.h"
 #include "Common/Defines.h"
 #include "Input/Input.h"
 #include "Keycodes.h"
@@ -28,8 +27,8 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void destroy_state();
 
 // Game
-const unsigned int WIDTH  = 800;
-const unsigned int HEIGHT = 600;
+const unsigned int WIDTH  = 1280;
+const unsigned int HEIGHT = 800;
 
 struct game_state {
   // Window
@@ -107,7 +106,7 @@ int main(void) {
     // FlashLight
     shader_model.setBool("flashLight.is_on", state->player.get_flashlight_on());
     shader_model.setVec3("flashLight.position", state->player.get_pos());
-    shader_model.setVec3("flashLight.direction", state->camera.Front);
+    shader_model.setVec3("flashLight.direction", state->camera.get_front());
     shader_model.setVec3("flashLight.ambient", 0.0f, 0.0f, 0.0f);
     shader_model.setVec3("flashLight.diffuse", 1.0f, 1.0f, 1.0f);
     shader_model.setVec3("flashLight.specular", 1.0f, 1.0f, 1.0f);
@@ -119,9 +118,10 @@ int main(void) {
 
     // Per Frame Transformations
     glm::mat4 projection = glm::perspective(
-        glm::radians(state->camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-    glm::mat4 view = glm::lookAt(
-        state->player.get_pos(), state->player.get_pos() + state->camera.Front, state->camera.Up);
+        glm::radians(state->camera.get_zoom()), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+    glm::mat4 view = glm::lookAt(state->player.get_pos(),
+                                 state->player.get_pos() + state->camera.get_front(),
+                                 state->camera.get_up());
     shader_model.setMat4("projection", projection);
     shader_model.setMat4("view", view);
 
@@ -221,11 +221,11 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
   state->lastX = xpos;
   state->lastY = ypos;
 
-  state->camera.ProcessMouseMovement(xoffset, yoffset);
+  state->camera.process_mouse_movement(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-  state->camera.ProcessMouseScroll(static_cast<float>(yoffset));
+  state->camera.process_mouse_scroll(static_cast<float>(yoffset));
 }
 
 void destroy_state() {
