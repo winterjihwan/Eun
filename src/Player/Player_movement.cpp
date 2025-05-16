@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 void Player::update_movement(float delta_time, Camera camera) {
+  // Walk
   glm::vec3 front = camera.get_front();
   front.y         = 0.0f;
   glm::vec3 right = camera.get_right();
@@ -23,11 +24,17 @@ void Player::update_movement(float delta_time, Camera camera) {
     walk += right;
   }
 
-  walk = glm::length(walk) > 0.0f ? glm::normalize(walk) : glm::vec3(0.0f);
-
+  walk          = glm::length(walk) > 0.0f ? glm::normalize(walk) : glm::vec3(0.0f);
   glm::vec3 vel = walk * _speed;
-  auto     &bi  = Physics::get_physics_system().GetBodyInterface();
 
-  JPH::Vec3 cur_vel = bi.GetLinearVelocity(_body_id);
-  bi.SetLinearVelocity(_body_id, JPH::Vec3(vel.x, cur_vel.GetY(), vel.z));
+  // Jump
+  auto &bi        = Physics::get_physics_system().GetBodyInterface();
+  float cur_vel_y = bi.GetLinearVelocity(_body_id).GetY();
+
+  if (Input::key_pressed(EUN_KEY_SPACE) && _on_ground) {
+    cur_vel_y += 4.9f;
+    _on_ground = false;
+  }
+
+  bi.SetLinearVelocity(_body_id, JPH::Vec3(vel.x, cur_vel_y, vel.z));
 }

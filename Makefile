@@ -1,4 +1,4 @@
-APP_NAME     := simple_fps
+APP_NAME     := Eun
 SRC_DIR      := ./src
 OUT_DIR      := ./bin
 OBJ_DIR      := ./obj/$(APP_NAME)
