@@ -11,6 +11,7 @@
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
 #include <Jolt/Physics/Collision/ContactListener.h>
+#include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/RegisterTypes.h>
@@ -18,19 +19,20 @@
 using namespace JPH;
 
 namespace Physics {
-using ContactCallback = std::function<void(const JPH::BodyID &self, const JPH::BodyID &other)>;
+using PFN_ContactCallback = std::function<void(const JPH::BodyID &self, const JPH::BodyID &other)>;
 
 void init();
 void update(float delta_time);
 void shutdown();
 
-void   register_static_mesh(const std::vector<Vertex>       &vertices,
-                            const std::vector<unsigned int> &indices,
-                            const glm::mat4                 &transform);
-BodyID create_dynamic_body(glm::vec3 position, float radius, ObjectLayer layer);
-void   register_on_contact(const JPH::BodyID &id, ContactCallback callback);
+void register_static_mesh(const std::vector<Vertex>       &vertices,
+                          const std::vector<unsigned int> &indices,
+                          const glm::mat4                 &transform);
 
-PhysicsSystem &get_physics_system();
+void register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback);
+
+PhysicsSystem                                   &get_physics_system();
+std::unordered_map<BodyID, PFN_ContactCallback> &get_contact_callbacks();
 
 } // namespace Physics
 

@@ -147,7 +147,7 @@ int main(void) {
     glfwPollEvents();
 
     // Shutdown
-    if (Input::key_pressed(SFPS_KEY_ESCAPE)) {
+    if (Input::key_pressed(EUN_KEY_ESCAPE)) {
       break;
     }
   }
@@ -168,7 +168,7 @@ bool init_window() {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-  state->window = glfwCreateWindow(WIDTH, HEIGHT, "Simple FPS", NULL, NULL);
+  state->window = glfwCreateWindow(WIDTH, HEIGHT, "Eun", NULL, NULL);
   if (state->window == NULL) {
     std::cout << "Failed to create GLFW window" << std::endl;
     glfwTerminate();

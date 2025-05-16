@@ -3,7 +3,7 @@
 #include "Player.h"
 
 void Player::update_flashlight() {
-  if (Input::key_pressed(SFPS_KEY_F)) {
+  if (Input::key_pressed(EUN_KEY_F)) {
     _flashlight_on = !_flashlight_on;
   }
 

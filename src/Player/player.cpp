@@ -6,11 +6,9 @@
 
 void Player::init(glm::vec3 position) {
   _position = position;
-
-  // TODO: Verbose, and height dont work
-  _body_id = Physics::create_dynamic_body(
-      glm::vec3(_position.x, _position.y - PLAYER_HEIGHT, _position.z), 0.25f, Layers::MOVING);
-  // TODO: Only if its ground tho
+  _body_id  = create_player_physics(
+      glm::vec3(_position.x, _position.y, _position.z), PLAYER_HEIGHT, 0.25f, Layers::MOVING);
+  // TODO: Only if its ground tho, deffered to asset system
   Physics::register_on_contact(_body_id,
                                [this](const BodyID &, const BodyID &) { _on_ground = true; });
 }

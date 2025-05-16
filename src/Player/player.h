@@ -1,19 +1,17 @@
 #pragma once
 
 #include "Camera/Camera.h"
-// TODO: Remove the shit out of this
-#include "Jolt/Jolt.h"
 #include <glm/glm.hpp>
 
-// TODO: Remove the shit out of this
-#include "Jolt/Physics/Body/BodyID.h"
+#include "Physics/Physics.h"
 
 struct Player {
   void init(glm::vec3 position);
   void update(float delta_time, Camera camera);
 
   void update_movement(float delta_time, Camera camera);
-  void check_on_ground();
+
+  BodyID create_player_physics(glm::vec3 position, float height, float radius, ObjectLayer layer);
 
   void update_flashlight();
 
