@@ -2,6 +2,7 @@
 #include "Input/Input.h"
 #include "Keycodes.h"
 #include "Model.h"
+#include "Physics/Physics.h"
 #include "Player/Player.h"
 #include "Shader.h"
 #include "Util/Util.h"
@@ -24,7 +25,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void process_input(GLFWwindow *window);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
-void destroy_state();
+void shutdown_game();
 
 // Game
 const unsigned int WIDTH  = 1280;
@@ -64,6 +65,9 @@ int main(void) {
 
   /* Models */
   Model scene("res/objects/Map_v1/Map_v1.obj");
+  for (const Mesh &mesh : scene.meshes) {
+    Physics::register_static_mesh(mesh.vertices, mesh.indices, glm::mat4(1.0f));
+  }
 
   /* Objects */
 
@@ -85,6 +89,7 @@ int main(void) {
 
     Input::update();
     state->player.update(state->delta_time, state->camera);
+    Physics::update(state->delta_time);
 
     /* Render Game */
 
@@ -149,7 +154,9 @@ int main(void) {
 
   glfwTerminate();
 
-  destroy_state();
+  shutdown_game();
+
+  delete state;
 
   return 0;
 }
@@ -191,6 +198,9 @@ bool init_window() {
 }
 
 void init_game() {
+  // Physics
+  Physics::init();
+
   // Player
   state->player.init(PLAYER_SPAWN_POS);
 
@@ -228,6 +238,6 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
   state->camera.process_mouse_scroll(static_cast<float>(yoffset));
 }
 
-void destroy_state() {
-  delete state;
+void shutdown_game() {
+  Physics::shutdown();
 }

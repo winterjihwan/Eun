@@ -5,16 +5,25 @@ OBJ_DIR      := ./obj/$(APP_NAME)
 OUT_FILE     := $(OUT_DIR)/$(APP_NAME)
 
 SRCFILES     := $(shell find $(SRC_DIR) -type f -name "*.cpp")
+JOLT_SRC 		 := $(shell find vendor/JoltPhysics/Jolt -type f -name "*.cpp")
 OBJFILES     := $(patsubst $(SRC_DIR)/%, $(OBJ_DIR)/%.o, $(basename $(SRCFILES)))
+OBJFILES 		 += $(patsubst vendor/%, $(OBJ_DIR)/vendor/%.o, $(basename $(JOLT_SRC)))
 
 CC           := clang++
-CXXFLAGS     := -std=c++20 -g -Wall -Wno-deprecated 
-INCLUDES     := -Isrc -Isrc/Common -Ivendor/glad/include -Ivendor -I/opt/homebrew/include -I/opt/homebrew/include
-LDFLAGS      := \
-	vendor/glad/src/glad.c \
-	-framework OpenGL \
-	/opt/homebrew/Cellar/glfw/3.4/lib/libglfw.3.4.dylib \
-  -L/opt/homebrew/lib -lassimp \
+CXXFLAGS     := -std=c++20 -g -Wall -Wno-deprecated -MMD -MP
+INCLUDES     := -Isrc \
+								-Isrc/Common \
+								-Ivendor \
+								-Ivendor/JoltPhysics \
+								-Ivendor/glad/include \
+								-I/opt/homebrew/include \
+								-I/opt/homebrew/include \
+								-Ivendor/JoltPhysics \
+
+LDFLAGS      := vendor/glad/src/glad.c \
+								-framework OpenGL \
+								/opt/homebrew/Cellar/glfw/3.4/lib/libglfw.3.4.dylib \
+								-L/opt/homebrew/lib -lassimp \
 
 all: $(OUT_FILE)
 
@@ -28,5 +37,12 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@echo "  Compiling $<"
 	@$(CC) -c $< -o $@ $(CXXFLAGS) $(INCLUDES)
 
+$(OBJ_DIR)/vendor/%.o: vendor/%.cpp
+	@mkdir -p $(dir $@)
+	@echo "  Compiling $<"
+	@$(CC) -c $< -o $@ $(CXXFLAGS) $(INCLUDES)
+
 clean:
 	rm -rf $(OUT_DIR) $(OBJ_DIR)
+
+-include $(OBJFILES:.o=.d)
