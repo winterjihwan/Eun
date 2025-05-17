@@ -19,13 +19,15 @@
 
 #include <GLFW/glfw3.h>
 
-bool init_window();
-void init_game();
-void framebuffer_size_callback(GLFWwindow *window, int width, int height);
-void process_input(GLFWwindow *window);
-void mouse_callback(GLFWwindow *window, double xpos, double ypos);
-void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
-void shutdown_game();
+bool         init_window();
+void         init_game();
+void         framebuffer_size_callback(GLFWwindow *window, int width, int height);
+void         process_input(GLFWwindow *window);
+void         mouse_callback(GLFWwindow *window, double xpos, double ypos);
+void         scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+void         shutdown_game();
+unsigned int load_texture(char const *path);
+unsigned int load_cubemap(vector<std::string> faces);
 
 // Game
 const unsigned int WIDTH  = 1280;
@@ -62,12 +64,53 @@ int main(void) {
 
   /* Shaders */
   Shader shader_model("shaders/model.vert", "shaders/model.frag");
+  Shader shader_sky("shaders/sky.vert", "shaders/sky.frag");
 
   /* Models */
   Model scene("res/objects/Map_v1/Map_v1.obj");
   for (const Mesh &mesh : scene.meshes) {
     Physics::register_static_mesh(mesh.vertices, mesh.indices, glm::mat4(1.0f));
   }
+
+  // Skybox
+  float skybox_vertices[] = {-1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
+                             1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f,
+
+                             -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f,
+                             -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,
+
+                             1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,
+                             1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f,
+
+                             -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,  1.0f,
+                             1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,
+
+                             -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,
+                             1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f,
+
+                             -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f,
+                             1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f};
+
+  // Skybox VAO
+  unsigned int skyVAO, skyVBO;
+  glGenVertexArrays(1, &skyVAO);
+  glGenBuffers(1, &skyVBO);
+  glBindVertexArray(skyVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, skyVBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(skybox_vertices), &skybox_vertices, GL_STATIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+
+  vector<std::string> faces{"res/textures/NightSky/NightSky_Right.png",
+                            "res/textures/NightSky/NightSky_Left.png",
+                            "res/textures/NightSky/NightSky_Top.png",
+                            "res/textures/NightSky/NightSky_Bottom.png",
+                            "res/textures/NightSky/NightSky_Front.png",
+                            "res/textures/NightSky/NightSky_Back.png"};
+  unsigned int        cubemap_texture = load_cubemap(faces);
+
+  shader_sky.use();
+  shader_sky.setInt("skybox", 0);
 
   /* Objects */
 
@@ -141,6 +184,23 @@ int main(void) {
     model_test_sphere           = glm::translate(model_test_sphere, glm::vec3(0.0f, 0.0f, -3.0f));
     shader_model.setMat4("model", model_test_sphere);
     test_sphere.Draw(shader_model);
+
+    // Cubemap
+    glDepthFunc(GL_LEQUAL);
+    shader_sky.use();
+    view = glm::lookAt(state->player.get_pos(),
+                       state->player.get_pos() + state->camera.get_front(),
+                       state->camera.get_up());
+    view = glm::mat4(glm::mat3(view));
+    shader_sky.setMat4("view", view);
+    shader_sky.setMat4("projection", projection);
+
+    glBindVertexArray(skyVAO);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap_texture);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+    glDepthFunc(GL_LESS);
 
     /* -- */
     glfwSwapBuffers(state->window);
@@ -240,4 +300,45 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
 
 void shutdown_game() {
   Physics::shutdown();
+}
+
+// Order:
+// +X (right)
+// -X (left)
+// +Y (top)
+// -Y (bottom)
+// +Z (front)
+// -Z (back)
+// -------------------------------------------------------
+unsigned int load_cubemap(vector<std::string> faces) {
+  unsigned int textureID;
+  glGenTextures(1, &textureID);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+  int width, height, nrChannels;
+  for (unsigned int i = 0; i < faces.size(); i++) {
+    unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+    if (data) {
+      glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                   0,
+                   GL_RGBA,
+                   width,
+                   height,
+                   0,
+                   GL_RGBA,
+                   GL_UNSIGNED_BYTE,
+                   data);
+      stbi_image_free(data);
+    } else {
+      std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+      stbi_image_free(data);
+    }
+  }
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+  return textureID;
 }
