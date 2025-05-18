@@ -5,6 +5,8 @@
 #include "Physics/Physics.h"
 #include "Player/Player.h"
 #include "Shader.h"
+#include "Types/Animation/Animation.h"
+#include "Types/Animation/Animator.h"
 #include "Util/Util.h"
 #include <cstdint>
 #include <cstdlib>
@@ -65,12 +67,18 @@ int main(void) {
   /* Shaders */
   Shader shader_model("shaders/model.vert", "shaders/model.frag");
   Shader shader_sky("shaders/sky.vert", "shaders/sky.frag");
+  Shader shader_anim("shaders/anim.vert", "shaders/anim.frag");
 
   /* Models */
   Model scene("res/objects/Map_v1/Map_v1.obj");
   for (const Mesh &mesh : scene.meshes) {
     Physics::register_static_mesh(mesh.vertices, mesh.indices, glm::mat4(1.0f));
   }
+
+  // Vampire
+  Model     vampire("res/objects/Vampire/dancing_vampire.dae");
+  Animation vampire_dance_animation("res/objects/vampire/dancing_vampire.dae", &vampire);
+  Animator  vampire_dance_animator(&vampire_dance_animation);
 
   // Skybox
   float skybox_vertices[] = {-1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
@@ -133,13 +141,21 @@ int main(void) {
     Input::update();
     state->player.update(state->delta_time, state->camera);
     Physics::update(state->delta_time);
+    vampire_dance_animator.UpdateAnimation(state->delta_time);
 
     /* Render Game */
+
+    // Per Frame Transformations
+    glm::mat4 projection = glm::perspective(
+        glm::radians(state->camera.get_zoom()), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+    glm::mat4 view = glm::lookAt(state->player.get_pos(),
+                                 state->player.get_pos() + state->camera.get_front(),
+                                 state->camera.get_up());
 
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    // Shaders
+    // Scene
     shader_model.use();
 
     // Light Uniforms
@@ -164,26 +180,35 @@ int main(void) {
     shader_model.setFloat("flashLight.cutOff", glm::cos(glm::radians(12.5f)));
     shader_model.setFloat("flashLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
-    // Per Frame Transformations
-    glm::mat4 projection = glm::perspective(
-        glm::radians(state->camera.get_zoom()), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-    glm::mat4 view = glm::lookAt(state->player.get_pos(),
-                                 state->player.get_pos() + state->camera.get_front(),
-                                 state->camera.get_up());
-    shader_model.setMat4("projection", projection);
-    shader_model.setMat4("view", view);
-
     // Scene
     glm::mat4 model_scene = glm::mat4(1.0f);
     shader_model.setMat4("model", model_scene);
+    shader_model.setMat4("projection", projection);
+    shader_model.setMat4("view", view);
     scene.Draw(shader_model);
 
     // Test Sphere
     glm::mat4 model_test_sphere = glm::mat4(1.0f);
-    model_test_sphere           = glm::translate(model_test_sphere, glm::vec3(PLAYER_SPAWN_POS));
-    model_test_sphere           = glm::translate(model_test_sphere, glm::vec3(0.0f, 0.0f, -3.0f));
+    model_test_sphere = glm::translate(model_test_sphere, glm::vec3(13.0f, PLAYER_HEIGHT, 0.0f));
+    model_test_sphere = glm::translate(model_test_sphere, glm::vec3(0.0f, 0.0f, -3.0f));
     shader_model.setMat4("model", model_test_sphere);
     test_sphere.Draw(shader_model);
+
+    // Vampire
+    shader_anim.use();
+    shader_anim.setMat4("projection", projection);
+    shader_anim.setMat4("view", view);
+
+    auto transforms = vampire_dance_animator.GetFinalBoneMatrices();
+    for (int i = 0; i < transforms.size(); ++i)
+      shader_anim.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+
+    glm::mat4 model_vampire = glm::mat4(1.0f);
+    model_vampire           = glm::translate(model_vampire, glm::vec3(13.0f, PLAYER_HEIGHT, 0.0f));
+    model_vampire           = glm::translate(model_vampire, glm::vec3(0.0f, 0.0f, -5.0f));
+    model_vampire           = glm::scale(model_vampire, glm::vec3(.5f, .5f, .5f));
+    shader_anim.setMat4("model", model_vampire);
+    vampire.Draw(shader_anim);
 
     // Cubemap
     glDepthFunc(GL_LEQUAL);
