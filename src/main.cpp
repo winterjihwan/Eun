@@ -80,6 +80,11 @@ int main(void) {
   Animation vampire_dance_animation("res/objects/vampire/dancing_vampire.dae", &vampire);
   Animator  vampire_dance_animator(&vampire_dance_animation);
 
+  // Knife
+  Model     knife("res/objects/Pistol/scene.gltf");
+  Animation knife_animation("res/objects/Pistol/scene.gltf", &knife);
+  Animator  knife_animator(&knife_animation);
+
   // Skybox
   float skybox_vertices[] = {-1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
                              1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f,
@@ -142,6 +147,7 @@ int main(void) {
     state->player.update(state->delta_time, state->camera);
     Physics::update(state->delta_time);
     vampire_dance_animator.UpdateAnimation(state->delta_time);
+    knife_animator.UpdateAnimation(state->delta_time);
 
     /* Render Game */
 
@@ -194,11 +200,12 @@ int main(void) {
     shader_model.setMat4("model", model_test_sphere);
     test_sphere.Draw(shader_model);
 
-    // Vampire
+    // Animation Shader
     shader_anim.use();
     shader_anim.setMat4("projection", projection);
     shader_anim.setMat4("view", view);
 
+    // Vampire
     auto transforms = vampire_dance_animator.GetFinalBoneMatrices();
     for (int i = 0; i < transforms.size(); ++i)
       shader_anim.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
@@ -209,6 +216,17 @@ int main(void) {
     model_vampire           = glm::scale(model_vampire, glm::vec3(.5f, .5f, .5f));
     shader_anim.setMat4("model", model_vampire);
     vampire.Draw(shader_anim);
+
+    // Knife
+    transforms = knife_animator.GetFinalBoneMatrices();
+    for (int i = 0; i < transforms.size(); ++i)
+      shader_anim.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+
+    glm::mat4 model_knife = glm::mat4(1.0f);
+    model_knife           = glm::translate(model_knife, state->player.get_pos());
+    model_knife           = glm::translate(model_knife, glm::vec3(0.0f, -0.5f, -2.0f));
+    shader_anim.setMat4("model", model_knife);
+    knife.Draw(shader_anim);
 
     // Cubemap
     glDepthFunc(GL_LEQUAL);

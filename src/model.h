@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Animdata.h"
 #include "Mesh.h"
+#include "Types/Animation/Animdata.h"
 #include "Types/Animation/Assimp_utils.h"
 #include "stb_image/stb_image.h"
 #include <assimp/Importer.hpp>

@@ -10,7 +10,6 @@ class AssimpUtils {
 public:
   static inline glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4 &from) {
     glm::mat4 to;
-    // the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
     to[0][0] = from.a1;
     to[1][0] = from.a2;
     to[2][0] = from.a3;

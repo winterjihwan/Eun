@@ -1,7 +1,7 @@
 #pragma once
 
-#include "bone.h"
-#include "model.h"
+#include "Bone.h"
+#include "Model.h"
 #include <assimp/scene.h>
 #include <glm/glm.hpp>
 #include <vector>
@@ -14,12 +14,13 @@ struct AssimpNodeData {
 };
 
 class Animation {
+  Assimp::Importer _importer;
+
 public:
   Animation() = default;
 
   Animation(const std::string &animationPath, Model *model) {
-    Assimp::Importer importer;
-    const aiScene   *scene = importer.ReadFile(animationPath, aiProcess_Triangulate);
+    const aiScene *scene = _importer.ReadFile(animationPath, aiProcess_Triangulate);
     assert(scene && scene->mRootNode);
     auto animation                   = scene->mAnimations[0];
     m_Duration                       = animation->mDuration;
