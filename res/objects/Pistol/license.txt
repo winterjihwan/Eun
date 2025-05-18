@@ -1,11 +1,11 @@
 Model Information:
-* title:	Animated Pistol
-* source:	https://sketchfab.com/3d-models/animated-pistol-415cd71f76c24d1b914f367ba9d5fcf4
-* author:	JUST (https://sketchfab.com/teenjust500)
+* title:	Beretta Pistol FPS ANIMATION
+* source:	https://sketchfab.com/3d-models/beretta-pistol-fps-animation-0313ab1888994c14abeaf444d7af3217
+* author:	BURNER (https://sketchfab.com/Alexander_Ovelar)
 
 Model License:
 * license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
 * requirements:	Author must be credited. Commercial use is allowed.
 
 If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
-This work is based on "Animated Pistol" (https://sketchfab.com/3d-models/animated-pistol-415cd71f76c24d1b914f367ba9d5fcf4) by JUST (https://sketchfab.com/teenjust500) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+This work is based on "Beretta Pistol FPS ANIMATION" (https://sketchfab.com/3d-models/beretta-pistol-fps-animation-0313ab1888994c14abeaf444d7af3217) by BURNER (https://sketchfab.com/Alexander_Ovelar) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

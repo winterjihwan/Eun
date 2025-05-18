@@ -26,7 +26,7 @@ public:
     m_Duration                       = animation->mDuration;
     m_TicksPerSecond                 = animation->mTicksPerSecond;
     aiMatrix4x4 globalTransformation = scene->mRootNode->mTransformation;
-    globalTransformation             = globalTransformation.Inverse();
+    m_GlobalRootTransform            = AssimpUtils::ConvertMatrixToGLMFormat(globalTransformation);
     ReadHierarchyData(m_RootNode, scene->mRootNode);
     ReadMissingBones(animation, *model);
   }
@@ -55,6 +55,9 @@ public:
   }
   inline const std::map<std::string, BoneInfo> &GetBoneIDMap() {
     return m_BoneInfoMap;
+  }
+  inline const glm::mat4 &GetRootTransform() const {
+    return m_GlobalRootTransform;
   }
 
 private:
@@ -97,4 +100,5 @@ private:
   std::vector<Bone>               m_Bones;
   AssimpNodeData                  m_RootNode;
   std::map<std::string, BoneInfo> m_BoneInfoMap;
+  glm::mat4                       m_GlobalRootTransform;
 };

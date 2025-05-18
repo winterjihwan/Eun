@@ -223,8 +223,9 @@ int main(void) {
       shader_anim.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
 
     glm::mat4 model_knife = glm::mat4(1.0f);
-    model_knife           = glm::translate(model_knife, state->player.get_pos());
-    model_knife           = glm::translate(model_knife, glm::vec3(0.0f, -0.5f, -2.0f));
+    // model_knife           = glm::translate(model_knife, state->player.get_pos());
+    // model_knife           = glm::translate(model_knife, glm::vec3(0.0f, -0.3f, 0.0f));
+    // model_knife           = glm::translate(model_knife, state->camera.get_front() * 0.10f);
     shader_anim.setMat4("model", model_knife);
     knife.Draw(shader_anim);
 
