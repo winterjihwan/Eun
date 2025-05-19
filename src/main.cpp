@@ -81,8 +81,11 @@ int main(void) {
   Animator  vampire_dance_animator(&vampire_dance_animation);
 
   // Knife
-  Model     knife("res/objects/Pistol/scene.gltf");
-  Animation knife_animation("res/objects/Pistol/scene.gltf", &knife);
+  // Model     knife("res/objects/Pistol/scene.gltf");
+  // Animation knife_animation("res/objects/Pistol/scene.gltf", &knife);
+  // Animator  knife_animator(&knife_animation);
+  Model     knife("res/objects/HK_416/scene.gltf");
+  Animation knife_animation("res/objects/HK_416/scene.gltf", &knife);
   Animator  knife_animator(&knife_animation);
 
   // Skybox
@@ -223,9 +226,10 @@ int main(void) {
       shader_anim.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
 
     glm::mat4 model_knife = glm::mat4(1.0f);
-    // model_knife           = glm::translate(model_knife, state->player.get_pos());
-    // model_knife           = glm::translate(model_knife, glm::vec3(0.0f, -0.3f, 0.0f));
-    // model_knife           = glm::translate(model_knife, state->camera.get_front() * 0.10f);
+    model_knife           = glm::translate(model_knife, state->player.get_pos());
+    model_knife           = glm::translate(model_knife, glm::vec3(0.0f, -0.3f, 0.0f));
+    model_knife           = glm::translate(model_knife, state->camera.get_front() * 0.5f);
+    model_knife           = glm::scale(model_knife, glm::vec3(0.5f));
     shader_anim.setMat4("model", model_knife);
     knife.Draw(shader_anim);
 
