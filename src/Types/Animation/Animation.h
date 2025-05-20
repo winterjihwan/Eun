@@ -19,12 +19,6 @@ public:
 
   Animation() = default;
 
-  Animation(const Animation &)            = delete;
-  Animation &operator=(const Animation &) = delete;
-
-  Animation(Animation &&)            = default;
-  Animation &operator=(Animation &&) = default;
-
   Animation(const std::string &animationPath, Model *model) {
     _path = animationPath;
     Assimp::Importer _importer;
@@ -33,6 +27,7 @@ public:
     auto animation   = scene->mAnimations[0];
     m_Duration       = animation->mDuration;
     m_TicksPerSecond = animation->mTicksPerSecond;
+
     ReadHierarchyData(m_RootNode, scene->mRootNode);
     ReadMissingBones(animation, *model);
   }
@@ -103,5 +98,4 @@ private:
   std::vector<Bone>               m_Bones;
   AssimpNodeData                  m_RootNode;
   std::map<std::string, BoneInfo> m_BoneInfoMap;
-  // Assimp::Importer _importer;
 };

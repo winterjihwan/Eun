@@ -11,7 +11,7 @@ unsigned int load_cubemap(vector<std::string> faces);
 namespace AssetManager {
 std::vector<Model>                      _models;
 std::vector<Mesh>                       _meshes;
-std::vector<std::unique_ptr<Animation>> _animations;
+std::vector<std::shared_ptr<Animation>> _animations;
 std::vector<Animator>                   _animators;
 
 // TODO: Index Map
@@ -25,19 +25,23 @@ void init() {
 
   // Vampire
   Model &vampire = _models.emplace_back("res/objects/Vampire/dancing_vampire.dae", "Vampire");
-  std::unique_ptr<Animation> &vampire_animation = _animations.emplace_back(
-      std::make_unique<Animation>("res/objects/Vampire/dancing_vampire.dae", &vampire));
-  _animators.emplace_back(&*vampire_animation);
+  std::shared_ptr<Animation> &vampire_animation = _animations.emplace_back(
+      std::make_shared<Animation>("res/objects/Vampire/dancing_vampire.dae", &vampire));
+  _animators.emplace_back(&*vampire_animation, "Vampire");
 
-  // Knife
+  // Pistol
   Model &pistol = _models.emplace_back("res/objects/Pistol/scene.gltf", "Pistol");
-  _animations.emplace_back(std::make_unique<Animation>("res/objects/Pistol/scene.gltf", &pistol));
-  _animators.emplace_back(_animations.back().get());
+  std::shared_ptr<Animation> &pistol_animation = _animations.emplace_back(
+      std::make_shared<Animation>("res/objects/Pistol/scene.gltf", &pistol));
+
+  _animators.emplace_back(&*pistol_animation, "Pistol_inspect");
+  get_animator_by_name("Pistol_inspect")->SetClip(1.5f, 7.0f);
 
   // HK_416
   Model &hk_416 = _models.emplace_back("res/objects/HK_416/scene.gltf", "HK_416");
-  _animations.emplace_back(std::make_unique<Animation>("res/objects/HK_416/scene.gltf", &hk_416));
-  _animators.emplace_back(_animations.back().get());
+  std::shared_ptr<Animation> &hk_416_animation = _animations.emplace_back(
+      std::make_shared<Animation>("res/objects/HK_416/scene.gltf", &hk_416));
+  _animators.emplace_back(&*hk_416_animation, "Pistol");
 
   /* Objects */
 
@@ -59,7 +63,7 @@ std::vector<Animator> &get_animators() {
 
 Animator *get_animator_by_name(const std::string &name) {
   for (auto &animator : _animators) {
-    if (name == animator._path) {
+    if (name == animator.GetName()) {
       return &animator;
     }
   }

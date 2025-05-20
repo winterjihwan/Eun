@@ -115,9 +115,8 @@ void render_game() {
   _shaders["Anim"].setMat4("view", view);
 
   // Vampire
-  Animator *vampire_dance_animator =
-      AssetManager::get_animator_by_name("res/objects/Vampire/dancing_vampire.dae");
-  auto transforms = vampire_dance_animator->GetFinalBoneMatrices();
+  Animator *vampire_dance_animator = AssetManager::get_animator_by_name("Vampire");
+  auto      transforms             = vampire_dance_animator->GetFinalBoneMatrices();
   for (int i = 0; i < transforms.size(); ++i)
     _shaders["Anim"].setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
 
@@ -130,7 +129,7 @@ void render_game() {
   vampire->Draw(_shaders["Anim"]);
 
   // Pistol
-  Animator *pistol_animator = AssetManager::get_animator_by_name("res/objects/Pistol/scene.gltf");
+  Animator *pistol_animator = AssetManager::get_animator_by_name("Pistol_inspect");
   transforms                = pistol_animator->GetFinalBoneMatrices();
   for (int i = 0; i < transforms.size(); ++i)
     _shaders["Anim"].setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
@@ -139,12 +138,9 @@ void render_game() {
   model_pistol           = glm::translate(model_pistol, Game::get_player()->get_pos());
   model_pistol           = glm::translate(model_pistol, glm::vec3(0.0f, -0.3f, 0.0f));
   model_pistol           = glm::translate(model_pistol, Game::get_camera()->get_front() * 0.5f);
-
   glm::quat rot = glm::quatLookAt(-Game::get_camera()->get_front(), Game::get_camera()->get_up());
   model_pistol *= glm::toMat4(rot);
-
   model_pistol = glm::scale(model_pistol, glm::vec3(0.5f));
-
   _shaders["Anim"].setMat4("model", model_pistol);
 
   Model *pistol = AssetManager::get_model_by_name("Pistol");

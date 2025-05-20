@@ -10,13 +10,13 @@
 
 class Animator {
 public:
-  std::string _path;
+  Animator(Animation *animation, const std::string &name) {
+    m_Name = name;
 
-  Animator(Animation *animation) {
-    _path = animation->_path;
-
-    m_CurrentTime      = 0.0;
+    m_CurrentTime      = 0.0f;
     m_CurrentAnimation = animation;
+    m_ClipStart        = 0.0f;
+    m_ClipEnd          = animation->GetDuration();
 
     m_FinalBoneMatrices.resize(100);
 
@@ -27,8 +27,14 @@ public:
   void UpdateAnimation(float dt) {
     m_DeltaTime = dt;
     if (m_CurrentAnimation) {
+      float clipLength = m_ClipEnd - m_ClipStart;
+
       m_CurrentTime += m_CurrentAnimation->GetTicksPerSecond() * dt;
-      m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation->GetDuration());
+
+      if (m_CurrentTime < m_ClipStart || m_CurrentTime > m_ClipEnd) {
+        m_CurrentTime = m_ClipStart + fmod(m_CurrentTime - m_ClipStart, clipLength);
+      }
+
       CalculateBoneTransform(&m_CurrentAnimation->GetRootNode(), glm::mat4(1.0f));
     }
   }
@@ -62,8 +68,17 @@ public:
       CalculateBoneTransform(&node->children[i], globalTransformation);
   }
 
+  void SetClip(float clipStart, float clipEnd) {
+    m_ClipStart = clipStart * 1000.0f;
+    m_ClipEnd   = clipEnd * 1000.0f;
+  }
+
   std::vector<glm::mat4> GetFinalBoneMatrices() {
     return m_FinalBoneMatrices;
+  }
+
+  std::string &GetName() {
+    return m_Name;
   }
 
 private:
@@ -71,4 +86,7 @@ private:
   Animation             *m_CurrentAnimation;
   float                  m_CurrentTime;
   float                  m_DeltaTime;
+  float                  m_ClipStart;
+  float                  m_ClipEnd;
+  std::string            m_Name;
 };
