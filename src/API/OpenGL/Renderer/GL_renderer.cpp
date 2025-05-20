@@ -129,8 +129,8 @@ void render_game() {
   vampire->Draw(_shaders["Anim"]);
 
   // Pistol
-  Animator *pistol_animator = AssetManager::get_animator_by_name("Pistol_inspect");
-  transforms                = pistol_animator->GetFinalBoneMatrices();
+  Animator *pistol_inspect_animator = AssetManager::get_animator_by_name("Pistol_idle");
+  transforms                        = pistol_inspect_animator->GetFinalBoneMatrices();
   for (int i = 0; i < transforms.size(); ++i)
     _shaders["Anim"].setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
 

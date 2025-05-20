@@ -3,14 +3,13 @@
 #include <vector>
 
 namespace WeaponManager {
+std::vector<WeaponInfo> _weapons;
 
-std::vector<WeaponInfo> g_weapons;
-
-void Init() {
-  g_weapons.clear();
+void init() {
+  _weapons.clear();
 
   // Weapons
-  WeaponInfo &hk_416            = g_weapons.emplace_back();
+  WeaponInfo &hk_416            = _weapons.emplace_back();
   hk_416.name                   = "HK_416";
   hk_416.model_name             = "HK_416";
   hk_416.type                   = WeaponType::AUTOMATIC;
@@ -19,30 +18,30 @@ void Init() {
   hk_416.animation_names.reload = "HK_416_Reload";
 }
 
-WeaponInfo *GetWeaponInfoByName(const std::string &name) {
-  for (int i = 0; i < g_weapons.size(); i++) {
-    if (g_weapons[i].name == name) {
-      return &g_weapons[i];
+int get_weapon_count() {
+  return _weapons.size();
+}
+
+WeaponInfo *get_weapon_info_by_name(const std::string &name) {
+  for (int i = 0; i < _weapons.size(); i++) {
+    if (_weapons[i].name == name) {
+      return &_weapons[i];
     }
   }
   return nullptr;
 }
 
-WeaponInfo *GetWeaponInfoByIndex(int index) {
-  if (index >= 0 && index < g_weapons.size()) {
-    return &g_weapons[index];
+WeaponInfo *get_weapon_info_by_index(int index) {
+  if (index >= 0 && index < _weapons.size()) {
+    return &_weapons[index];
   }
   return nullptr;
 }
 
-int GetWeaponCount() {
-  return g_weapons.size();
-}
-
-int32_t GetWeaponIndexFromWeaponName(const std::string &weaponName) {
-  std::vector<WeaponInfo> g_weapons;
-  for (int i = 0; i < g_weapons.size(); i++) {
-    if (g_weapons[i].name == weaponName) {
+int32_t get_weapon_index_from_weapon_name(const std::string &weaponName) {
+  std::vector<WeaponInfo> _weapons;
+  for (int i = 0; i < _weapons.size(); i++) {
+    if (_weapons[i].name == weaponName) {
       return i;
     }
   }

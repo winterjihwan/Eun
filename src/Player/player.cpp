@@ -2,6 +2,7 @@
 #include "Defines.h"
 #include "Keycodes.h"
 #include "Physics/Physics.h"
+#include "Weapon/WeaponManager.h"
 #include <glm/glm.hpp>
 
 void Player::init(glm::vec3 position) {
@@ -11,10 +12,19 @@ void Player::init(glm::vec3 position) {
   // TODO: Only if its ground tho, deffered to asset system
   Physics::register_on_contact(_body_id,
                                [this](const BodyID &, const BodyID &) { _on_ground = true; });
+
+  // Weapon
+  _weapon_states.clear();
+  for (int i = 0; i < WeaponManager::get_weapon_count(); i++) {
+    WeaponState &state = _weapon_states.emplace_back();
+    state.name         = WeaponManager::get_weapon_info_by_index(i)->name;
+    state.has          = false;
+  }
 }
 
 void Player::update(float delta_time, Camera camera) {
   update_movement(delta_time, camera);
+  update_weapon_logic(delta_time);
   update_flashlight();
 }
 

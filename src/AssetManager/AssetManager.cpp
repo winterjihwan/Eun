@@ -37,6 +37,12 @@ void init() {
   _animators.emplace_back(&*pistol_animation, "Pistol_inspect");
   get_animator_by_name("Pistol_inspect")->SetClip(1.5f, 7.0f);
 
+  _animators.emplace_back(&*pistol_animation, "Pistol_idle");
+  get_animator_by_name("Pistol_idle")->SetClip(10.9f, 11.2f);
+
+  _animators.emplace_back(&*pistol_animation, "Pistol_fire");
+  get_animator_by_name("Pistol_fire")->SetClip(7.0f, 8.25f);
+
   // HK_416
   Model &hk_416 = _models.emplace_back("res/objects/HK_416/scene.gltf", "HK_416");
   std::shared_ptr<Animation> &hk_416_animation = _animations.emplace_back(

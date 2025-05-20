@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Camera/Camera.h"
-#include <glm/glm.hpp>
-
+#include "Enums.h"
 #include "Physics/Physics.h"
+#include "Weapon/WeaponCommon.h"
+#include <glm/glm.hpp>
 
 struct Player {
   void init(glm::vec3 position);
@@ -18,6 +19,16 @@ struct Player {
   glm::vec3 get_pos();
   bool      get_flashlight_on();
 
+  // Weapon
+  void         update_weapon_logic(float delta_time);
+  void         switch_weapon(const std::string &name, WeaponAction weaponAction);
+  void         next_weapon();
+  void         fire_gun();
+  void         give_weapon(const std::string &name);
+  WeaponState *get_weapon_state_by_name(const std::string &name);
+  WeaponState *get_current_weapon_state();
+  WeaponInfo  *get_current_weapon_info();
+
 private:
   float       _speed = 5.0f;
   glm::vec3   _position;
@@ -25,4 +36,9 @@ private:
   bool        _on_ground     = false;
   bool        _flashlight_on = false;
   JPH::BodyID _body_id;
+
+  // Weapon
+  int                      _current_weapon_index = 0;
+  std::vector<WeaponState> _weapon_states;
+  WeaponAction             _weapon_action;
 };

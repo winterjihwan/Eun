@@ -16,3 +16,8 @@ struct WeaponInfo {
   AnimationNames animation_names;
   WeaponType     type;
 };
+
+struct WeaponState {
+  bool        has  = false;
+  std::string name = "UNDEFINED_STRING";
+};
