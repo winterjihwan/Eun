@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 
 namespace Input {
-void  init(GLFWwindow *glfwWinodw);
+void  init(void *glfwWinodw);
 void  update();
 bool  key_pressed(unsigned int keycode);
 bool  key_down(unsigned int keycode);

@@ -19,12 +19,14 @@ using namespace std;
 
 class Model {
 public:
+  string          name;
   vector<Texture> textures_loaded;
   vector<Mesh>    meshes;
   string          directory;
   bool            gammaCorrection;
 
-  Model(string const &path, bool gamma = false) : gammaCorrection(gamma) {
+  Model(string const &path, const string &name, bool gamma = false)
+      : name(name), gammaCorrection(gamma) {
     loadModel(path);
   }
 

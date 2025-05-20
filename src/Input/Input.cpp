@@ -32,9 +32,9 @@ GLFWwindow *g_window;
 
 void mouse_scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
-void init(GLFWwindow *glfwWindow) {
+void init(void *glfwWindow) {
   double x, y;
-  g_window = glfwWindow;
+  g_window = static_cast<GLFWwindow *>(glfwWindow);
   glfwSetScrollCallback(g_window, mouse_scroll_callback);
   glfwGetCursorPos(g_window, &x, &y);
   disable_cursor();

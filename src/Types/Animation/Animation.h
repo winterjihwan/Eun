@@ -14,13 +14,21 @@ struct AssimpNodeData {
 };
 
 class Animation {
-  Assimp::Importer _importer;
-
 public:
+  std::string _path;
+
   Animation() = default;
 
+  Animation(const Animation &)            = delete;
+  Animation &operator=(const Animation &) = delete;
+
+  Animation(Animation &&)            = default;
+  Animation &operator=(Animation &&) = default;
+
   Animation(const std::string &animationPath, Model *model) {
-    const aiScene *scene = _importer.ReadFile(animationPath, aiProcess_Triangulate);
+    _path = animationPath;
+    Assimp::Importer _importer;
+    const aiScene   *scene = _importer.ReadFile(animationPath, aiProcess_Triangulate);
     assert(scene && scene->mRootNode);
     auto animation   = scene->mAnimations[0];
     m_Duration       = animation->mDuration;
@@ -95,4 +103,5 @@ private:
   std::vector<Bone>               m_Bones;
   AssimpNodeData                  m_RootNode;
   std::map<std::string, BoneInfo> m_BoneInfoMap;
+  // Assimp::Importer _importer;
 };

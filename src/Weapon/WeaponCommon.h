@@ -1,0 +1,18 @@
+#pragma once
+
+#include <string>
+
+enum class WeaponType { MELEE, PISTOL, SHOTGUN, AUTOMATIC, UNDEFINED };
+
+struct AnimationNames {
+  std::string idle;
+  std::string reload;
+  std::string draw;
+};
+
+struct WeaponInfo {
+  std::string    name;
+  std::string    model_name;
+  AnimationNames animation_names;
+  WeaponType     type;
+};

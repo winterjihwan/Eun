@@ -10,7 +10,11 @@
 
 class Animator {
 public:
+  std::string _path;
+
   Animator(Animation *animation) {
+    _path = animation->_path;
+
     m_CurrentTime      = 0.0;
     m_CurrentAnimation = animation;
 
