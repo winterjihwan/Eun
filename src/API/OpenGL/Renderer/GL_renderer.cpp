@@ -139,7 +139,12 @@ void render_game() {
   model_pistol           = glm::translate(model_pistol, Game::get_player()->get_pos());
   model_pistol           = glm::translate(model_pistol, glm::vec3(0.0f, -0.3f, 0.0f));
   model_pistol           = glm::translate(model_pistol, Game::get_camera()->get_front() * 0.5f);
-  model_pistol           = glm::scale(model_pistol, glm::vec3(0.5f));
+
+  glm::quat rot = glm::quatLookAt(-Game::get_camera()->get_front(), Game::get_camera()->get_up());
+  model_pistol *= glm::toMat4(rot);
+
+  model_pistol = glm::scale(model_pistol, glm::vec3(0.5f));
+
   _shaders["Anim"].setMat4("model", model_pistol);
 
   Model *pistol = AssetManager::get_model_by_name("Pistol");

@@ -40,3 +40,13 @@ glm::vec3 Camera::get_up() {
 float Camera::get_zoom() {
   return _zoom;
 }
+
+void Camera::update_camera_vectors() {
+  glm::vec3 front;
+  front.x = cos(glm::radians(_yaw)) * cos(glm::radians(_pitch));
+  front.y = sin(glm::radians(_pitch));
+  front.z = sin(glm::radians(_yaw)) * cos(glm::radians(_pitch));
+  _front  = glm::normalize(front);
+  _right  = glm::normalize(glm::cross(_front, _world_up));
+  _up     = glm::normalize(glm::cross(_right, _front));
+}
