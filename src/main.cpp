@@ -29,6 +29,7 @@ int main(void) {
     }
     Backend::end_frame();
 
+    // HACK
     if (Input::key_pressed(EUN_KEY_ESCAPE)) {
       return 0;
     }

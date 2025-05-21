@@ -1,5 +1,6 @@
 #include "Backend.h"
 #include "AssetManager/AssetManager.h"
+#include "Audio/Audio.h"
 #include "Backend/GLFW.h"
 #include "Core/Game.h"
 #include "Input/Input.h"
@@ -14,6 +15,7 @@ bool init() {
 
   Physics::init();
   AssetManager::init();
+  Audio::init();
   Input::init(get_window_pointer());
   WeaponManager::init();
 
