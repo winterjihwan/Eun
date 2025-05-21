@@ -30,30 +30,68 @@ void init() {
   _animators.emplace_back(&*vampire_animation, "Vampire");
 
   // Pistol
-  Model &pistol = _models.emplace_back("res/objects/Pistol/scene.gltf", "Pistol");
-  std::shared_ptr<Animation> &pistol_animation = _animations.emplace_back(
-      std::make_shared<Animation>("res/objects/Pistol/scene.gltf", &pistol));
+  {
+    Model &pistol = _models.emplace_back("res/objects/Pistol/scene.gltf", "Pistol");
+    std::shared_ptr<Animation> &pistol_animation = _animations.emplace_back(
+        std::make_shared<Animation>("res/objects/Pistol/scene.gltf", &pistol));
 
-  _animators.emplace_back(&*pistol_animation, "Pistol_Inspect");
-  Animator *pistol_inspect_animator = get_animator_by_name("Pistol_Inspect");
-  pistol_inspect_animator->SetClip(1.5f, 7.0f);
-  pistol_inspect_animator->SetIsLoop(false);
+    _animators.emplace_back(&*pistol_animation, "Pistol_Draw");
+    Animator *pistol_draw_animator = get_animator_by_name("Pistol_Draw");
+    pistol_draw_animator->SetClip(0.0f, 1.14f);
+    pistol_draw_animator->SetIsLoop(false);
 
-  _animators.emplace_back(&*pistol_animation, "Pistol_Idle");
-  Animator *pistol_idle_animator = get_animator_by_name("Pistol_Idle");
-  pistol_idle_animator->SetClip(10.9f, 11.2f);
-  pistol_idle_animator->SetIsLoop(false);
+    _animators.emplace_back(&*pistol_animation, "Pistol_Idle");
+    Animator *pistol_idle_animator = get_animator_by_name("Pistol_Idle");
+    pistol_idle_animator->SetClip(10.9f, 11.2f);
+    pistol_idle_animator->SetIsLoop(false);
 
-  _animators.emplace_back(&*pistol_animation, "Pistol_Fire");
-  Animator *pistol_fire_animator = get_animator_by_name("Pistol_Fire");
-  pistol_fire_animator->SetClip(7.5f, 8.0f);
-  pistol_fire_animator->SetIsLoop(false);
+    _animators.emplace_back(&*pistol_animation, "Pistol_Fire");
+    Animator *pistol_fire_animator = get_animator_by_name("Pistol_Fire");
+    pistol_fire_animator->SetClip(7.5f, 8.0f);
+    pistol_fire_animator->SetIsLoop(false);
+
+    _animators.emplace_back(&*pistol_animation, "Pistol_Reload");
+    Animator *pistol_reload_animator = get_animator_by_name("Pistol_Reload");
+    pistol_reload_animator->SetClip(8.2f, 10.8f);
+    pistol_reload_animator->SetIsLoop(false);
+
+    _animators.emplace_back(&*pistol_animation, "Pistol_Inspect");
+    Animator *pistol_inspect_animator = get_animator_by_name("Pistol_Inspect");
+    pistol_inspect_animator->SetClip(1.5f, 7.0f);
+    pistol_inspect_animator->SetIsLoop(false);
+  }
 
   // HK_416
-  Model &hk_416 = _models.emplace_back("res/objects/HK_416/scene.gltf", "HK_416");
-  std::shared_ptr<Animation> &hk_416_animation = _animations.emplace_back(
-      std::make_shared<Animation>("res/objects/HK_416/scene.gltf", &hk_416));
-  _animators.emplace_back(&*hk_416_animation, "Pistol");
+  {
+    Model &hk_416 = _models.emplace_back("res/objects/HK_416/scene.gltf", "HK_416");
+    std::shared_ptr<Animation> &hk_416_animation = _animations.emplace_back(
+        std::make_shared<Animation>("res/objects/HK_416/scene.gltf", &hk_416));
+
+    _animators.emplace_back(&*hk_416_animation, "HK_416_Draw");
+    Animator *hk_416_draw_animator = get_animator_by_name("HK_416_Draw");
+    hk_416_draw_animator->SetClip(0.0f, 2.2f);
+    hk_416_draw_animator->SetIsLoop(false);
+
+    _animators.emplace_back(&*hk_416_animation, "HK_416_Idle");
+    Animator *hk_416_idle_animator = get_animator_by_name("HK_416_Idle");
+    hk_416_idle_animator->SetClip(8.0f, 8.2f);
+    hk_416_idle_animator->SetIsLoop(false);
+
+    _animators.emplace_back(&*hk_416_animation, "HK_416_Inspect");
+    Animator *hk_416_inspect_animator = get_animator_by_name("HK_416_Inspect");
+    hk_416_inspect_animator->SetClip(2.2f, 8.0f);
+    hk_416_inspect_animator->SetIsLoop(false);
+
+    _animators.emplace_back(&*hk_416_animation, "HK_416_Fire");
+    Animator *hk_416_fire_animator = get_animator_by_name("HK_416_Fire");
+    hk_416_fire_animator->SetClip(21.96f, 22.36f);
+    hk_416_fire_animator->SetIsLoop(false);
+
+    _animators.emplace_back(&*hk_416_animation, "HK_416_Reload");
+    Animator *hk_416_reload_animator = get_animator_by_name("HK_416_Reload");
+    hk_416_reload_animator->SetClip(8.25f, 14.5f);
+    hk_416_reload_animator->SetIsLoop(false);
+  }
 
   /* Objects */
 

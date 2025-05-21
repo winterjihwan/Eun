@@ -5,4 +5,5 @@ enum WeaponAction {
   DRAW,
   FIRE,
   RELOAD,
+  INSPECT,
 };

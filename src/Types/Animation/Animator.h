@@ -6,7 +6,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <glm/glm.hpp>
-#include <iostream>
 #include <map>
 #include <vector>
 

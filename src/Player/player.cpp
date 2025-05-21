@@ -24,6 +24,7 @@ void Player::init(glm::vec3 position) {
 
   // Default weapon
   give_weapon("Pistol");
+  give_weapon("HK_416");
   _weapon_view_animator = AssetManager::get_animator_by_name("Pistol_Idle"); // HACK
 }
 

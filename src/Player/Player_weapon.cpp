@@ -1,9 +1,15 @@
 #include "AssetManager/AssetManager.h"
 #include "Enums.h"
+#include "Input/Input.h"
+#include "Keycodes.h"
 #include "Player.h"
 #include "Weapon/WeaponManager.h"
 
 void Player::update_weapon(float delta_time) {
+  if (Input::key_pressed(EUN_KEY_Q)) {
+    next_weapon();
+  }
+
   WeaponInfo *weapon_info = get_current_weapon_info();
   // WeaponState *weapon_state = get_current_weapon_state();
 
@@ -20,20 +26,32 @@ void Player::update_weapon(float delta_time) {
   };
 
   if (_weapon_action == WeaponAction::DRAW) {
-    // TODO: 'Draw' animation
-    _weapon_action = WeaponAction::IDLE;
-  } else if (_weapon_action == WeaponAction::FIRE) {
-    if (_weapon_view_animator->GetName() != weapon_info->animation_names.fire) {
-      _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.fire);
-    }
-
+    _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.draw);
     if (_weapon_view_animator->IsDone()) {
       _weapon_action = WeaponAction::IDLE;
     }
-  } else if (_weapon_action == WeaponAction::IDLE) {
-    if (_weapon_view_animator->GetName() != weapon_info->animation_names.idle) {
-      _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
+
+  } else if (_weapon_action == WeaponAction::FIRE) {
+    _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.fire);
+    if (_weapon_view_animator->IsDone()) {
+      _weapon_action = WeaponAction::IDLE;
     }
+
+  } else if (_weapon_action == WeaponAction::RELOAD) {
+    _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.reload);
+    if (_weapon_view_animator->IsDone()) {
+      _weapon_action = WeaponAction::IDLE;
+    }
+
+  } else if (_weapon_action == WeaponAction::INSPECT) {
+    _weapon_view_animator =
+        AssetManager::get_animator_by_name(weapon_info->animation_names.inspect);
+    if (_weapon_view_animator->IsDone()) {
+      _weapon_action = WeaponAction::IDLE;
+    }
+
+  } else if (_weapon_action == WeaponAction::IDLE) {
+    _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
   }
 
   _weapon_view_animator->UpdateAnimation(delta_time);
@@ -51,7 +69,7 @@ void Player::next_weapon() {
     }
   }
 
-  switch_weapon(_weapon_states[_current_weapon_index].name, IDLE);
+  switch_weapon(_weapon_states[_current_weapon_index].name, DRAW);
 }
 
 void Player::switch_weapon(const std::string &name, WeaponAction weapon_action) {

@@ -143,8 +143,9 @@ void render_game() {
   model_weapon = glm::scale(model_weapon, glm::vec3(0.5f));
   _shaders["Anim"].setMat4("model", model_weapon);
 
-  Model *pistol = AssetManager::get_model_by_name("Pistol");
-  pistol->Draw(_shaders["Anim"]);
+  const std::string &current_weapon_name = Game::get_player()->get_current_weapon_info()->name;
+  Model             *weapon_model        = AssetManager::get_model_by_name(current_weapon_name);
+  weapon_model->Draw(_shaders["Anim"]);
 
   // Cubemap
   glDepthFunc(GL_LEQUAL);
