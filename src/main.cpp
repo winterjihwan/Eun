@@ -1,3 +1,4 @@
+#include "Audio/Audio.h"
 #include "Backend/Backend.h"
 #include "Core/Game.h"
 #include "Input/Input.h"
@@ -17,6 +18,9 @@ int main(void) {
 
   // HACK
   Game::init();
+
+  // HACK
+  Audio::play_audio("Dark_ambient.mp3", 0.5f);
 
   while (Backend::is_window_open()) {
     Backend::update_subsystems();
