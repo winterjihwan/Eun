@@ -27,33 +27,19 @@ void Player::update_weapon(float delta_time) {
   default:;
   };
 
-  if (_weapon_action == WeaponAction::DRAW) {
-    _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.draw);
-    if (_weapon_view_animator->IsDone()) {
-      _weapon_action = WeaponAction::IDLE;
-    }
-
-  } else if (_weapon_action == WeaponAction::FIRE) {
-    _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.fire);
-    if (_weapon_view_animator->IsDone()) {
-      _weapon_action = WeaponAction::IDLE;
-    }
-
-  } else if (_weapon_action == WeaponAction::RELOAD) {
-    _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.reload);
-    if (_weapon_view_animator->IsDone()) {
-      _weapon_action = WeaponAction::IDLE;
-    }
-
-  } else if (_weapon_action == WeaponAction::INSPECT) {
-    _weapon_view_animator =
-        AssetManager::get_animator_by_name(weapon_info->animation_names.inspect);
-    if (_weapon_view_animator->IsDone()) {
-      _weapon_action = WeaponAction::IDLE;
-    }
-
-  } else if (_weapon_action == WeaponAction::IDLE) {
+  if (_weapon_action == WeaponAction::DRAW && _weapon_view_animator->IsDone()) {
     _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
+    _weapon_action        = WeaponAction::IDLE;
+  }
+
+  if (_weapon_action == WeaponAction::FIRE && _weapon_view_animator->IsDone()) {
+    _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
+    _weapon_action        = WeaponAction::IDLE;
+  }
+
+  if (_weapon_action == WeaponAction::INSPECT && _weapon_view_animator->IsDone()) {
+    _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
+    _weapon_action        = WeaponAction::IDLE;
   }
 
   _weapon_view_animator->UpdateAnimation(delta_time);
@@ -71,10 +57,10 @@ void Player::next_weapon() {
     }
   }
 
-  switch_weapon(_weapon_states[_current_weapon_index].name, DRAW);
+  switch_weapon(_weapon_states[_current_weapon_index].name);
 }
 
-void Player::switch_weapon(const std::string &name, WeaponAction weapon_action) {
+void Player::switch_weapon(const std::string &name) {
   WeaponState *state       = get_weapon_state_by_name(name);
   WeaponInfo  *weapon_info = WeaponManager::get_weapon_info_by_name(name);
 
@@ -88,7 +74,9 @@ void Player::switch_weapon(const std::string &name, WeaponAction weapon_action) 
     }
   }
 
-  _weapon_action = weapon_action;
+  _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.draw);
+  _weapon_view_animator->PlayAnimation();
+  _weapon_action = WeaponAction::DRAW;
 }
 
 void Player::fire_gun() {

@@ -49,9 +49,8 @@ public:
     }
   }
 
-  void PlayAnimation(Animation *pAnimation) {
-    m_CurrentAnimation = pAnimation;
-    m_CurrentTime      = 0.0f;
+  void PlayAnimation() {
+    m_CurrentTime = 0.0f;
   }
 
   void CalculateBoneTransform(const AssimpNodeData *node, glm::mat4 parentTransform) {

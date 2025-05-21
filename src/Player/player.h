@@ -23,7 +23,7 @@ struct Player {
   // Weapon
   void         update_weapon(float delta_time);
   void         update_weapon_gun(float delta_time);
-  void         switch_weapon(const std::string &name, WeaponAction weaponAction);
+  void         switch_weapon(const std::string &name);
   void         next_weapon();
   void         fire_gun();
   void         give_weapon(const std::string &name);

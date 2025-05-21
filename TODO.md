@@ -2,6 +2,7 @@
 
 - [x] Hand Animation  
 - [ ] Animation Layer, State  
+- [x] Animation 'Play' upon consecutive event trigger
 - [ ] Ammo System  
 - [x] Audio  
 - [ ] Audio Handle  
@@ -21,6 +22,8 @@
 - [ ] Hot reloading  
 - [ ] Arena Allocator  
 - [ ] Array-ify instead of std::vector  
-- [ ] Compute Skinning Pass  
 - [ ] Remove dependency OpenGLRenderer <-> Player  
 - [ ] Precise Audio Handle  
+
+## When I buy Windows ...
+- [ ] Compute Skinning Pass <- Defer this to when I buy Windows, macOS only supports OpenGL 4.1
