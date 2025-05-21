@@ -6,8 +6,8 @@ enum class WeaponType { MELEE, PISTOL, SHOTGUN, AUTOMATIC, UNDEFINED };
 
 struct AnimationNames {
   std::string idle;
+  std::string fire;
   std::string reload;
-  std::string draw;
 };
 
 struct WeaponInfo {

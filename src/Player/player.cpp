@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "AssetManager/AssetManager.h"
 #include "Defines.h"
 #include "Keycodes.h"
 #include "Physics/Physics.h"
@@ -20,11 +21,15 @@ void Player::init(glm::vec3 position) {
     state.name         = WeaponManager::get_weapon_info_by_index(i)->name;
     state.has          = false;
   }
+
+  // Default weapon
+  give_weapon("Pistol");
+  _weapon_view_animator = AssetManager::get_animator_by_name("Pistol_Idle"); // HACK
 }
 
 void Player::update(float delta_time, Camera camera) {
   update_movement(delta_time, camera);
-  update_weapon_logic(delta_time);
+  update_weapon(delta_time);
   update_flashlight();
 }
 

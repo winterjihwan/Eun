@@ -3,7 +3,6 @@
 #include "Backend/GLFW.h"
 #include "Types/Animation/Animator.h"
 #include <GLFW/glfw3.h>
-#include <vector>
 
 namespace Game {
 Player _player;
@@ -34,10 +33,8 @@ void update() {
 
   _player.update(_delta_time, _camera);
 
-  std::vector<Animator> &animators = AssetManager::get_animators();
-  for (auto &animator : animators) {
-    animator.UpdateAnimation(_delta_time);
-  }
+  // HACK
+  AssetManager::get_animator_by_name("Vampire")->UpdateAnimation(_delta_time);
 }
 
 void begin_frame() {

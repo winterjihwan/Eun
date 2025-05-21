@@ -8,7 +8,7 @@
 #include <iostream>
 
 int main(void) {
-  std::cout << "Eunni" << std::endl;
+  std::cout << "Eunnnnnnnnni" << std::endl;
 
   if (!Backend::init()) {
     std::cout << "Backend::init() failed" << std::endl;

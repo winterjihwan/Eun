@@ -4,6 +4,7 @@
 #include "Core/Game.h"
 #include "Input/Input.h"
 #include "Physics/Physics.h"
+#include "Weapon/WeaponManager.h"
 
 namespace Backend {
 bool init() {
@@ -14,6 +15,7 @@ bool init() {
   Physics::init();
   AssetManager::init();
   Input::init(get_window_pointer());
+  WeaponManager::init();
 
   return true;
 }

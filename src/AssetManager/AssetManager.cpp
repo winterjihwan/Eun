@@ -34,14 +34,20 @@ void init() {
   std::shared_ptr<Animation> &pistol_animation = _animations.emplace_back(
       std::make_shared<Animation>("res/objects/Pistol/scene.gltf", &pistol));
 
-  _animators.emplace_back(&*pistol_animation, "Pistol_inspect");
-  get_animator_by_name("Pistol_inspect")->SetClip(1.5f, 7.0f);
+  _animators.emplace_back(&*pistol_animation, "Pistol_Inspect");
+  Animator *pistol_inspect_animator = get_animator_by_name("Pistol_Inspect");
+  pistol_inspect_animator->SetClip(1.5f, 7.0f);
+  pistol_inspect_animator->SetIsLoop(false);
 
-  _animators.emplace_back(&*pistol_animation, "Pistol_idle");
-  get_animator_by_name("Pistol_idle")->SetClip(10.9f, 11.2f);
+  _animators.emplace_back(&*pistol_animation, "Pistol_Idle");
+  Animator *pistol_idle_animator = get_animator_by_name("Pistol_Idle");
+  pistol_idle_animator->SetClip(10.9f, 11.2f);
+  pistol_idle_animator->SetIsLoop(false);
 
-  _animators.emplace_back(&*pistol_animation, "Pistol_fire");
-  get_animator_by_name("Pistol_fire")->SetClip(7.0f, 8.25f);
+  _animators.emplace_back(&*pistol_animation, "Pistol_Fire");
+  Animator *pistol_fire_animator = get_animator_by_name("Pistol_Fire");
+  pistol_fire_animator->SetClip(7.5f, 8.0f);
+  pistol_fire_animator->SetIsLoop(false);
 
   // HK_416
   Model &hk_416 = _models.emplace_back("res/objects/HK_416/scene.gltf", "HK_416");

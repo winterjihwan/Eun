@@ -2,9 +2,11 @@
 
 #include "Animation.h"
 #include "Bone.h"
+#include <__assert>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <glm/glm.hpp>
+#include <iostream>
 #include <map>
 #include <vector>
 
@@ -31,8 +33,17 @@ public:
 
       m_CurrentTime += m_CurrentAnimation->GetTicksPerSecond() * dt;
 
-      if (m_CurrentTime < m_ClipStart || m_CurrentTime > m_ClipEnd) {
-        m_CurrentTime = m_ClipStart + fmod(m_CurrentTime - m_ClipStart, clipLength);
+      if (m_CurrentTime < m_ClipStart) {
+        m_CurrentTime = m_ClipStart;
+      }
+
+      if (m_CurrentTime > m_ClipEnd) {
+        if (m_Loop) {
+          m_CurrentTime = m_ClipStart + fmod(m_CurrentTime - m_ClipStart, clipLength);
+        } else {
+          m_Done        = true;
+          m_CurrentTime = m_ClipEnd - 1; // HACK
+        }
       }
 
       CalculateBoneTransform(&m_CurrentAnimation->GetRootNode(), glm::mat4(1.0f));
@@ -81,12 +92,28 @@ public:
     return m_Name;
   }
 
+  void SetIsLoop(bool loop) {
+    m_Loop = loop;
+  }
+
+  bool IsDone() {
+    if (m_Done) {
+      // TODO: Reset in a separate function
+      m_CurrentTime = 0.0f;
+      m_Done        = false;
+      return true;
+    }
+    return false;
+  }
+
 private:
+  std::string            m_Name;
+  bool                   m_Loop = true;
+  bool                   m_Done = false;
   std::vector<glm::mat4> m_FinalBoneMatrices;
   Animation             *m_CurrentAnimation;
   float                  m_CurrentTime;
   float                  m_DeltaTime;
   float                  m_ClipStart;
   float                  m_ClipEnd;
-  std::string            m_Name;
 };

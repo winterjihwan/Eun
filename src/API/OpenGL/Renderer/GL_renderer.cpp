@@ -3,7 +3,6 @@
 #include "Core/Game.h"
 #include "Defines.h"
 #include "Mesh.h"
-#include "Player/Player.h"
 
 unsigned int load_cubemap(vector<std::string> faces);
 
@@ -128,20 +127,21 @@ void render_game() {
   Model *vampire = AssetManager::get_model_by_name("Vampire");
   vampire->Draw(_shaders["Anim"]);
 
-  // Pistol
-  Animator *pistol_inspect_animator = AssetManager::get_animator_by_name("Pistol_idle");
-  transforms                        = pistol_inspect_animator->GetFinalBoneMatrices();
+  // Weapon View
+  // HACK
+  Animator *weapon_view_animator = Game::get_player()->get_weapon_view_animator();
+  transforms                     = weapon_view_animator->GetFinalBoneMatrices();
   for (int i = 0; i < transforms.size(); ++i)
     _shaders["Anim"].setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
 
-  glm::mat4 model_pistol = glm::mat4(1.0f);
-  model_pistol           = glm::translate(model_pistol, Game::get_player()->get_pos());
-  model_pistol           = glm::translate(model_pistol, glm::vec3(0.0f, -0.3f, 0.0f));
-  model_pistol           = glm::translate(model_pistol, Game::get_camera()->get_front() * 0.5f);
+  glm::mat4 model_weapon = glm::mat4(1.0f);
+  model_weapon           = glm::translate(model_weapon, Game::get_player()->get_pos());
+  model_weapon           = glm::translate(model_weapon, glm::vec3(0.0f, -0.3f, 0.0f));
+  model_weapon           = glm::translate(model_weapon, Game::get_camera()->get_front() * 0.5f);
   glm::quat rot = glm::quatLookAt(-Game::get_camera()->get_front(), Game::get_camera()->get_up());
-  model_pistol *= glm::toMat4(rot);
-  model_pistol = glm::scale(model_pistol, glm::vec3(0.5f));
-  _shaders["Anim"].setMat4("model", model_pistol);
+  model_weapon *= glm::toMat4(rot);
+  model_weapon = glm::scale(model_weapon, glm::vec3(0.5f));
+  _shaders["Anim"].setMat4("model", model_weapon);
 
   Model *pistol = AssetManager::get_model_by_name("Pistol");
   pistol->Draw(_shaders["Anim"]);

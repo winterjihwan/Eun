@@ -9,12 +9,20 @@ void init() {
   _weapons.clear();
 
   // Weapons
+  WeaponInfo &pistol            = _weapons.emplace_back();
+  pistol.name                   = "Pistol";
+  pistol.model_name             = "Pistol";
+  pistol.type                   = WeaponType::PISTOL;
+  pistol.animation_names.idle   = "Pistol_Idle";
+  pistol.animation_names.fire   = "Pistol_Fire";
+  pistol.animation_names.reload = "Pistol_Reload";
+
   WeaponInfo &hk_416            = _weapons.emplace_back();
   hk_416.name                   = "HK_416";
   hk_416.model_name             = "HK_416";
   hk_416.type                   = WeaponType::AUTOMATIC;
   hk_416.animation_names.idle   = "HK_416_Idle";
-  hk_416.animation_names.draw   = "HK_416_Draw";
+  hk_416.animation_names.fire   = "HK_416_Fire";
   hk_416.animation_names.reload = "HK_416_Reload";
 }
 

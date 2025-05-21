@@ -2,6 +2,7 @@
 #include "Keycodes.h"
 #include "Physics/Physics.h"
 #include "Player.h"
+#include "Types.h"
 #include <glm/glm.hpp>
 
 void Player::update_movement(float delta_time, Camera camera) {

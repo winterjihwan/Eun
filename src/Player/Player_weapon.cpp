@@ -1,8 +1,9 @@
+#include "AssetManager/AssetManager.h"
 #include "Enums.h"
 #include "Player.h"
 #include "Weapon/WeaponManager.h"
 
-void Player::update_weapon_logic(float delta_time) {
+void Player::update_weapon(float delta_time) {
   WeaponInfo *weapon_info = get_current_weapon_info();
   // WeaponState *weapon_state = get_current_weapon_state();
 
@@ -10,11 +11,32 @@ void Player::update_weapon_logic(float delta_time) {
     return;
   }
 
+  switch (weapon_info->type) {
+  case WeaponType::PISTOL:
+  case WeaponType::AUTOMATIC:
+    update_weapon_gun(delta_time);
+    break;
+  default:;
+  };
+
   if (_weapon_action == WeaponAction::DRAW) {
-    // TODO: Draw animation
+    // TODO: 'Draw' animation
     _weapon_action = WeaponAction::IDLE;
+  } else if (_weapon_action == WeaponAction::FIRE) {
+    if (_weapon_view_animator->GetName() != weapon_info->animation_names.fire) {
+      _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.fire);
+    }
+
+    if (_weapon_view_animator->IsDone()) {
+      _weapon_action = WeaponAction::IDLE;
+    }
   } else if (_weapon_action == WeaponAction::IDLE) {
+    if (_weapon_view_animator->GetName() != weapon_info->animation_names.idle) {
+      _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
+    }
   }
+
+  _weapon_view_animator->UpdateAnimation(delta_time);
 }
 
 void Player::next_weapon() {
@@ -80,4 +102,8 @@ WeaponState *Player::get_current_weapon_state() {
 
 WeaponInfo *Player::get_current_weapon_info() {
   return WeaponManager::get_weapon_info_by_name(_weapon_states[_current_weapon_index].name);
+}
+
+Animator *Player::get_weapon_view_animator() {
+  return _weapon_view_animator;
 }
