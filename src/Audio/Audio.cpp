@@ -38,17 +38,18 @@ void play_audio(const std::string &filename, float volume, float frequency) {
   }
 
   ma_sound *sound = _loaded_sounds[filename];
+  ma_sound_seek_to_pcm_frame(sound, 0);
   ma_sound_set_volume(sound, volume);
+  ma_sound_set_pitch(sound, frequency);
   ma_sound_start(sound);
 }
 
 void loop_audio(const std::string &filename, float volume) {
-  auto it = _loaded_sounds.find(filename);
   if (_loaded_sounds.find(filename) == _loaded_sounds.end()) {
     load_audio(filename);
   }
 
-  ma_sound *sound = it->second;
+  ma_sound *sound = _loaded_sounds[filename];
   ma_sound_set_volume(sound, volume);
   ma_sound_set_looping(sound, true);
   ma_sound_start(sound);

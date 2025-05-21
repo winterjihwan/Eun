@@ -20,7 +20,7 @@ int main(void) {
   Game::init();
 
   // HACK
-  Audio::play_audio("Dark_ambient.mp3", 0.5f);
+  Audio::loop_audio("Dark_ambient.mp3", 0.5f);
 
   while (Backend::is_window_open()) {
     Backend::update_subsystems();

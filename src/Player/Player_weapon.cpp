@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "Weapon/WeaponManager.h"
 
+// TODO: Ammo system
+
 void Player::update_weapon(float delta_time) {
   if (Input::key_pressed(EUN_KEY_Q)) {
     next_weapon();
