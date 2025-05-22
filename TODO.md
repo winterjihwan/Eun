@@ -1,9 +1,11 @@
 # TODO's
 
 - [x] Hand Animation  
+- [ ] Character Controller
 - [ ] Animation Layer, State  
 - [x] Animation 'Play' upon consecutive event trigger
 - [ ] Ammo System  
+- [ ] Shadows
 - [x] Audio  
 - [ ] Audio Handle  
 - [x] Weapon Manager  

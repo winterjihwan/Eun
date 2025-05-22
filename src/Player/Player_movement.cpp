@@ -6,36 +6,45 @@
 #include <glm/glm.hpp>
 
 void Player::update_movement(float delta_time, Camera camera) {
-  // Walk
+  using namespace JPH;
+
   glm::vec3 front = camera.get_front();
   front.y         = 0.0f;
   glm::vec3 right = camera.get_right();
 
-  glm::vec3 walk = glm::vec3(0);
-  if (Input::key_down(EUN_KEY_W)) {
-    walk += front;
-  }
-  if (Input::key_down(EUN_KEY_S)) {
-    walk -= front;
-  }
-  if (Input::key_down(EUN_KEY_A)) {
-    walk -= right;
-  }
-  if (Input::key_down(EUN_KEY_D)) {
-    walk += right;
-  }
+  glm::vec3 walk_dir(0.0f);
+  if (Input::key_down(EUN_KEY_W))
+    walk_dir += front;
+  if (Input::key_down(EUN_KEY_S))
+    walk_dir -= front;
+  if (Input::key_down(EUN_KEY_A))
+    walk_dir -= right;
+  if (Input::key_down(EUN_KEY_D))
+    walk_dir += right;
+  if (glm::length(walk_dir) > 0.0f)
+    walk_dir = glm::normalize(walk_dir);
 
-  walk          = glm::length(walk) > 0.0f ? glm::normalize(walk) : glm::vec3(0.0f);
-  glm::vec3 vel = walk * _speed;
+  Vec3 move = Vec3(walk_dir.x, 0.0f, walk_dir.z) * _speed;
+  Vec3 vel  = move;
 
   // Jump
-  auto &bi        = Physics::get_physics_system().GetBodyInterface();
-  float cur_vel_y = bi.GetLinearVelocity(_body_id).GetY();
-
-  if (Input::key_pressed(EUN_KEY_SPACE) && _on_ground) {
-    cur_vel_y += 4.9f;
-    _on_ground = false;
+  if (_character->GetGroundState() == CharacterBase::EGroundState::OnGround &&
+      Input::key_pressed(EUN_KEY_SPACE)) {
+    vel.SetY(4.9f);
+  } else {
+    vel += Physics::get_physics_system().GetGravity() * delta_time;
   }
 
-  bi.SetLinearVelocity(_body_id, JPH::Vec3(vel.x, cur_vel_y, vel.z));
+  _character->SetLinearVelocity(vel);
+
+  CharacterVirtual::ExtendedUpdateSettings settings;
+  _character->ExtendedUpdate(
+      delta_time,
+      Physics::get_physics_system().GetGravity(),
+      settings,
+      Physics::get_physics_system().GetDefaultBroadPhaseLayerFilter(Layers::MOVING),
+      Physics::get_physics_system().GetDefaultLayerFilter(Layers::MOVING),
+      {},
+      {},
+      *Physics::get_temp_allocator());
 }

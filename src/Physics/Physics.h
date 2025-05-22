@@ -10,10 +10,13 @@
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
+#include <Jolt/Physics/Character/CharacterVirtual.h>
 #include <Jolt/Physics/Collision/ContactListener.h>
 #include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
+#include <Jolt/Physics/Constraints/SwingTwistConstraint.h>
 #include <Jolt/Physics/PhysicsSystem.h>
+#include <Jolt/Physics/Ragdoll/Ragdoll.h>
 #include <Jolt/RegisterTypes.h>
 
 using namespace JPH;
@@ -33,6 +36,7 @@ void register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback);
 
 PhysicsSystem                                   &get_physics_system();
 std::unordered_map<BodyID, PFN_ContactCallback> &get_contact_callbacks();
+TempAllocatorImpl                               *get_temp_allocator();
 
 } // namespace Physics
 

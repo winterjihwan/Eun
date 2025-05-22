@@ -1,6 +1,7 @@
 #include "Physics.h"
 
 #include "Defines.h"
+#include "Jolt/Core/TempAllocator.h"
 
 #include <thread>
 
@@ -178,6 +179,10 @@ void register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback) {
 
 PhysicsSystem &get_physics_system() {
   return _physics_system;
+}
+
+TempAllocatorImpl *get_temp_allocator() {
+  return _temp_allocator;
 }
 
 std::unordered_map<BodyID, PFN_ContactCallback> &get_contact_callbacks() {

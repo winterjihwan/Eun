@@ -12,9 +12,16 @@ struct AnimationNames {
   std::string reload;
 };
 
+struct AudioFiles {
+  std::string draw;
+  std::string fire;
+  std::string reload;
+};
+
 struct WeaponInfo {
   std::string    name;
   std::string    model_name;
+  AudioFiles     audio_files;
   AnimationNames animation_names;
   WeaponType     type;
 };

@@ -23,6 +23,9 @@ void init() {
     Physics::register_static_mesh(mesh.vertices, mesh.indices, glm::mat4(1.0f));
   }
 
+  // Human
+  _models.emplace_back("res/objects/Human/scene.gltf", "Human");
+
   // Vampire
   Model &vampire = _models.emplace_back("res/objects/Vampire/dancing_vampire.dae", "Vampire");
   std::shared_ptr<Animation> &vampire_animation = _animations.emplace_back(

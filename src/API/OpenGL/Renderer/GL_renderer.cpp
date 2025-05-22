@@ -92,13 +92,23 @@ void render_game() {
   _shaders["Model"].setFloat("flashLight.cutOff", glm::cos(glm::radians(12.5f)));
   _shaders["Model"].setFloat("flashLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
+  // Model Shader
+  _shaders["Model"].setMat4("projection", projection);
+  _shaders["Model"].setMat4("view", view);
+
   // Scene
   glm::mat4 model_scene = glm::mat4(1.0f);
   _shaders["Model"].setMat4("model", model_scene);
-  _shaders["Model"].setMat4("projection", projection);
-  _shaders["Model"].setMat4("view", view);
   Model *scene = AssetManager::get_model_by_name("Map");
   scene->Draw(_shaders["Model"]);
+
+  // Human
+  glm::mat4 model_human = glm::mat4(1.0f);
+  model_human           = glm::translate(model_human, glm::vec3(13.0f, PLAYER_HEIGHT, 0.0f));
+  model_human           = glm::translate(model_human, glm::vec3(0.0f, 0.0f, -3.0f));
+  _shaders["Model"].setMat4("model", model_human);
+  Model *human = AssetManager::get_model_by_name("Human");
+  human->Draw(_shaders["Model"]);
 
   // Test Sphere
   glm::mat4 model_test_sphere = glm::mat4(1.0f);

@@ -1,17 +1,22 @@
 #include "Physics/Physics.h"
 #include "Player.h"
 
-BodyID
-Player::create_player_physics(glm::vec3 position, float height, float radius, ObjectLayer layer) {
+JPH::CharacterVirtual *
+Player::create_character_virtual(glm::vec3 position, float height, float radius) {
   CapsuleShapeSettings capsule_shape(height * 0.5f, radius);
   ShapeRefC            shape = capsule_shape.Create().Get();
+
+  CharacterVirtualSettings settings;
+  settings.mShape            = shape;
+  settings.mSupportingVolume = Plane(Vec3::sAxisY(), -radius);
+  settings.mMaxSlopeAngle    = DegreesToRadians(60.0f);
+  settings.mMass             = 70.0f;
 
   RVec3 pos(position.x, position.y + height * 0.5f + radius, position.z);
   Quat  rot = Quat::sIdentity();
 
-  BodyCreationSettings settings(shape, pos, rot, EMotionType::Dynamic, layer);
-  Body                *body = Physics::get_physics_system().GetBodyInterface().CreateBody(settings);
-  Physics::get_physics_system().GetBodyInterface().AddBody(body->GetID(), EActivation::Activate);
+  CharacterVirtual *character =
+      new CharacterVirtual(&settings, pos, rot, 0, &Physics::get_physics_system());
 
-  return body->GetID();
+  return character;
 }

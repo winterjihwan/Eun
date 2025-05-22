@@ -8,14 +8,14 @@ void Player::update_weapon_gun(float delta_time) {
   WeaponInfo *weapon_info = get_current_weapon_info();
 
   if (Input::left_mouse_pressed()) {
-    Audio::play_audio("Pistol_fire.wav", 1.0f);
+    Audio::play_audio(weapon_info->audio_files.fire, 1.0f);
     _weapon_action        = WeaponAction::FIRE;
     _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.fire);
     _weapon_view_animator->PlayAnimation();
   }
 
   if (Input::key_pressed(EUN_KEY_R)) {
-    Audio::play_audio("Pistol_reload.wav", 1.0f);
+    Audio::play_audio(weapon_info->audio_files.reload, 1.0f);
     // TODO: Check if can reload
     _weapon_action        = WeaponAction::RELOAD;
     _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.reload);

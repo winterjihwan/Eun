@@ -13,12 +13,13 @@ struct Player {
 
   void update_movement(float delta_time, Camera camera);
 
-  BodyID create_player_physics(glm::vec3 position, float height, float radius, ObjectLayer layer);
-
-  void update_flashlight();
+  JPH::CharacterVirtual *create_character_virtual(glm::vec3 position, float height, float radius);
 
   glm::vec3 get_pos();
-  bool      get_flashlight_on();
+
+  // Flashlight
+  void update_flashlight();
+  bool get_flashlight_on();
 
   // Weapon
   void         update_weapon(float delta_time);
@@ -33,12 +34,11 @@ struct Player {
   Animator    *get_weapon_view_animator();
 
 private:
-  float       _speed = 5.0f;
-  glm::vec3   _position;
-  float       _y_velocity    = 0.0f;
-  bool        _on_ground     = false;
-  bool        _flashlight_on = false;
-  JPH::BodyID _body_id;
+  JPH::CharacterVirtual *_character;
+  float                  _speed = 5.0f;
+  glm::vec3              _position;
+  float                  _y_velocity    = 0.0f;
+  bool                   _flashlight_on = false;
 
   // Weapon
   int                      _current_weapon_index = 0;
