@@ -1,6 +1,7 @@
 #include "AssetManager.h"
 
 #include "Physics/Physics.h"
+#include "Physics/RagdollBuilder.h"
 #include "Renderer/Renderer.h"
 #include "Types/Animation/Animation.h"
 #include <memory>
@@ -24,7 +25,9 @@ void init() {
   }
 
   // Human
-  _models.emplace_back("res/objects/Human/scene.gltf", "Human");
+  Model          &human = _models.emplace_back("res/objects/Human/scene.gltf", "Human");
+  RagdollBuilder  builder(&human, &Physics::get_physics_system());
+  RagdollInstance rag = builder.CreateRagdoll(glm::vec3(0, 3, 0));
 
   // Vampire
   Model &vampire = _models.emplace_back("res/objects/Vampire/dancing_vampire.dae", "Vampire");

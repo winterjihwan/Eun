@@ -5,6 +5,15 @@
 #include <assimp/vector3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <string>
+#include <vector>
+
+struct AssimpNodeData {
+  glm::mat4                   transformation;
+  std::string                 name;
+  int                         childrenCount;
+  std::vector<AssimpNodeData> children;
+};
 
 class AssimpUtils {
 public:

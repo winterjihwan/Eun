@@ -41,10 +41,26 @@ public:
   int &GetBoneCount() {
     return m_BoneCounter;
   }
+  AssimpNodeData &GetRootNode() {
+    return m_RootNode;
+  }
 
 private:
   std::map<string, BoneInfo> m_BoneInfoMap;
   int                        m_BoneCounter = 0;
+  AssimpNodeData             m_RootNode;
+
+  void ReadHierarchyData(AssimpNodeData &dest, const aiNode *src) {
+    dest.name           = src->mName.data;
+    dest.transformation = AssimpUtils::ConvertMatrixToGLMFormat(src->mTransformation);
+    dest.childrenCount  = src->mNumChildren;
+
+    for (int i = 0; i < src->mNumChildren; i++) {
+      AssimpNodeData child;
+      ReadHierarchyData(child, src->mChildren[i]);
+      dest.children.push_back(child);
+    }
+  }
 
   void loadModel(string const &path) {
     Assimp::Importer importer;
@@ -59,6 +75,7 @@ private:
     directory = path.substr(0, path.find_last_of('/'));
 
     processNode(scene->mRootNode, scene);
+    ReadHierarchyData(m_RootNode, scene->mRootNode);
   }
 
   void processNode(aiNode *node, const aiScene *scene) {
