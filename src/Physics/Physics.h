@@ -1,12 +1,17 @@
 #pragma once
 
 #include "Mesh.h"
+#include "Model.h"
+#include "Types/Animation/Assimp_utils.h"
 #include <Jolt/Jolt.h>
 #include <vector>
 
 #include <Jolt/Core/Factory.h>
 #include <Jolt/Core/JobSystemThreadPool.h>
 #include <Jolt/Core/TempAllocator.h>
+
+#include "Jolt/Physics/Collision/CollisionGroup.h"
+#include "Jolt/Physics/EActivation.h"
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
@@ -33,6 +38,15 @@ void register_static_mesh(const std::vector<Vertex>       &vertices,
                           const glm::mat4                 &transform);
 
 void register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback);
+
+// Ragdoll
+void             ComputeBonePositions(const AssimpNodeData                       &node,
+                                      const glm::mat4                            &parentTransform,
+                                      std::unordered_map<std::string, glm::vec3> &outPositions,
+                                      std::unordered_map<std::string, glm::mat4> &outTransforms);
+void             ExtractBonePairs(const AssimpNodeData                             &node,
+                                  std::vector<std::pair<std::string, std::string>> &outPairs);
+RagdollSettings *CreateRagdollFromModel(Model &model);
 
 PhysicsSystem                                   &get_physics_system();
 std::unordered_map<BodyID, PFN_ContactCallback> &get_contact_callbacks();

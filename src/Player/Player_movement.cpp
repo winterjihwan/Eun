@@ -24,18 +24,20 @@ void Player::update_movement(float delta_time, Camera camera) {
   if (glm::length(walk_dir) > 0.0f)
     walk_dir = glm::normalize(walk_dir);
 
-  Vec3 move = Vec3(walk_dir.x, 0.0f, walk_dir.z) * _speed;
-  Vec3 vel  = move;
+  Vec3 move    = Vec3(walk_dir.x, 0.0f, walk_dir.z) * _speed;
+  Vec3 cur_vel = _character->GetLinearVelocity();
+  Vec3 new_vel = move + Vec3(0, cur_vel.GetY(), 0);
 
   // Jump
-  if (_character->GetGroundState() == CharacterBase::EGroundState::OnGround &&
-      Input::key_pressed(EUN_KEY_SPACE)) {
-    vel.SetY(4.9f);
+  if (_character->GetGroundState() == CharacterBase::EGroundState::OnGround) {
+    if (Input::key_pressed(EUN_KEY_SPACE)) {
+      new_vel.SetY(4.9f);
+    }
   } else {
-    vel += Physics::get_physics_system().GetGravity() * delta_time;
+    new_vel += Physics::get_physics_system().GetGravity() * delta_time;
   }
 
-  _character->SetLinearVelocity(vel);
+  _character->SetLinearVelocity(new_vel);
 
   CharacterVirtual::ExtendedUpdateSettings settings;
   _character->ExtendedUpdate(

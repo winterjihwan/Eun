@@ -1,7 +1,6 @@
 #include "Physics.h"
 
 #include "Defines.h"
-#include "Jolt/Core/TempAllocator.h"
 
 #include <thread>
 
@@ -187,6 +186,9 @@ TempAllocatorImpl *get_temp_allocator() {
 
 std::unordered_map<BodyID, PFN_ContactCallback> &get_contact_callbacks() {
   return _contact_callbacks;
+}
+
+void a() {
 }
 
 } // namespace Physics

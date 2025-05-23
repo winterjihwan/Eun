@@ -1,7 +1,6 @@
 #include "AssetManager.h"
 
 #include "Physics/Physics.h"
-#include "Physics/RagdollBuilder.h"
 #include "Renderer/Renderer.h"
 #include "Types/Animation/Animation.h"
 #include <memory>
@@ -14,6 +13,7 @@ std::vector<Model>                      _models;
 std::vector<Mesh>                       _meshes;
 std::vector<std::shared_ptr<Animation>> _animations;
 std::vector<Animator>                   _animators;
+std::vector<Ref<Ragdoll>>               _ragdolls;
 
 // TODO: Index Map
 void init() {
@@ -25,9 +25,7 @@ void init() {
   }
 
   // Human
-  Model          &human = _models.emplace_back("res/objects/Human/scene.gltf", "Human");
-  RagdollBuilder  builder(&human, &Physics::get_physics_system());
-  RagdollInstance rag = builder.CreateRagdoll(glm::vec3(0, 3, 0));
+  _models.emplace_back("res/objects/Human/scene.gltf", "Human");
 
   // Vampire
   Model &vampire = _models.emplace_back("res/objects/Vampire/dancing_vampire.dae", "Vampire");
@@ -151,4 +149,9 @@ Model *get_model_by_name(const std::string &name) {
             << std::endl;
   assert(0);
 }
+
+std::vector<Ref<Ragdoll>> &get_ragdolls() {
+  return _ragdolls;
+}
+
 } // namespace AssetManager

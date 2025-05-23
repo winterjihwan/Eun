@@ -31,6 +31,11 @@ void Player::update(float delta_time, Camera camera) {
 }
 
 glm::vec3 Player::get_pos() {
-  RVec3 pos = _character->GetPosition();
-  return glm::vec3(pos.GetX(), pos.GetY() + PLAYER_HEIGHT * 0.5f, pos.GetZ());
+  RVec3     pos    = _character->GetPosition();
+  glm::vec3 result = glm::vec3(pos.GetX(), pos.GetY() + PLAYER_HEIGHT * 0.5f, pos.GetZ());
+
+  std::cout << "[Player::get_pos] Position = (" << result.x << ", " << result.y << ", " << result.z
+            << ")" << std::endl;
+
+  return result;
 }

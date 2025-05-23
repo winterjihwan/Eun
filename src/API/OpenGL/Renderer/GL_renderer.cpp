@@ -102,14 +102,6 @@ void render_game() {
   Model *scene = AssetManager::get_model_by_name("Map");
   scene->Draw(_shaders["Model"]);
 
-  // Human
-  glm::mat4 model_human = glm::mat4(1.0f);
-  model_human           = glm::translate(model_human, glm::vec3(13.0f, PLAYER_HEIGHT, 0.0f));
-  model_human           = glm::translate(model_human, glm::vec3(0.0f, 0.0f, -3.0f));
-  _shaders["Model"].setMat4("model", model_human);
-  Model *human = AssetManager::get_model_by_name("Human");
-  human->Draw(_shaders["Model"]);
-
   // Test Sphere
   glm::mat4 model_test_sphere = glm::mat4(1.0f);
   model_test_sphere = glm::translate(model_test_sphere, glm::vec3(13.0f, PLAYER_HEIGHT, 0.0f));
@@ -117,6 +109,14 @@ void render_game() {
   _shaders["Model"].setMat4("model", model_test_sphere);
   Mesh *test_sphere = &AssetManager::get_meshes().front();
   test_sphere->Draw(_shaders["Model"]);
+
+  // Human
+  glm::mat4 model_human = glm::mat4(1.0f);
+  model_human           = glm::translate(model_human, glm::vec3(13.0f, PLAYER_HEIGHT, 0.0f));
+  model_human           = glm::translate(model_human, glm::vec3(0.0f, 0.0f, -3.0f));
+  _shaders["Model"].setMat4("model", model_human);
+  Model *human = AssetManager::get_model_by_name("Human");
+  human->Draw(_shaders["Model"]);
 
   // Animation Shader
   _shaders["Anim"].use();
