@@ -43,6 +43,7 @@ void end_frame() {
 }
 
 void clean_up() {
+  AssetManager::shutdown();
   Physics::shutdown();
 
   GLFW::shutdown();

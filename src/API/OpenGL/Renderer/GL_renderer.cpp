@@ -96,7 +96,7 @@ void render_game() {
   _shaders["Model"].setMat4("projection", projection);
   _shaders["Model"].setMat4("view", view);
 
-  // Scene
+  // Map
   glm::mat4 model_scene = glm::mat4(1.0f);
   _shaders["Model"].setMat4("model", model_scene);
   Model *scene = AssetManager::get_model_by_name("Map");
@@ -107,12 +107,42 @@ void render_game() {
   model_test_sphere = glm::translate(model_test_sphere, glm::vec3(13.0f, PLAYER_HEIGHT, 0.0f));
   model_test_sphere = glm::translate(model_test_sphere, glm::vec3(0.0f, 0.0f, -3.0f));
   _shaders["Model"].setMat4("model", model_test_sphere);
-  Mesh *test_sphere = &AssetManager::get_meshes().front();
-  test_sphere->Draw(_shaders["Model"]);
+  Mesh &test_sphere = AssetManager::get_meshes().back();
+  test_sphere.Draw(_shaders["Model"]);
+
+  // Ragdoll
+  Ref<Ragdoll> ragdoll  = AssetManager::get_ragdolls().front();
+  const auto  &body_ids = ragdoll->GetBodyIDs();
+  for (const BodyID &id : body_ids) {
+    if (!id.IsInvalid()) {
+      RVec3 position;
+      Quat  rotation;
+      Physics::get_physics_system().GetBodyInterface().GetPositionAndRotation(
+          id, position, rotation);
+
+      glm::vec3 pos = glm::vec3(position.GetX(), position.GetY(), position.GetZ()) +
+                      glm::vec3(13.0f, 0.0f, 0.0f);
+      glm::quat q = glm::quat(rotation.GetW(), rotation.GetX(), rotation.GetY(), rotation.GetZ());
+
+      std::cout << "[Ragdoll] BodyID: " << id.GetIndex() << " Pos: (" << pos.x << ", " << pos.y
+                << ", " << pos.z << ")"
+                << " Rot: (" << q.x << ", " << q.y << ", " << q.z << ", " << q.w << ")\n";
+
+      glm::mat4 model_mat = glm::mat4(1.0f);
+      model_mat           = glm::translate(model_mat, pos);
+      model_mat *= glm::toMat4(q);
+      model_mat = glm::scale(model_mat, glm::vec3(0.1f, 0.3f, 0.1f));
+
+      _shaders["Model"].setMat4("model", model_mat);
+
+      Mesh &capsule_mesh = AssetManager::get_meshes().back();
+      capsule_mesh.Draw(_shaders["Model"]);
+    }
+  }
 
   // Human
   glm::mat4 model_human = glm::mat4(1.0f);
-  model_human           = glm::translate(model_human, glm::vec3(13.0f, PLAYER_HEIGHT, 0.0f));
+  model_human           = glm::translate(model_human, glm::vec3(13.0f, 0, 0.0f));
   model_human           = glm::translate(model_human, glm::vec3(0.0f, 0.0f, -3.0f));
   _shaders["Model"].setMat4("model", model_human);
   Model *human = AssetManager::get_model_by_name("Human");

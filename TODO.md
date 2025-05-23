@@ -1,7 +1,7 @@
 # TODO's
 
 - [x] Hand Animation  
-- [ ] Character Controller
+- [x] Character Controller
 - [ ] Animation Layer, State  
 - [x] Animation 'Play' upon consecutive event trigger
 - [ ] Ammo System  
@@ -11,7 +11,7 @@
 - [x] Weapon Manager  
      - [x] HK_416  
      - [x] Pistol  
-- [ ] Double jump fix  
+- [x] Double jump fix  
 - [x] Weapon System  
 - [x] Asset Manager  
 - [x] Separate Animation to clips  
@@ -29,3 +29,5 @@
 
 ## When I buy Windows ...
 - [ ] Compute Skinning Pass <- Defer this to when I buy Windows, macOS only supports OpenGL 4.1
+- [ ] SSBO
+- [ ] PhysX, Jolt is just too new

@@ -1,3 +1,5 @@
+# Diary
+
 1. 2025.05.19 Zero weight problem  
 
 ```c++

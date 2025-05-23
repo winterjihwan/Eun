@@ -10,8 +10,6 @@
 #include <Jolt/Core/JobSystemThreadPool.h>
 #include <Jolt/Core/TempAllocator.h>
 
-#include "Jolt/Physics/Collision/CollisionGroup.h"
-#include "Jolt/Physics/EActivation.h"
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
@@ -47,6 +45,8 @@ void             ComputeBonePositions(const AssimpNodeData                      
 void             ExtractBonePairs(const AssimpNodeData                             &node,
                                   std::vector<std::pair<std::string, std::string>> &outPairs);
 RagdollSettings *CreateRagdollFromModel(Model &model);
+
+RagdollSettings *create_ragdoll();
 
 PhysicsSystem                                   &get_physics_system();
 std::unordered_map<BodyID, PFN_ContactCallback> &get_contact_callbacks();

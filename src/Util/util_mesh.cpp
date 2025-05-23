@@ -53,4 +53,62 @@ std::vector<uint32_t> generate_sphere_indices(int segments) {
   }
   return indices;
 }
+
+std::vector<Vertex>
+generate_capsule_vertices(float radius, float halfHeight, unsigned int segments) {
+  std::vector<Vertex> vertices;
+
+  segments                            = std::max(segments, 4u);
+  const float        pi               = glm::pi<float>();
+  const float        two_pi           = glm::two_pi<float>();
+  const unsigned int hemisphere_rings = segments / 2;
+
+  // Top hemisphere
+  for (unsigned int y = 0; y <= hemisphere_rings; ++y) {
+    float v   = static_cast<float>(y) / static_cast<float>(hemisphere_rings);
+    float phi = (pi / 2.0f) * v;
+
+    for (unsigned int x = 0; x <= segments; ++x) {
+      float u     = static_cast<float>(x) / static_cast<float>(segments);
+      float theta = two_pi * u;
+
+      glm::vec3 p = glm::vec3(radius * cos(theta) * sin(phi),
+                              halfHeight + radius * cos(phi),
+                              radius * sin(theta) * sin(phi));
+      glm::vec3 n = glm::normalize(p - glm::vec3(0, halfHeight, 0));
+      glm::vec3 t = glm::normalize(glm::cross(glm::vec3(0, 1, 0), n));
+      vertices.emplace_back(Vertex{p, n, t});
+    }
+  }
+
+  // Cylinder
+  for (unsigned int y = 0; y <= 1; ++y) {
+    float h = halfHeight * (1.0f - 2.0f * static_cast<float>(y));
+    for (unsigned int x = 0; x <= segments; ++x) {
+      float     theta = two_pi * static_cast<float>(x) / static_cast<float>(segments);
+      glm::vec3 p     = glm::vec3(radius * cos(theta), h, radius * sin(theta));
+      glm::vec3 n     = glm::normalize(glm::vec3(p.x, 0, p.z));
+      glm::vec3 t     = glm::normalize(glm::cross(glm::vec3(0, 1, 0), n));
+      vertices.emplace_back(Vertex{p, n, t});
+    }
+  }
+
+  // Bottom hemisphere
+  for (unsigned int y = 0; y <= hemisphere_rings; ++y) {
+    float v   = static_cast<float>(y) / static_cast<float>(hemisphere_rings);
+    float phi = (pi / 2.0f) * v;
+
+    for (unsigned int x = 0; x <= segments; ++x) {
+      float     theta = two_pi * static_cast<float>(x) / static_cast<float>(segments);
+      glm::vec3 p     = glm::vec3(radius * cos(theta) * sin(phi),
+                              -halfHeight - radius * cos(phi),
+                              radius * sin(theta) * sin(phi));
+      glm::vec3 n     = glm::normalize(p - glm::vec3(0, -halfHeight, 0));
+      glm::vec3 t     = glm::normalize(glm::cross(glm::vec3(0, 1, 0), n));
+      vertices.emplace_back(Vertex{p, n, t});
+    }
+  }
+
+  return vertices;
+}
 } // namespace Util

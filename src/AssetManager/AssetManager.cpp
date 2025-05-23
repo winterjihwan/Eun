@@ -27,6 +27,12 @@ void init() {
   // Human
   _models.emplace_back("res/objects/Human/scene.gltf", "Human");
 
+  // Ragdoll
+  Ref<RagdollSettings> settings = Physics::create_ragdoll();
+  Ragdoll             *ragdoll  = settings->CreateRagdoll(0, 0, &Physics::get_physics_system());
+  ragdoll->AddToPhysicsSystem(EActivation::DontActivate);
+  _ragdolls.emplace_back(std::move(ragdoll));
+
   // Vampire
   Model &vampire = _models.emplace_back("res/objects/Vampire/dancing_vampire.dae", "Vampire");
   std::shared_ptr<Animation> &vampire_animation = _animations.emplace_back(
@@ -109,6 +115,10 @@ void init() {
   _meshes.emplace_back(sphere_v, sphere_i, sphere_t);
 
   Renderer::init();
+}
+
+void shutdown() {
+  _ragdolls.clear();
 }
 
 std::vector<Animator> &get_animators() {

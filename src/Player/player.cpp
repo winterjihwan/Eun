@@ -34,8 +34,9 @@ glm::vec3 Player::get_pos() {
   RVec3     pos    = _character->GetPosition();
   glm::vec3 result = glm::vec3(pos.GetX(), pos.GetY() + PLAYER_HEIGHT * 0.5f, pos.GetZ());
 
-  std::cout << "[Player::get_pos] Position = (" << result.x << ", " << result.y << ", " << result.z
-            << ")" << std::endl;
+  // std::cout << "[Player::get_pos] Position = (" << result.x << ", " << result.y << ", " <<
+  // result.z
+  //           << ")" << std::endl;
 
   return result;
 }
