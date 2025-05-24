@@ -1,6 +1,7 @@
 #include "AssetManager.h"
 
 #include "Physics/Physics.h"
+#include "Physics/RagdollBuilder.h"
 #include "Renderer/Renderer.h"
 #include "Types/Animation/Animation.h"
 #include <memory>
@@ -19,17 +20,29 @@ std::vector<Ref<Ragdoll>>               _ragdolls;
 void init() {
   /* Models */
   // Map
-  Model &map = _models.emplace_back("res/objects/Map_v1/Map_v1.obj", "Map");
-  for (const Mesh &mesh : map.meshes) {
-    Physics::register_static_mesh(mesh.vertices, mesh.indices, glm::mat4(1.0f));
-  }
+  // Model &map = _models.emplace_back("res/objects/Map_v1/Map_v1.obj", "Map");
+  // for (const Mesh &mesh : map.meshes) {
+  //   Physics::register_static_mesh(mesh.vertices, mesh.indices, glm::mat4(1.0f));
+  // }
+  std::vector<Vertex> plane_v = {
+      {{-100.0f, 0.0f, -100.0f}, {0, 1, 0}},
+      {{-100.0f, 0.0f, 100.0f}, {0, 1, 0}},
+      {{100.0f, 0.0f, 100.0f}, {0, 1, 0}},
+      {{100.0f, 0.0f, -100.0f}, {0, 1, 0}},
+  };
+  std::vector<unsigned int> plane_i = {0, 1, 2, 2, 3, 0};
+  std::vector<Texture>      plane_t = std::vector<Texture>();
+  _meshes.emplace_back(plane_v, plane_i, plane_t);
+  Physics::register_static_mesh(plane_v, plane_i, glm::mat4(1.0f));
 
-  // Human
-  _models.emplace_back("res/objects/Human/scene.gltf", "Human");
+  // Brian
+  Model &brian = _models.emplace_back("res/objects/Brian/Brian.dae", "Brian");
 
   // Ragdoll
   Ref<RagdollSettings> settings = Physics::create_ragdoll();
-  Ragdoll             *ragdoll  = settings->CreateRagdoll(0, 0, &Physics::get_physics_system());
+  // Ref<RagdollSettings> settings = RagdollBuilder::Create(model,
+  // "res/objects/Human/ragdoll.json");
+  Ragdoll *ragdoll = settings->CreateRagdoll(0, 0, &Physics::get_physics_system());
   ragdoll->AddToPhysicsSystem(EActivation::DontActivate);
   _ragdolls.emplace_back(std::move(ragdoll));
 

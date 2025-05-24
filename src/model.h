@@ -35,6 +35,31 @@ public:
       meshes[i].Draw(shader);
   }
 
+  void DrawWithRagdollPose(Shader                                 &shader,
+                           const std::map<std::string, glm::mat4> &bone_transforms) {
+    for (unsigned int i = 0; i < meshes.size(); ++i) {
+      std::vector<glm::mat4> final_matrices(100, glm::mat4(1.0f));
+
+      for (const auto &[bone_name, info] : m_BoneInfoMap) {
+        int         bone_id       = info.id;
+        glm::mat4   offset        = info.offset;
+        std::string stripped_name = bone_name;
+        if (stripped_name.find("Armature_") == 0)
+          stripped_name = stripped_name.substr(9);
+
+        if (bone_transforms.count(stripped_name)) {
+          final_matrices[bone_id] = bone_transforms.at(stripped_name);
+        }
+      }
+
+      for (int j = 0; j < final_matrices.size(); ++j) {
+        shader.setMat4("finalBonesMatrices[" + std::to_string(j) + "]", final_matrices[j]);
+      }
+
+      meshes[i].Draw(shader);
+    }
+  }
+
   auto &GetBoneInfoMap() {
     return m_BoneInfoMap;
   }
@@ -175,7 +200,8 @@ private:
         newBoneInfo.offset =
             AssimpUtils::ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
         boneInfoMap[boneName] = newBoneInfo;
-        boneID                = boneCount;
+
+        boneID = boneCount;
         boneCount++;
       } else {
         boneID = boneInfoMap[boneName].id;
