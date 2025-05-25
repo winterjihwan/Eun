@@ -10,6 +10,7 @@
 #include <Jolt/Core/JobSystemThreadPool.h>
 #include <Jolt/Core/TempAllocator.h>
 
+#include "Jolt/Physics/Collision/Shape/BoxShape.h"
 #include <Jolt/Physics/Body/BodyActivationListener.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
@@ -38,15 +39,15 @@ void register_static_mesh(const std::vector<Vertex>       &vertices,
 void register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback);
 
 // Ragdoll
-void             ComputeBonePositions(const AssimpNodeData                       &node,
-                                      const glm::mat4                            &parentTransform,
-                                      std::unordered_map<std::string, glm::vec3> &outPositions,
-                                      std::unordered_map<std::string, glm::mat4> &outTransforms);
-void             ExtractBonePairs(const AssimpNodeData                             &node,
-                                  std::vector<std::pair<std::string, std::string>> &outPairs);
-RagdollSettings *CreateRagdollFromModel(Model &model);
-
-RagdollSettings *create_ragdoll();
+void                 ComputeBonePositions(const AssimpNodeData                       &node,
+                                          const glm::mat4                            &parentTransform,
+                                          std::unordered_map<std::string, glm::vec3> &outPositions,
+                                          std::unordered_map<std::string, glm::mat4> &outTransforms);
+void                 ExtractBonePairs(const AssimpNodeData                             &node,
+                                      std::vector<std::pair<std::string, std::string>> &outPairs);
+RagdollSettings     *CreateRagdollFromModel(Model &model);
+RagdollSettings     *create_ragdoll();
+Ref<RagdollSettings> LoadRagdollFromJSON(const std::string &filename);
 
 PhysicsSystem                                   &get_physics_system();
 std::unordered_map<BodyID, PFN_ContactCallback> &get_contact_callbacks();

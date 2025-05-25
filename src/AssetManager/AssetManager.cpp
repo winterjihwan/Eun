@@ -36,13 +36,11 @@ void init() {
   Physics::register_static_mesh(plane_v, plane_i, glm::mat4(1.0f));
 
   // Brian
-  Model &brian = _models.emplace_back("res/objects/Brian/Brian.dae", "Brian");
+  _models.emplace_back("res/objects/Brian/Brian.dae", "Brian");
 
   // Ragdoll
   Ref<RagdollSettings> settings = Physics::create_ragdoll();
-  // Ref<RagdollSettings> settings = RagdollBuilder::Create(model,
-  // "res/objects/Human/ragdoll.json");
-  Ragdoll *ragdoll = settings->CreateRagdoll(0, 0, &Physics::get_physics_system());
+  Ragdoll             *ragdoll  = settings->CreateRagdoll(0, 0, &Physics::get_physics_system());
   ragdoll->AddToPhysicsSystem(EActivation::DontActivate);
   _ragdolls.emplace_back(std::move(ragdoll));
 

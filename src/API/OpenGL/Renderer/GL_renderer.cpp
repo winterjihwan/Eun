@@ -1,3 +1,4 @@
+#include "API/OpenGL/Renderer/GL_renderer.h"
 #include "API/OpenGL/Renderer/GL_cubemapView.h"
 #include "AssetManager/AssetManager.h"
 #include "Core/Game.h"
@@ -16,9 +17,10 @@ unsigned int _sky_vao;
 
 void init() {
   /* Shaders */
-  _shaders["Model"] = Shader("shaders/model.vert", "shaders/model.frag");
-  _shaders["Sky"]   = Shader("shaders/sky.vert", "shaders/sky.frag");
-  _shaders["Anim"]  = Shader("shaders/anim.vert", "shaders/anim.frag");
+  _shaders["Model"]   = Shader("shaders/model.vert", "shaders/model.frag");
+  _shaders["Sky"]     = Shader("shaders/sky.vert", "shaders/sky.frag");
+  _shaders["Anim"]    = Shader("shaders/anim.vert", "shaders/anim.frag");
+  _shaders["Ragdoll"] = Shader("shaders/ragdoll.vert", "shaders/ragdoll.frag");
 
   // Skybox
   float skybox_vertices[] = {-1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
@@ -154,40 +156,52 @@ void render_game() {
   {
     Ref<Ragdoll> ragdoll = AssetManager::get_ragdolls().front();
     Model       *brian   = AssetManager::get_model_by_name("Brian");
+    //
+    // std::map<std::string, glm::mat4> bone_transforms;
+    //
+    // const auto &body_ids = ragdoll->GetBodyIDs();
+    // const auto &skeleton = ragdoll->GetRagdollSettings()->mSkeleton;
+    //
+    // for (int i = 0; i < body_ids.size(); ++i) {
+    //   if (body_ids[i].IsInvalid())
+    //     continue;
+    //
+    //   RVec3 pos;
+    //   Quat  rot;
+    //   Physics::get_physics_system().GetBodyInterface().GetPositionAndRotation(
+    //       body_ids[i], pos, rot);
+    //
+    //   glm::vec3 glm_pos = glm::vec3(pos.GetX(), pos.GetY(), pos.GetZ());
+    //   glm::quat glm_rot = glm::quat(rot.GetW(), rot.GetX(), rot.GetY(), rot.GetZ());
+    //
+    //   glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm_pos) * glm::toMat4(glm_rot);
+    //
+    //   std::string bone_name = skeleton->GetJoint(i).mName.c_str();
+    //
+    //   bone_transforms[bone_name] = transform;
+    // }
+    //
+    std::map<std::string, glm::mat4> ragdollGlobals;
 
-    std::map<std::string, glm::mat4> bone_transforms;
+    for (int i = 0; i < ragdoll->GetRagdollSettings()->mSkeleton->GetJointCount(); ++i) {
+      const std::string &name = ragdoll->GetRagdollSettings()->mSkeleton->GetJoint(i).mName.c_str();
+      JPH::BodyID        bodyId = ragdoll->GetBodyID(i);
 
-    const auto &body_ids = ragdoll->GetBodyIDs();
-    const auto &skeleton = ragdoll->GetRagdollSettings()->mSkeleton;
-
-    for (int i = 0; i < body_ids.size(); ++i) {
-      if (body_ids[i].IsInvalid())
-        continue;
-
-      RVec3 pos;
-      Quat  rot;
-      Physics::get_physics_system().GetBodyInterface().GetPositionAndRotation(
-          body_ids[i], pos, rot);
-
-      glm::vec3 glm_pos = glm::vec3(pos.GetX(), pos.GetY(), pos.GetZ());
-      glm::quat glm_rot = glm::quat(rot.GetW(), rot.GetX(), rot.GetY(), rot.GetZ());
-
-      glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm_pos) * glm::toMat4(glm_rot);
-
-      std::string bone_name = skeleton->GetJoint(i).mName.c_str();
-
-      bone_transforms[bone_name] = transform;
+      RMat44 transform =
+          Physics::get_physics_system().GetBodyInterface().GetCenterOfMassTransform(bodyId);
+      glm::mat4 ragdollMat = ConvertToGLM(transform);
+      ragdollGlobals[name] = ragdollMat;
     }
 
-    Shader &shader = _shaders["Anim"];
+    Shader &shader = _shaders["Ragdoll"];
     shader.use();
     shader.setMat4("projection", projection);
     shader.setMat4("view", view);
     glm::mat4 model_brian = glm::mat4(1.0f);
-    model_brian           = glm::scale(model_brian, glm::vec3(0.011f, 0.011f, 0.011f));
+    // model_brian           = glm::scale(model_brian, glm::vec3(0.011f, 0.011f, 0.011f));
     shader.setMat4("model", model_brian);
 
-    brian->DrawWithRagdollPose(shader, bone_transforms);
+    brian->DrawWithRagdollPose(shader, ragdollGlobals);
   }
 
   // Animation Shader
@@ -246,4 +260,5 @@ void render_game() {
   glBindVertexArray(0);
   glDepthFunc(GL_LESS);
 }
+
 } // namespace OpenGLRenderer

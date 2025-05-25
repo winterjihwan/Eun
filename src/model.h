@@ -35,47 +35,33 @@ public:
       meshes[i].Draw(shader);
   }
 
-  void DrawWithRagdollPose(Shader                                 &shader,
-                           const std::map<std::string, glm::mat4> &ragdollWorldTransforms) {
-    for (unsigned int i = 0; i < meshes.size(); ++i) {
-      std::vector<glm::mat4> final_matrices(100, glm::mat4(1.0f));
+  std::string StripArmaturePrefix(const std::string &name) {
+    const std::string prefix = "Armature_";
+    if (name.rfind(prefix, 0) == 0)
+      return name.substr(prefix.size());
+    return name;
+  }
 
-      std::string ragdollRootName = "LowerBody";
+  void DrawWithRagdollPose(Shader &shader, const std::map<std::string, glm::mat4> &ragdollGlobals) {
+    std::vector<glm::mat4> boneMatrices(m_BoneCounter, glm::mat4(1.0f));
 
-      glm::mat4 ragdollRootWorld = glm::mat4(1.0f);
-      if (ragdollWorldTransforms.count(ragdollRootName)) {
-        ragdollRootWorld = ragdollWorldTransforms.at(ragdollRootName);
-      } else {
-        std::cerr << "[DrawWithRagdollPose] Missing root transform for: " << ragdollRootName
-                  << "\n";
+    for (auto &[name, boneInfo] : m_BoneInfoMap) {
+      std::string strippedName = StripArmaturePrefix(name);
+      auto        it_bind      = m_GlobalBindPose.find(name);
+      auto        it_ragdoll   = ragdollGlobals.find(strippedName);
+      if (it_bind != m_GlobalBindPose.end() && it_ragdoll != ragdollGlobals.end()) {
+        glm::mat4 invBind         = glm::inverse(it_bind->second);
+        glm::mat4 ragdollGlobal   = it_ragdoll->second;
+        boneMatrices[boneInfo.id] = ragdollGlobal * invBind;
       }
+    }
 
-      for (const auto &[bone_name, info] : m_BoneInfoMap) {
-        int       bone_id = info.id;
-        glm::mat4 offset  = info.offset;
+    for (int i = 0; i < boneMatrices.size(); ++i) {
+      shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", boneMatrices[i]);
+    }
 
-        std::string stripped_name = bone_name;
-        if (stripped_name.find("Armature_") == 0)
-          stripped_name = stripped_name.substr(9);
-
-        auto ragdollIt = ragdollWorldTransforms.find(stripped_name);
-        auto bindIt    = m_GlobalBindPose.find(bone_name);
-
-        if (ragdollIt != ragdollWorldTransforms.end() && bindIt != m_GlobalBindPose.end()) {
-          glm::mat4 ragdoll_world   = ragdollIt->second;
-          glm::mat4 model_bind_pose = bindIt->second;
-
-          glm::mat4 skin_matrix =
-              glm::inverse(ragdollRootWorld) * ragdoll_world * glm::inverse(model_bind_pose);
-          final_matrices[bone_id] = skin_matrix * offset;
-        }
-      }
-
-      for (int j = 0; j < final_matrices.size(); ++j) {
-        shader.setMat4("finalBonesMatrices[" + std::to_string(j) + "]", final_matrices[j]);
-      }
-
-      meshes[i].Draw(shader);
+    for (auto &mesh : meshes) {
+      mesh.Draw(shader);
     }
   }
 
@@ -90,10 +76,10 @@ public:
   }
 
 private:
-  std::unordered_map<std::string, glm::mat4> m_GlobalBindPose;
-  std::map<string, BoneInfo>                 m_BoneInfoMap;
-  int                                        m_BoneCounter = 0;
-  AssimpNodeData                             m_RootNode;
+  std::map<std::string, glm::mat4> m_GlobalBindPose;
+  std::map<string, BoneInfo>       m_BoneInfoMap;
+  int                              m_BoneCounter = 0;
+  AssimpNodeData                   m_RootNode;
 
   void ReadHierarchyData(AssimpNodeData &dest, const aiNode *src) {
     dest.name           = src->mName.data;
@@ -121,16 +107,18 @@ private:
 
     processNode(scene->mRootNode, scene);
     ReadHierarchyData(m_RootNode, scene->mRootNode);
-    computeGlobalBindPoses(m_RootNode, glm::mat4(1.0f));
+    glm::mat4 identity = glm::mat4(1.0f);
+    ComputeGlobalBindPose(m_RootNode, identity);
   }
 
-  void computeGlobalBindPoses(const AssimpNodeData &node, glm::mat4 parentTransform) {
+  void ComputeGlobalBindPose(const AssimpNodeData &node, const glm::mat4 &parentTransform) {
     glm::mat4 globalTransform = parentTransform * node.transformation;
-    if (m_BoneInfoMap.count(node.name)) {
+    if (m_BoneInfoMap.find(node.name) != m_BoneInfoMap.end()) {
       m_GlobalBindPose[node.name] = globalTransform;
     }
+
     for (const auto &child : node.children) {
-      computeGlobalBindPoses(child, globalTransform);
+      ComputeGlobalBindPose(child, globalTransform);
     }
   }
 
