@@ -27,7 +27,16 @@ void init() {
 
   // Brian
   {
-    Model &brian = _models.emplace_back("res/objects/Brian/Death.dae", "Brian");
+    Model &brian = _models.emplace_back("res/objects/Brian/Idle.dae", "Brian");
+
+    // for (const Mesh &mesh : brian.meshes) {
+    //   Physics::register_convex_dynamic_body(mesh.vertices, mesh.indices, glm::mat4(1.0f));
+    // }
+
+    std::shared_ptr<Animation> &brian_idle_animation =
+        _animations.emplace_back(std::make_shared<Animation>("res/objects/Brian/Idle.dae", &brian));
+    _animators.emplace_back(&*brian_idle_animation, "Brian_Idle");
+
     std::shared_ptr<Animation> &brian_walk_animation =
         _animations.emplace_back(std::make_shared<Animation>("res/objects/Brian/Walk.dae", &brian));
     _animators.emplace_back(&*brian_walk_animation, "Brian_Walk");

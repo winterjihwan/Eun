@@ -4,7 +4,6 @@
 - [x] Character Controller
 - [ ] Animation Layer, State  
 - [x] Animation 'Play' upon consecutive event trigger
-- [ ] Ammo System  
 - [ ] Shadows
 - [x] Audio  
 - [ ] Audio Handle  
@@ -15,6 +14,14 @@
 - [x] Weapon System  
 - [x] Asset Manager  
 - [x] Separate Animation to clips  
+- [ ] Advanced Weapon
+     - [ ] Debug Pass
+     - [x] Raycast
+     - [ ] Muzzle Flash
+     - [ ] Bullet Casing
+     - [ ] Decal
+     - [ ] Ammo System
+- [ ] Blood Splash
 - [ ] Ragdoll  
 - [ ] Z fighting  
 - [ ] Loading (offscreen)  

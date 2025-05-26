@@ -1,6 +1,5 @@
 #include "AssetManager/AssetManager.h"
 #include "Core/Game.h"
-#include <glm/gtx/string_cast.hpp>
 
 namespace OpenGLRenderer {
 extern std::unordered_map<std::string, Shader> _shaders;

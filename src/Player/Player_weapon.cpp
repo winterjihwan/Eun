@@ -1,5 +1,6 @@
 #include "AssetManager/AssetManager.h"
 #include "Core/Game.h"
+#include "CreateInfo.h"
 #include "Enums.h"
 #include "Input/Input.h"
 #include "Keycodes.h"
@@ -118,16 +119,31 @@ void Player::switch_weapon(const std::string &name) {
   _weapon_action = WeaponAction::DRAW;
 }
 
-void Player::fire_gun() {
-  // TODO: Fire gun animation
-}
-
 void Player::give_weapon(const std::string &name) {
   WeaponState *state      = get_weapon_state_by_name(name);
   WeaponInfo  *weaponInfo = WeaponManager::get_weapon_info_by_name(name);
   if (state && weaponInfo) {
     state->has = true;
   }
+}
+
+void Player::spawn_bullet(float variance) {
+  WeaponInfo *weapon_info = get_current_weapon_info();
+
+  glm::vec3 bullet_direction = Game::get_camera()->get_front();
+
+  // bulletDirection.x += Util::RandomFloat(-(variance * 0.5f), variance * 0.5f);
+  // bulletDirection.y += Util::RandomFloat(-(variance * 0.5f), variance * 0.5f);
+  // bulletDirection.z += Util::RandomFloat(-(variance * 0.5f), variance * 0.5f);
+  bullet_direction = glm::normalize(bullet_direction);
+
+  BulletCreateInfo createInfo;
+  createInfo.origin       = _position;
+  createInfo.direction    = bullet_direction;
+  createInfo.damage       = weapon_info->damage;
+  createInfo.weapon_index = WeaponManager::get_weapon_index_from_weapon_name(weapon_info->name);
+
+  World::add_bullet(Bullet(createInfo));
 }
 
 WeaponState *Player::get_weapon_state_by_name(const std::string &name) {

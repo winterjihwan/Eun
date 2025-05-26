@@ -21,6 +21,7 @@ void init() {
   pistol.audio_files.fire        = "Pistol_fire.wav";
   pistol.audio_files.reload      = "Pistol_reload.wav";
   // pistol.audio_files.draw        = ;
+  pistol.damage = 5;
 
   WeaponInfo &hk_416             = _weapons.emplace_back();
   hk_416.name                    = "HK_416";
@@ -34,6 +35,7 @@ void init() {
   hk_416.audio_files.fire        = "Pistol_fire.wav";
   hk_416.audio_files.reload      = "Pistol_reload.wav";
   // hk_416.audio_files.draw        = ;
+  hk_416.damage = 15;
 }
 
 int get_weapon_count() {

@@ -2,6 +2,7 @@
 #include "AssetManager/AssetManager.h"
 #include "Audio/Audio.h"
 #include "Backend/GLFW.h"
+#include "Core/Debug.h"
 #include "Core/Game.h"
 #include "Input/Input.h"
 #include "Physics/Physics.h"
@@ -37,6 +38,8 @@ void update_game() {
   Physics::update(delta_time);
 
   World::submit_render_items();
+
+  Debug::update();
   RenderDataManager::update();
 }
 

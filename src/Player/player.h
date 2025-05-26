@@ -2,9 +2,10 @@
 
 #include "Camera/Camera.h"
 #include "Enums.h"
-#include "Physics/Physics.h"
 #include "Types/Game/AnimEntity.h"
 #include "Weapon/WeaponCommon.h"
+#include <Jolt/Jolt.h>
+#include <Jolt/Physics/Character/CharacterVirtual.h>
 #include <glm/glm.hpp>
 
 struct Player {
@@ -22,13 +23,17 @@ struct Player {
   bool get_flashlight_on();
 
   // Weapon
-  void         init_weapon();
-  void         update_weapon(float delta_time);
-  void         update_weapon_gun(float delta_time);
-  void         switch_weapon(const std::string &name);
-  void         next_weapon();
-  void         fire_gun();
-  void         give_weapon(const std::string &name);
+  void init_weapon();
+  void update_weapon(float delta_time);
+  void update_weapon_gun(float delta_time);
+  void switch_weapon(const std::string &name);
+  void next_weapon();
+  void reload_gun();
+  void fire_gun();
+  void inspect_gun();
+  void give_weapon(const std::string &name);
+  void spawn_bullet(float variance);
+
   WeaponState *get_weapon_state_by_name(const std::string &name);
   WeaponState *get_current_weapon_state();
   WeaponInfo  *get_current_weapon_info();

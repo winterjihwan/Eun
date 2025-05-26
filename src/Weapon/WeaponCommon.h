@@ -24,6 +24,7 @@ struct WeaponInfo {
   AudioFiles     audio_files;
   AnimationNames animation_names;
   WeaponType     type;
+  float          damage;
 };
 
 struct WeaponState {

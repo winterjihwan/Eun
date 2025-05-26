@@ -3,6 +3,8 @@
 #include "Player.h"
 
 void Player::update_flashlight() {
+  // TODO: Flashlight audio
+
   if (Input::key_pressed(EUN_KEY_F)) {
     _flashlight_on = !_flashlight_on;
   }
