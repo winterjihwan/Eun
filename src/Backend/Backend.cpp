@@ -5,7 +5,9 @@
 #include "Core/Game.h"
 #include "Input/Input.h"
 #include "Physics/Physics.h"
+#include "Renderer/RenderDataManager.h"
 #include "Weapon/WeaponManager.h"
+#include "World/World.h"
 
 namespace Backend {
 bool init() {
@@ -24,6 +26,7 @@ bool init() {
 
 void begin_frame() {
   GLFW::begin_frame();
+  RenderDataManager::begin_frame();
   Game::begin_frame();
 }
 
@@ -32,6 +35,9 @@ void update_game() {
 
   Game::update();
   Physics::update(delta_time);
+
+  World::submit_render_items();
+  RenderDataManager::update();
 }
 
 void update_subsystems() {

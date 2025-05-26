@@ -189,7 +189,7 @@ private:
 
     ExtractBoneWeightForVertices(vertices, mesh, scene);
 
-    return Mesh(vertices, indices, textures);
+    return Mesh(vertices, indices, textures, "");
   }
 
   void SetVertexBoneData(Vertex &vertex, int boneID, float weight) {

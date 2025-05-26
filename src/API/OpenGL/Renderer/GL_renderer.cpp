@@ -4,6 +4,8 @@
 #include "Core/Game.h"
 #include "Defines.h"
 #include "Mesh.h"
+#include "Renderer/RenderDataManager.h"
+#include "Types/Game/AnimEntity.h"
 #include <glm/gtx/string_cast.hpp>
 
 unsigned int load_cubemap(vector<std::string> faces);
@@ -11,6 +13,11 @@ unsigned int load_cubemap(vector<std::string> faces);
 namespace OpenGLRenderer {
 std::unordered_map<std::string, Shader>            _shaders;
 std::unordered_map<std::string, OpenGLCubemapView> _cubemap_views;
+std::vector<AnimEntity>                            _anim_entities;
+
+// HACK
+glm::mat4 _projection;
+glm::mat4 _view;
 
 // HACK
 unsigned int _sky_vao;
@@ -61,10 +68,9 @@ void render_game() {
   Player *player = Game::get_player();
 
   // Per Frame Transformations
-  glm::mat4 projection = glm::perspective(
+  _projection = glm::perspective(
       glm::radians(camera->get_zoom()), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-  glm::mat4 view =
-      glm::lookAt(player->get_pos(), player->get_pos() + camera->get_front(), camera->get_up());
+  _view = glm::lookAt(player->get_pos(), player->get_pos() + camera->get_front(), camera->get_up());
 
   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -95,8 +101,8 @@ void render_game() {
   _shaders["Model"].setFloat("flashLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
   // Model Shader
-  _shaders["Model"].setMat4("projection", projection);
-  _shaders["Model"].setMat4("view", view);
+  _shaders["Model"].setMat4("projection", _projection);
+  _shaders["Model"].setMat4("view", _view);
 
   // Map
   glm::mat4 model_scene = glm::mat4(1.0f);
@@ -114,24 +120,24 @@ void render_game() {
 
   // Animation Shader
   _shaders["Anim"].use();
-  _shaders["Anim"].setMat4("projection", projection);
-  _shaders["Anim"].setMat4("view", view);
+  _shaders["Anim"].setMat4("projection", _projection);
+  _shaders["Anim"].setMat4("view", _view);
 
   // Brian
-  {
-    Animator *brian_walk_animator = AssetManager::get_animator_by_name("Brian_Death");
-    auto      transforms          = brian_walk_animator->GetFinalBoneMatrices();
-    for (int i = 0; i < transforms.size(); ++i)
-      _shaders["Anim"].setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
-
-    glm::mat4 model_brian = glm::mat4(1.0f);
-    model_brian           = glm::translate(model_brian, glm::vec3(13.0f, PLAYER_HEIGHT, -5.0f));
-    model_brian           = glm::scale(model_brian, glm::vec3(.5f, .5f, .5f));
-    _shaders["Anim"].setMat4("model", model_brian);
-
-    Model *brian = AssetManager::get_model_by_name("Brian");
-    brian->Draw(_shaders["Anim"]);
-  }
+  // {
+  //   Animator              *brian_walk_animator =
+  //   AssetManager::get_animator_by_name("Brian_Walk"); std::vector<glm::mat4> transforms =
+  //   brian_walk_animator->GetFinalBoneMatrices(); for (int i = 0; i < transforms.size(); ++i)
+  //     _shaders["Anim"].setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+  //
+  //   glm::mat4 model_brian = glm::mat4(1.0f);
+  //   model_brian           = glm::translate(model_brian, glm::vec3(13.0f, PLAYER_HEIGHT, -5.0f));
+  //   model_brian           = glm::scale(model_brian, glm::vec3(.5f, .5f, .5f));
+  //   _shaders["Anim"].setMat4("model", model_brian);
+  //
+  //   Model *brian = AssetManager::get_model_by_name("Brian");
+  //   brian->Draw(_shaders["Anim"]);
+  // }
 
   // Weapon View
   // HACK
@@ -154,21 +160,45 @@ void render_game() {
   weapon_model->Draw(_shaders["Anim"]);
 
   // Cubemap
-  glDepthFunc(GL_LEQUAL);
-  _shaders["Sky"].use();
-  view = glm::lookAt(Game::get_player()->get_pos(),
-                     Game::get_player()->get_pos() + Game::get_camera()->get_front(),
-                     Game::get_camera()->get_up());
-  view = glm::mat4(glm::mat3(view));
-  _shaders["Sky"].setMat4("view", view);
-  _shaders["Sky"].setMat4("projection", projection);
+  {
+    glDepthFunc(GL_LEQUAL);
+    _shaders["Sky"].use();
+    glm::mat4 view = glm::lookAt(Game::get_player()->get_pos(),
+                                 Game::get_player()->get_pos() + Game::get_camera()->get_front(),
+                                 Game::get_camera()->get_up());
+    view           = glm::mat4(glm::mat3(view));
+    _shaders["Sky"].setMat4("view", view);
+    _shaders["Sky"].setMat4("projection", _projection);
 
-  glBindVertexArray(_sky_vao);
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, _cubemap_views["NightSky"].get_handle());
-  glDrawArrays(GL_TRIANGLES, 0, 36);
-  glBindVertexArray(0);
-  glDepthFunc(GL_LESS);
+    glBindVertexArray(_sky_vao);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, _cubemap_views["NightSky"].get_handle());
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+    glDepthFunc(GL_LESS);
+  }
+
+  world_pass();
+}
+
+void world_pass() {
+
+  // Anim Entities
+  std::vector<AnimEntity *> anim_entities = RenderDataManager::get_anim_entities();
+  for (AnimEntity *anim_entity : anim_entities) {
+    Model     *model           = anim_entity->get_model();
+    Animator  *animator        = anim_entity->get_animator();
+    glm::mat4 &model_transform = anim_entity->get_model_transform();
+
+    _shaders["Anim"].use();
+    std::vector<glm::mat4> transforms = animator->GetFinalBoneMatrices();
+    for (int i = 0; i < transforms.size(); ++i) {
+      _shaders["Anim"].setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+    }
+
+    _shaders["Anim"].setMat4("model", model_transform);
+    model->Draw(_shaders["Anim"]);
+  }
 }
 
 } // namespace OpenGLRenderer

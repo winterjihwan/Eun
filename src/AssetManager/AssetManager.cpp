@@ -3,6 +3,7 @@
 #include "Physics/Physics.h"
 #include "Renderer/Renderer.h"
 #include "Types/Animation/Animation.h"
+#include "World/World.h"
 #include <memory>
 #include <vector>
 
@@ -109,8 +110,9 @@ void init() {
   std::vector<uint32_t> sphere_i = Util::generate_sphere_indices(segments);
   std::vector<Texture>  sphere_t = std::vector<Texture>();
 
-  _meshes.emplace_back(sphere_v, sphere_i, sphere_t);
+  _meshes.emplace_back(sphere_v, sphere_i, sphere_t, "Test_Sphere");
 
+  World::init();
   Renderer::init();
 }
 
@@ -138,8 +140,16 @@ std::vector<Mesh> &get_meshes() {
   return _meshes;
 }
 
-// Model *get_mesh_by_name(const std::string &name) {
-// }
+Mesh *get_mesh_by_name(const std::string &name) {
+  for (auto &mesh : _meshes) {
+    if (name == mesh.name) {
+      return &mesh;
+    }
+  }
+
+  std::cout << "AssetManager::get_mesh_by_name() failed, no mesh with name: " << name << std::endl;
+  assert(0);
+}
 
 std::vector<Model> &get_models() {
   return _models;

@@ -1,7 +1,6 @@
 #include "Game.h"
-#include "AssetManager/AssetManager.h"
 #include "Backend/GLFW.h"
-#include "Types/Animation/Animator.h"
+#include "World/World.h"
 #include <GLFW/glfw3.h>
 
 namespace Game {
@@ -33,9 +32,7 @@ void update() {
 
   _player.update(_delta_time, _camera);
 
-  // HACK
-  AssetManager::get_animator_by_name("Brian_Walk")->UpdateAnimation(_delta_time);
-  AssetManager::get_animator_by_name("Brian_Death")->UpdateAnimation(_delta_time);
+  World::update(_delta_time);
 }
 
 void begin_frame() {

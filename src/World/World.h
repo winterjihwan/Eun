@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Types/Animation/Animation.h"
-#include <vector>
+#include "Types/Game/AnimEntity.h"
+
 namespace World {
 void init();
 void begin_frame();
-void update();
+void update(float delta_time);
 void submit_render_items();
 
-std::vector<Animation> &get_animation_transforms();
+AnimEntity *get_anim_entity_by_name(const std::string &name);
 
 } // namespace World
