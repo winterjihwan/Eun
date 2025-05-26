@@ -24,11 +24,17 @@ void init() {
     Physics::register_static_mesh(mesh.vertices, mesh.indices, glm::mat4(1.0f));
   }
 
-  // Vampire
-  Model &vampire = _models.emplace_back("res/objects/Vampire/dancing_vampire.dae", "Vampire");
-  std::shared_ptr<Animation> &vampire_animation = _animations.emplace_back(
-      std::make_shared<Animation>("res/objects/Vampire/dancing_vampire.dae", &vampire));
-  _animators.emplace_back(&*vampire_animation, "Vampire");
+  // Brian
+  {
+    Model &brian = _models.emplace_back("res/objects/Brian/Death.dae", "Brian");
+    std::shared_ptr<Animation> &brian_walk_animation =
+        _animations.emplace_back(std::make_shared<Animation>("res/objects/Brian/Walk.dae", &brian));
+    _animators.emplace_back(&*brian_walk_animation, "Brian_Walk");
+
+    std::shared_ptr<Animation> &brian_death_animation = _animations.emplace_back(
+        std::make_shared<Animation>("res/objects/Brian/Death.dae", &brian));
+    _animators.emplace_back(&*brian_death_animation, "Brian_Death");
+  }
 
   // Pistol
   {

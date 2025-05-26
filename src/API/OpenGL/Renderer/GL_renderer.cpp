@@ -117,24 +117,26 @@ void render_game() {
   _shaders["Anim"].setMat4("projection", projection);
   _shaders["Anim"].setMat4("view", view);
 
-  // Vampire
-  Animator *vampire_dance_animator = AssetManager::get_animator_by_name("Vampire");
-  auto      transforms             = vampire_dance_animator->GetFinalBoneMatrices();
-  for (int i = 0; i < transforms.size(); ++i)
-    _shaders["Anim"].setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+  // Brian
+  {
+    Animator *brian_walk_animator = AssetManager::get_animator_by_name("Brian_Death");
+    auto      transforms          = brian_walk_animator->GetFinalBoneMatrices();
+    for (int i = 0; i < transforms.size(); ++i)
+      _shaders["Anim"].setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
 
-  glm::mat4 model_vampire = glm::mat4(1.0f);
-  model_vampire           = glm::translate(model_vampire, glm::vec3(13.0f, PLAYER_HEIGHT, -5.0f));
-  model_vampire           = glm::scale(model_vampire, glm::vec3(.5f, .5f, .5f));
-  _shaders["Anim"].setMat4("model", model_vampire);
+    glm::mat4 model_brian = glm::mat4(1.0f);
+    model_brian           = glm::translate(model_brian, glm::vec3(13.0f, PLAYER_HEIGHT, -5.0f));
+    model_brian           = glm::scale(model_brian, glm::vec3(.5f, .5f, .5f));
+    _shaders["Anim"].setMat4("model", model_brian);
 
-  Model *vampire = AssetManager::get_model_by_name("Vampire");
-  vampire->Draw(_shaders["Anim"]);
+    Model *brian = AssetManager::get_model_by_name("Brian");
+    brian->Draw(_shaders["Anim"]);
+  }
 
   // Weapon View
   // HACK
   Animator *weapon_view_animator = Game::get_player()->get_weapon_view_animator();
-  transforms                     = weapon_view_animator->GetFinalBoneMatrices();
+  auto      transforms           = weapon_view_animator->GetFinalBoneMatrices();
   for (int i = 0; i < transforms.size(); ++i)
     _shaders["Anim"].setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
 

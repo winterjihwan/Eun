@@ -34,7 +34,8 @@ void update() {
   _player.update(_delta_time, _camera);
 
   // HACK
-  AssetManager::get_animator_by_name("Vampire")->UpdateAnimation(_delta_time);
+  AssetManager::get_animator_by_name("Brian_Walk")->UpdateAnimation(_delta_time);
+  AssetManager::get_animator_by_name("Brian_Death")->UpdateAnimation(_delta_time);
 }
 
 void begin_frame() {
