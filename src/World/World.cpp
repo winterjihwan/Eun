@@ -12,14 +12,16 @@ std::vector<Bullet>     _bullets;
 void init() {
   //  Brian
   {
-    AnimEntity *brian_anim_entity   = &_anim_entities.emplace_back();
-    Model      *brian_model         = AssetManager::get_model_by_name("Brian");
-    Animator   *brian_animator_walk = AssetManager::get_animator_by_name("Brian_Idle");
+    AnimEntity  *brian_anim_entity   = &_anim_entities.emplace_back();
+    Model       *brian_model         = AssetManager::get_model_by_name("Brian");
+    Animator    *brian_animator_walk = AssetManager::get_animator_by_name("Brian_Idle");
+    JPH::BodyID *brian_collider      = AssetManager::get_collider_by_name("Brian");
 
     glm::mat4 transform_brian = glm::mat4(1.0f);
     transform_brian           = glm::translate(transform_brian, glm::vec3(13.0f, 0, -5.0f));
 
-    brian_anim_entity->init(brian_model, brian_animator_walk, transform_brian, "Brian");
+    brian_anim_entity->init("Brian", brian_model, brian_animator_walk, transform_brian);
+    brian_anim_entity->set_collider(brian_collider);
   }
 }
 

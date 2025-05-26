@@ -32,7 +32,7 @@ void Player::init_weapon() {
     Animator  *pistol_idle_animation = AssetManager::get_animator_by_name("Pistol_Idle");
     glm::mat4  weapon_transform      = weapon_view_transform();
 
-    weapon_view.init(pistol_model, pistol_idle_animation, weapon_transform, "Weapon_View");
+    weapon_view.init("Weapon_View", pistol_model, pistol_idle_animation, weapon_transform);
     World::add_anim_entity(std::move(weapon_view));
     _weapon_anim_entity = World::get_anim_entity_by_name("Weapon_View");
   }

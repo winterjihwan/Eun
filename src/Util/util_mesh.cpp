@@ -111,4 +111,70 @@ generate_capsule_vertices(float radius, float halfHeight, unsigned int segments)
 
   return vertices;
 }
+
+std::vector<uint32_t> generate_capsule_indices(unsigned int segments) {
+  std::vector<uint32_t> indices;
+
+  segments                            = std::max(segments, 4u);
+  const unsigned int hemisphere_rings = segments / 2;
+  const unsigned int verts_per_ring   = segments + 1;
+
+  // Top hemisphere
+  for (unsigned int y = 0; y < hemisphere_rings; ++y) {
+    for (unsigned int x = 0; x < segments; ++x) {
+      uint32_t i0 = y * verts_per_ring + x;
+      uint32_t i1 = (y + 1) * verts_per_ring + x;
+      uint32_t i2 = y * verts_per_ring + (x + 1);
+      uint32_t i3 = (y + 1) * verts_per_ring + (x + 1);
+
+      indices.push_back(i0);
+      indices.push_back(i1);
+      indices.push_back(i2);
+
+      indices.push_back(i2);
+      indices.push_back(i1);
+      indices.push_back(i3);
+    }
+  }
+
+  uint32_t offset_cylinder = (hemisphere_rings + 1) * verts_per_ring;
+
+  // Cylinder (2 rings: top and bottom)
+  for (unsigned int x = 0; x < segments; ++x) {
+    uint32_t i0 = offset_cylinder + x;
+    uint32_t i1 = offset_cylinder + verts_per_ring + x;
+    uint32_t i2 = offset_cylinder + x + 1;
+    uint32_t i3 = offset_cylinder + verts_per_ring + x + 1;
+
+    indices.push_back(i0);
+    indices.push_back(i1);
+    indices.push_back(i2);
+
+    indices.push_back(i2);
+    indices.push_back(i1);
+    indices.push_back(i3);
+  }
+
+  uint32_t offset_bottom = offset_cylinder + 2 * verts_per_ring;
+
+  // Bottom hemisphere
+  for (unsigned int y = 0; y < hemisphere_rings; ++y) {
+    for (unsigned int x = 0; x < segments; ++x) {
+      uint32_t i0 = offset_bottom + y * verts_per_ring + x;
+      uint32_t i1 = offset_bottom + (y + 1) * verts_per_ring + x;
+      uint32_t i2 = offset_bottom + y * verts_per_ring + (x + 1);
+      uint32_t i3 = offset_bottom + (y + 1) * verts_per_ring + (x + 1);
+
+      indices.push_back(i0);
+      indices.push_back(i1);
+      indices.push_back(i2);
+
+      indices.push_back(i2);
+      indices.push_back(i1);
+      indices.push_back(i3);
+    }
+  }
+
+  return indices;
+}
 } // namespace Util

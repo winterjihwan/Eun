@@ -1,19 +1,36 @@
 #include "AnimEntity.h"
+#include "Physics/Physics.h"
 #include "Renderer/RenderDataManager.h"
 
-void AnimEntity::init(Model             *model,
+void AnimEntity::init(const std::string &name,
+                      Model             *model,
                       Animator          *animator,
-                      glm::mat4         &model_transform,
-                      const std::string &name) {
+                      glm::mat4         &model_transform) {
+  _name             = name;
   _model            = model;
   _current_animator = animator;
   _model_transform  = model_transform;
-  _name             = name;
 }
 
 void AnimEntity::update(float delta_time) {
   if (_current_animator != 0) {
     _current_animator->UpdateAnimation(delta_time);
+  }
+
+  if (_collider) {
+    glm::mat4   model_transform = glm::mat4(1.0f);
+    const Body *body = Physics::get_physics_system().GetBodyLockInterface().TryGetBody(*_collider);
+    if (body) {
+      RVec3 pos = body->GetCenterOfMassPosition();
+
+      // HACK: Subtract capsule height by half
+      _model_transform =
+          glm::translate(model_transform, glm::vec3(pos.GetX(), pos.GetY() - 0.9f, pos.GetZ()));
+    } else {
+      std::cout << "AnimEntity::update(), No body found for body_id: " << _collider->GetIndex()
+                << std::endl;
+      assert(0);
+    }
   }
 }
 
@@ -32,6 +49,10 @@ void AnimEntity::set_animator(Animator *animator) {
 
 void AnimEntity::set_model_transform(glm::mat4 model_transform) {
   _model_transform = model_transform;
+}
+
+void AnimEntity::set_collider(JPH::BodyID *collider) {
+  _collider = collider;
 }
 
 const std::string &AnimEntity::get_name() {
