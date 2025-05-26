@@ -23,7 +23,12 @@ void init() {
   }
 }
 
+void add_anim_entity(AnimEntity &&anim_entity) {
+  _anim_entities.push_back(std::move(anim_entity));
+}
+
 void update(float delta_time) {
+  // HACK
   if (Input::key_pressed(EUN_KEY_5)) {
     AnimEntity *brian_anim_entity    = get_anim_entity_by_name("Brian");
     Animator   *brian_animator_death = AssetManager::get_animator_by_name("Brian_Death");

@@ -3,7 +3,7 @@
 #include "Camera/Camera.h"
 #include "Enums.h"
 #include "Physics/Physics.h"
-#include "Types/Animation/Animator.h"
+#include "Types/Game/AnimEntity.h"
 #include "Weapon/WeaponCommon.h"
 #include <glm/glm.hpp>
 
@@ -22,6 +22,7 @@ struct Player {
   bool get_flashlight_on();
 
   // Weapon
+  void         init_weapon();
   void         update_weapon(float delta_time);
   void         update_weapon_gun(float delta_time);
   void         switch_weapon(const std::string &name);
@@ -31,7 +32,6 @@ struct Player {
   WeaponState *get_weapon_state_by_name(const std::string &name);
   WeaponState *get_current_weapon_state();
   WeaponInfo  *get_current_weapon_info();
-  Animator    *get_weapon_view_animator();
 
 private:
   JPH::CharacterVirtual *_character;
@@ -44,5 +44,5 @@ private:
   int                      _current_weapon_index = 0;
   std::vector<WeaponState> _weapon_states;
   WeaponAction             _weapon_action;
-  Animator                *_weapon_view_animator; // HACK
+  AnimEntity              *_weapon_anim_entity;
 };

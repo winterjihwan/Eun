@@ -4,6 +4,7 @@ namespace OpenGLRenderer {
 void init();
 void render_game();
 
-void world_pass();
-
+void anim_pass();
+void geometry_pass();
+void skybox_pass();
 } // namespace OpenGLRenderer

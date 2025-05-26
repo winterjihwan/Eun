@@ -22,8 +22,16 @@ void AnimEntity::submit_render_item() {
   RenderDataManager::submit_anim_entity(this);
 }
 
+void AnimEntity::set_model(Model *model) {
+  _model = model;
+}
+
 void AnimEntity::set_animator(Animator *animator) {
   _current_animator = animator;
+}
+
+void AnimEntity::set_model_transform(glm::mat4 model_transform) {
+  _model_transform = model_transform;
 }
 
 const std::string &AnimEntity::get_name() {

@@ -8,6 +8,8 @@ void begin_frame();
 void update(float delta_time);
 void submit_render_items();
 
+void add_anim_entity(AnimEntity &&anim_entity);
+
 AnimEntity *get_anim_entity_by_name(const std::string &name);
 
 } // namespace World

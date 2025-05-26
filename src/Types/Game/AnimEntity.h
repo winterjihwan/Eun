@@ -10,7 +10,11 @@ struct AnimEntity {
   void update(float delta_time);
   void submit_render_item();
 
+  void add_anim_entity(AnimEntity &&anim_entity);
+
+  void set_model(Model *model);
   void set_animator(Animator *animator);
+  void set_model_transform(glm::mat4 model_transform);
 
   const std::string &get_name();
   Model             *get_model();

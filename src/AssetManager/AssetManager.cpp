@@ -131,7 +131,7 @@ Animator *get_animator_by_name(const std::string &name) {
     }
   }
 
-  std::cout << "AssetManager::get_model_by_name() failed, no model with name: " << name
+  std::cout << "AssetManager::get_animator_by_name() failed, no animator with name: " << name
             << std::endl;
   assert(0);
 }

@@ -1,11 +1,41 @@
 #include "AssetManager/AssetManager.h"
+#include "Core/Game.h"
 #include "Enums.h"
 #include "Input/Input.h"
 #include "Keycodes.h"
 #include "Player.h"
 #include "Weapon/WeaponManager.h"
+#include "World/World.h"
 
 // TODO: Ammo system
+
+glm::mat4 weapon_view_transform();
+
+void Player::init_weapon() {
+  // Weapon
+  _weapon_states.clear();
+  for (int i = 0; i < WeaponManager::get_weapon_count(); i++) {
+    WeaponState &state = _weapon_states.emplace_back();
+    state.name         = WeaponManager::get_weapon_info_by_index(i)->name;
+    state.has          = false;
+  }
+
+  // Default weapon
+  give_weapon("Pistol");
+  give_weapon("HK_416");
+
+  // Anim Entity
+  {
+    AnimEntity weapon_view;
+    Model     *pistol_model          = AssetManager::get_model_by_name("Pistol");
+    Animator  *pistol_idle_animation = AssetManager::get_animator_by_name("Pistol_Idle");
+    glm::mat4  weapon_transform      = weapon_view_transform();
+
+    weapon_view.init(pistol_model, pistol_idle_animation, weapon_transform, "Weapon_View");
+    World::add_anim_entity(std::move(weapon_view));
+    _weapon_anim_entity = World::get_anim_entity_by_name("Weapon_View");
+  }
+}
 
 void Player::update_weapon(float delta_time) {
   if (Input::key_pressed(EUN_KEY_Q)) {
@@ -27,22 +57,27 @@ void Player::update_weapon(float delta_time) {
   default:;
   };
 
-  if (_weapon_action == WeaponAction::DRAW && _weapon_view_animator->IsDone()) {
-    _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
-    _weapon_action        = WeaponAction::IDLE;
+  Animator *weapon_animator = _weapon_anim_entity->get_animator();
+
+  if (_weapon_action == WeaponAction::DRAW && weapon_animator->IsDone()) {
+    Animator *idle_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
+    _weapon_anim_entity->set_animator(idle_animator);
+    _weapon_action = WeaponAction::IDLE;
   }
 
-  if (_weapon_action == WeaponAction::FIRE && _weapon_view_animator->IsDone()) {
-    _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
-    _weapon_action        = WeaponAction::IDLE;
+  if (_weapon_action == WeaponAction::FIRE && weapon_animator->IsDone()) {
+    Animator *idle_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
+    _weapon_anim_entity->set_animator(idle_animator);
+    _weapon_action = WeaponAction::IDLE;
   }
 
-  if (_weapon_action == WeaponAction::INSPECT && _weapon_view_animator->IsDone()) {
-    _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
-    _weapon_action        = WeaponAction::IDLE;
+  if (_weapon_action == WeaponAction::INSPECT && weapon_animator->IsDone()) {
+    Animator *idle_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
+    _weapon_anim_entity->set_animator(idle_animator);
+    _weapon_action = WeaponAction::IDLE;
   }
 
-  _weapon_view_animator->UpdateAnimation(delta_time);
+  _weapon_anim_entity->set_model_transform(weapon_view_transform());
 }
 
 void Player::next_weapon() {
@@ -74,8 +109,12 @@ void Player::switch_weapon(const std::string &name) {
     }
   }
 
-  _weapon_view_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.draw);
-  _weapon_view_animator->PlayAnimation();
+  Model    *weapon_model    = AssetManager::get_model_by_name(weapon_info->model_name);
+  Animator *weapon_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.draw);
+  _weapon_anim_entity->set_model(weapon_model);
+  _weapon_anim_entity->set_animator(weapon_animator);
+
+  weapon_animator->PlayAnimation();
   _weapon_action = WeaponAction::DRAW;
 }
 
@@ -112,6 +151,14 @@ WeaponInfo *Player::get_current_weapon_info() {
   return WeaponManager::get_weapon_info_by_name(_weapon_states[_current_weapon_index].name);
 }
 
-Animator *Player::get_weapon_view_animator() {
-  return _weapon_view_animator;
+glm::mat4 weapon_view_transform() {
+  glm::mat4 weapon_transform = glm::mat4(1.0f);
+  weapon_transform           = glm::translate(weapon_transform, Game::get_player()->get_pos());
+  weapon_transform           = glm::translate(weapon_transform, glm::vec3(0.0f, -0.3f, 0.0f));
+  weapon_transform = glm::translate(weapon_transform, Game::get_camera()->get_front() * 0.5f);
+  glm::quat rot = glm::quatLookAt(-Game::get_camera()->get_front(), Game::get_camera()->get_up());
+  weapon_transform *= glm::toMat4(rot);
+  weapon_transform = glm::scale(weapon_transform, glm::vec3(0.5f));
+
+  return weapon_transform;
 }
