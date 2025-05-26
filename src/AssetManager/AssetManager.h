@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Model.h"
-#include "Physics/Physics.h"
 #include "Types/Animation/Animator.h"
 #include "Util/Util.h"
 #include <vector>
@@ -18,6 +17,4 @@ std::vector<Mesh> &get_meshes();
 
 std::vector<Model> &get_models();
 Model              *get_model_by_name(const std::string &name);
-
-std::vector<Ref<Ragdoll>> &get_ragdolls();
 } // namespace AssetManager

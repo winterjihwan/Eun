@@ -30,4 +30,3 @@ Need to be cautious the functional difference between resize and reserve
 3. 2025.05.22 Ragdolls...  
 Not necessarily troubleshooting but it's just too hard to create ragdolls  
 Its so hard without visual assistance since it's all by code  
-I need 5 days max and I will make it done  
