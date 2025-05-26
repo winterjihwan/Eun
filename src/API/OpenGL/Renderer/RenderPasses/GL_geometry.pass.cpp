@@ -1,7 +1,6 @@
 #include "AssetManager/AssetManager.h"
 #include "Core/Game.h"
 #include "Defines.h"
-#include "Physics/Physics.h"
 
 namespace OpenGLRenderer {
 extern std::unordered_map<std::string, Shader> _shaders;
@@ -56,17 +55,5 @@ void geometry_pass() {
   _shaders["Model"].setMat4("model", model_test_sphere);
   Mesh *test_sphere = AssetManager::get_mesh_by_name("Test_Sphere");
   test_sphere->Draw(_shaders["Model"]);
-
-  // Brian Collider Capsule
-  glm::mat4   brian_collider = glm::mat4(1.0f);
-  BodyID     *id             = AssetManager::get_collider_by_name("Brian");
-  const Body *body           = Physics::get_physics_system().GetBodyLockInterface().TryGetBody(*id);
-  if (body) {
-    RVec3 pos      = body->GetCenterOfMassPosition();
-    brian_collider = glm::translate(brian_collider, glm::vec3(pos.GetX(), pos.GetY(), pos.GetZ()));
-  }
-  _shaders["Model"].setMat4("model", brian_collider);
-  Mesh *test_collider = AssetManager::get_mesh_by_name("Test_Capsule");
-  test_collider->Draw(_shaders["Model"]);
 }
 } // namespace OpenGLRenderer

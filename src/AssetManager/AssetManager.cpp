@@ -15,7 +15,6 @@ std::vector<Mesh>                       _meshes;
 std::vector<std::shared_ptr<Animation>> _animations;
 std::vector<Animator>                   _animators;
 std::vector<Ref<Ragdoll>>               _ragdolls;
-std::unordered_map<std::string, BodyID> _colliders;
 
 // TODO: Index Map
 void init() {
@@ -42,30 +41,6 @@ void init() {
     std::shared_ptr<Animation> &brian_death_animation = _animations.emplace_back(
         std::make_shared<Animation>("res/objects/Brian/Death.dae", &brian));
     _animators.emplace_back(&*brian_death_animation, "Brian_Death");
-
-    // Collider
-    float               capsule_radius   = 0.3f;
-    float               capsule_height   = 1.2f;
-    int                 capsule_segments = 32;
-    std::vector<Vertex> capsule_v =
-        Util::generate_capsule_vertices(capsule_radius, capsule_height / 2.0f, capsule_segments);
-    std::vector<uint32_t> capsule_i = Util::generate_capsule_indices(capsule_segments);
-    std::vector<Texture>  capsule_t;
-    _meshes.emplace_back(capsule_v, capsule_i, capsule_t, "Test_Capsule");
-
-    // Physics Collider
-    CapsuleShapeSettings shape_settings(capsule_height / 2, capsule_radius);
-    ShapeRefC            shape = shape_settings.Create().Get();
-
-    RVec3 pos(13.0f, (capsule_height + 2.0f * capsule_radius) / 2.0f, -5.0f);
-    Quat  rot = Quat::sIdentity();
-
-    BodyCreationSettings settings(shape, pos, rot, EMotionType::Dynamic, Layers::MOVING);
-    BodyInterface       &bi   = Physics::get_physics_system().GetBodyInterface();
-    Body                *body = bi.CreateBody(settings);
-    bi.AddBody(body->GetID(), EActivation::DontActivate);
-    _colliders["Brian"] = body->GetID();
-    std::cout << "Brian's body id is " << body->GetID().GetIndex() << std::endl;
   }
 
   // Pistol
@@ -199,10 +174,6 @@ Model *get_model_by_name(const std::string &name) {
 
 std::vector<Ref<Ragdoll>> &get_ragdolls() {
   return _ragdolls;
-}
-
-JPH::BodyID *get_collider_by_name(const std::string &name) {
-  return &_colliders[name];
 }
 
 } // namespace AssetManager

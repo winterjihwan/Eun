@@ -6,8 +6,6 @@
 #include <glm/glm.hpp>
 
 void Player::update_movement(float delta_time, Camera camera) {
-  using namespace JPH;
-
   glm::vec3 front = camera.get_front();
   front.y         = 0.0f;
   glm::vec3 right = camera.get_right();
@@ -49,4 +47,6 @@ void Player::update_movement(float delta_time, Camera camera) {
       {},
       {},
       *Physics::get_temp_allocator());
+
+  _position = get_pos();
 }

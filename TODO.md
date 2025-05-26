@@ -16,25 +16,27 @@
 - [x] Separate Animation to clips  
 - [ ] Advanced Weapon
      - [ ] Debug Pass
+     - [x] Collider
      - [x] Raycast
      - [ ] Muzzle Flash
      - [ ] Bullet Casing
      - [ ] Decal
      - [ ] Ammo System
 - [ ] Blood Splash
-- [ ] Ragdoll  
 - [ ] Z fighting  
 - [ ] Loading (offscreen)  
 - [ ] Fog of war  
 - [ ] Loading Screen  
 - [ ] UI Pass  
 - [ ] Hot reloading  
-- [ ] Arena Allocator  
+- [ ] Arena Allocator
 - [ ] Array-ify instead of std::vector  
 - [ ] Remove dependency OpenGLRenderer <-> Player  
 - [ ] Precise Audio Handle  
+- [ ] Sanity Checks ~20% coverage
 
 ## When I buy Windows ...
 - [ ] Compute Skinning Pass <- Defer this to when I buy Windows, macOS only supports OpenGL 4.1
 - [ ] SSBO
 - [ ] PhysX, Jolt is just too new
+- [ ] Ragdoll using PhysX  

@@ -73,10 +73,6 @@ class EunContactListener : public ContactListener {
                       const Body &body2,
                       const ContactManifold &,
                       ContactSettings &) override {
-    printf("[Contact] Body1: %u <--> Body2: %u\n",
-           body1.GetID().GetIndexAndSequenceNumber(),
-           body2.GetID().GetIndexAndSequenceNumber());
-
     auto it1 = Physics::get_contact_callbacks().find(body1.GetID());
     if (it1 != Physics::get_contact_callbacks().end())
       it1->second(body1.GetID(), body2.GetID());

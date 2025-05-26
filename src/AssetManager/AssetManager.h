@@ -19,6 +19,4 @@ Mesh              *get_mesh_by_name(const std::string &name);
 
 std::vector<Model> &get_models();
 Model              *get_model_by_name(const std::string &name);
-
-JPH::BodyID *get_collider_by_name(const std::string &name);
 } // namespace AssetManager

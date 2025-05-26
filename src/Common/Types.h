@@ -14,3 +14,24 @@ struct PlayerControls {
   unsigned int NEXT_WEAPON   = EUN_KEY_Q;
   unsigned int FLASHLIGHT    = EUN_KEY_F;
 };
+
+enum struct PhysicsType {
+  NONE = 0,
+  RIGID_DYNAMIC,
+  RIGID_STATIC,
+  UNDEFINED,
+};
+
+enum class ObjectType {
+  NONE = 0,
+  MAP,
+  GAME_OBJECT,
+  DECAL,
+  UNDEFINED,
+};
+
+struct PhysicsUserData {
+  // TODO: Object UUID
+  PhysicsType physics_type = PhysicsType::NONE;
+  ObjectType  object_type  = ObjectType::NONE;
+};

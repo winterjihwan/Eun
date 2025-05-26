@@ -1,46 +1,58 @@
 #include "World.h"
 #include "AssetManager/AssetManager.h"
+#include "CreateInfo.h"
+#include "Enums.h"
 #include "Input/Input.h"
 #include "Keycodes.h"
 #include "Physics/Physics.h"
+#include "Types/Game/AnimEntity.h"
 #include <vector>
 
 namespace World {
 std::vector<AnimEntity> _anim_entities;
 std::vector<Bullet>     _bullets;
+std::vector<Npc>        _npcs;
 
 void init() {
-  //  Brian
+  // Brian
   {
-    AnimEntity  *brian_anim_entity   = &_anim_entities.emplace_back();
-    Model       *brian_model         = AssetManager::get_model_by_name("Brian");
-    Animator    *brian_animator_walk = AssetManager::get_animator_by_name("Brian_Idle");
-    JPH::BodyID *brian_collider      = AssetManager::get_collider_by_name("Brian");
+    NpcCreateInfo npc_create_info;
+    npc_create_info.name            = "Brian";
+    npc_create_info.model           = AssetManager::get_model_by_name("Brian");
+    npc_create_info.animators.idle  = AssetManager::get_animator_by_name("Brian_Idle");
+    npc_create_info.animators.walk  = AssetManager::get_animator_by_name("Brian_Walk");
+    npc_create_info.animators.death = AssetManager::get_animator_by_name("Brian_Death");
+    npc_create_info.model_transform = glm::translate(glm::mat4(1.0f), glm::vec3(13.0f, 0, -5.0f));
+    npc_create_info.capsule_radius  = 0.3f;
+    npc_create_info.capsule_height  = 1.2f;
+    npc_create_info.capsule_position =
+        glm::vec3(13.0f,
+                  (npc_create_info.capsule_height + 2.0f * npc_create_info.capsule_radius) / 2.0f,
+                  -5.0f);
 
-    glm::mat4 transform_brian = glm::mat4(1.0f);
-    transform_brian           = glm::translate(transform_brian, glm::vec3(13.0f, 0, -5.0f));
-
-    brian_anim_entity->init("Brian", brian_model, brian_animator_walk, transform_brian);
-    brian_anim_entity->set_collider(brian_collider);
+    Npc &npc = _npcs.emplace_back();
+    npc.init(std::move(npc_create_info));
   }
 }
 
 void update(float delta_time) {
   // HACK
   if (Input::key_pressed(EUN_KEY_5)) {
-    AnimEntity *brian_anim_entity    = get_anim_entity_by_name("Brian");
-    Animator   *brian_animator_death = AssetManager::get_animator_by_name("Brian_Death");
-    brian_animator_death->PlayAnimation();
-    brian_anim_entity->set_animator(brian_animator_death);
+    Npc *brian = get_npc_by_name("Brian");
+    brian->set_animation_state(NpcAnimationState::DEATH);
   }
   if (Input::key_pressed(EUN_KEY_6)) {
-    AnimEntity *brian_anim_entity   = get_anim_entity_by_name("Brian");
-    Animator   *brian_animator_walk = AssetManager::get_animator_by_name("Brian_Walk");
-    brian_animator_walk->PlayAnimation();
-    brian_anim_entity->set_animator(brian_animator_walk);
+    Npc *brian = get_npc_by_name("Brian");
+    brian->set_animation_state(NpcAnimationState::WALK);
   }
 
   process_bullets();
+
+  // Npcs
+  for (Npc &npc : _npcs) {
+    AnimEntity *anim_entity = npc.get_anim_entity();
+    anim_entity->update(delta_time);
+  }
 
   // Anim Entities
   for (AnimEntity &anim_entity : _anim_entities) {
@@ -49,6 +61,12 @@ void update(float delta_time) {
 }
 
 void submit_render_items() {
+  // Npcs
+  for (Npc &npc : _npcs) {
+    AnimEntity *anim_entity = npc.get_anim_entity();
+    anim_entity->submit_render_item();
+  }
+
   // Anim Entities
   for (AnimEntity &anim_entity : _anim_entities) {
     anim_entity.submit_render_item();
@@ -72,7 +90,7 @@ void process_bullets() {
       BodyID hitBody = result.mBodyID;
       float  dist    = result.mFraction * maxDist;
 
-      printf("Bullet hit body %u at distance %.2f\n", hitBody.GetIndexAndSequenceNumber(), dist);
+      printf("Bullet hit body %u at distance %.2f\n", hitBody.GetIndex(), dist);
     }
   }
 
@@ -100,6 +118,17 @@ AnimEntity *get_anim_entity_by_name(const std::string &name) {
 
   std::cout << "World::get_anim_entity_by_name() failed, no anim entity with name: " << name
             << std::endl;
+  assert(0);
+}
+
+Npc *get_npc_by_name(const std::string &name) {
+  for (Npc &npc : _npcs) {
+    if (name == npc.get_name()) {
+      return &npc;
+    }
+  }
+
+  std::cout << "World::get_npc_by_name() failed, no npc with name: " << name << std::endl;
   assert(0);
 }
 } // namespace World
