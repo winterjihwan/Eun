@@ -3,8 +3,8 @@
 
 namespace OpenGLRenderer {
 extern std::unordered_map<std::string, Shader> _shaders;
-extern glm::mat4                               _projection;
 extern glm::mat4                               _view;
+extern glm::mat4                               _projection;
 
 void anim_pass() {
   _shaders["Anim"].use();

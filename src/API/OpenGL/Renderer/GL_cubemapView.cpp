@@ -1,6 +1,6 @@
 #include "GL_cubemapView.h"
-#include "Model.h"
 #include <iostream>
+#include <stb_image/stb_image.h>
 
 OpenGLCubemapView::OpenGLCubemapView() {
   create_cubemap();
@@ -17,12 +17,12 @@ void OpenGLCubemapView::create_cubemap() {
   glBindTexture(GL_TEXTURE_CUBE_MAP, _handle);
 
   // HACK
-  vector<std::string> faces{"res/textures/NightSky/NightSky_Right.png",
-                            "res/textures/NightSky/NightSky_Left.png",
-                            "res/textures/NightSky/NightSky_Top.png",
-                            "res/textures/NightSky/NightSky_Bottom.png",
-                            "res/textures/NightSky/NightSky_Front.png",
-                            "res/textures/NightSky/NightSky_Back.png"};
+  std::vector<std::string> faces{"res/textures/NightSky/NightSky_Right.png",
+                                 "res/textures/NightSky/NightSky_Left.png",
+                                 "res/textures/NightSky/NightSky_Top.png",
+                                 "res/textures/NightSky/NightSky_Bottom.png",
+                                 "res/textures/NightSky/NightSky_Front.png",
+                                 "res/textures/NightSky/NightSky_Back.png"};
 
   int width, height, nrChannels;
   for (unsigned int i = 0; i < faces.size(); i++) {

@@ -2,6 +2,7 @@
 
 #include "Types/Game/AnimEntity.h"
 #include "Types/Game/Bullet.h"
+#include "Types/Game/Decal.h"
 #include "Types/Game/Npc.h"
 
 namespace World {
@@ -14,6 +15,7 @@ void process_bullets();
 
 void add_anim_entity(AnimEntity &&anim_entity);
 void add_bullet(Bullet &&bullet);
+void add_decal(Decal &&decal);
 
 std::vector<Bullet> &get_bullets();
 AnimEntity          *get_anim_entity_by_name(const std::string &name);

@@ -12,6 +12,7 @@ void Npc::init(NpcCreateInfo &&npc_create_info) {
   _model           = npc_create_info.model;
   _animators       = npc_create_info.animators;
   _model_transform = npc_create_info.model_transform;
+  _animation_state = npc_create_info.animation_state;
   _anim_entity.init(_name, _model, _animators.idle, _model_transform);
 
   // Physics
@@ -37,7 +38,6 @@ void Npc::init(NpcCreateInfo &&npc_create_info) {
 
   _collider = body->GetID();
   _anim_entity.set_collider(&_collider);
-  std::cout << "Brian's body id is " << body->GetID().GetIndex() << std::endl;
 }
 
 AnimEntity *Npc::get_anim_entity() {

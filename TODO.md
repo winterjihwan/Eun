@@ -23,6 +23,8 @@
      - [ ] Decal
      - [ ] Ammo System
 - [ ] Blood Splash
+- [ ] G-buffer
+- [ ] Deferred Rendering
 - [ ] Z fighting  
 - [ ] Loading (offscreen)  
 - [ ] Fog of war  
@@ -34,6 +36,7 @@
 - [ ] Remove dependency OpenGLRenderer <-> Player  
 - [ ] Precise Audio Handle  
 - [ ] Sanity Checks ~20% coverage
+- [ ] Npc Intelligence
 
 ## When I buy Windows ...
 - [ ] Compute Skinning Pass <- Defer this to when I buy Windows, macOS only supports OpenGL 4.1

@@ -19,3 +19,6 @@ const float ZOOM        = 45.0f;
 
 // Audio
 #define AUDIO_BASE_PATH "res/audio/"
+
+// Animation
+#define MAX_BONE_INFLUENCE 8

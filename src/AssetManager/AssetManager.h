@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Model.h"
+#include "Texture.h"
 #include "Types/Animation/Animator.h"
 #include "Util/Util.h"
 #include <Jolt/Jolt.h>
@@ -19,4 +20,6 @@ Mesh              *get_mesh_by_name(const std::string &name);
 
 std::vector<Model> &get_models();
 Model              *get_model_by_name(const std::string &name);
+
+Texture *get_texture_by_name(const std::string &name);
 } // namespace AssetManager

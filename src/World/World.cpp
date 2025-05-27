@@ -1,20 +1,17 @@
 #include "World.h"
 #include "AssetManager/AssetManager.h"
 #include "CreateInfo.h"
-#include "Enums.h"
-#include "Input/Input.h"
 #include "Keycodes.h"
-#include "Physics/Physics.h"
-#include "Types/Game/AnimEntity.h"
 #include <vector>
 
 namespace World {
 std::vector<AnimEntity> _anim_entities;
 std::vector<Bullet>     _bullets;
+std::vector<Decal>      _decals;
 std::vector<Npc>        _npcs;
 
 void init() {
-  // Brian
+  // Npc
   {
     NpcCreateInfo npc_create_info;
     npc_create_info.name            = "Brian";
@@ -35,31 +32,6 @@ void init() {
   }
 }
 
-void update(float delta_time) {
-  // HACK
-  if (Input::key_pressed(EUN_KEY_5)) {
-    Npc *brian = get_npc_by_name("Brian");
-    brian->set_animation_state(NpcAnimationState::DEATH);
-  }
-  if (Input::key_pressed(EUN_KEY_6)) {
-    Npc *brian = get_npc_by_name("Brian");
-    brian->set_animation_state(NpcAnimationState::WALK);
-  }
-
-  process_bullets();
-
-  // Npcs
-  for (Npc &npc : _npcs) {
-    AnimEntity *anim_entity = npc.get_anim_entity();
-    anim_entity->update(delta_time);
-  }
-
-  // Anim Entities
-  for (AnimEntity &anim_entity : _anim_entities) {
-    anim_entity.update(delta_time);
-  }
-}
-
 void submit_render_items() {
   // Npcs
   for (Npc &npc : _npcs) {
@@ -71,30 +43,11 @@ void submit_render_items() {
   for (AnimEntity &anim_entity : _anim_entities) {
     anim_entity.submit_render_item();
   }
-}
 
-void process_bullets() {
-  std::vector<Bullet>    &bullets = get_bullets();
-  PhysicsSystem          &system  = Physics::get_physics_system();
-  const NarrowPhaseQuery &query   = system.GetNarrowPhaseQuery();
-
-  for (Bullet &bullet : bullets) {
-    JPH::Vec3 origin    = Util::to_jolt_vec3(bullet.get_origin());
-    JPH::Vec3 direction = Util::to_jolt_vec3(bullet.get_direction());
-    float     maxDist   = 100.0f;
-
-    RRayCast      ray(origin, direction * maxDist);
-    RayCastResult result;
-
-    if (query.CastRay(ray, result)) {
-      BodyID hitBody = result.mBodyID;
-      float  dist    = result.mFraction * maxDist;
-
-      printf("Bullet hit body %u at distance %.2f\n", hitBody.GetIndex(), dist);
-    }
+  // Decals
+  for (Decal &decal : _decals) {
+    decal.submit_render_item();
   }
-
-  bullets.clear();
 }
 
 void add_anim_entity(AnimEntity &&anim_entity) {
@@ -103,6 +56,10 @@ void add_anim_entity(AnimEntity &&anim_entity) {
 
 void add_bullet(Bullet &&bullet) {
   _bullets.push_back(std::move(bullet));
+}
+
+void add_decal(Decal &&decal) {
+  _decals.push_back(std::move(decal));
 }
 
 std::vector<Bullet> &get_bullets() {

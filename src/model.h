@@ -1,6 +1,9 @@
 #pragma once
 
+#include "Enums.h"
 #include "Mesh.h"
+#include "Texture.h"
+#include "Types.h"
 #include "Types/Animation/Animdata.h"
 #include "Types/Animation/Assimp_utils.h"
 #include "stb_image/stb_image.h"
@@ -15,24 +18,22 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 class Model {
 public:
-  string          name;
-  vector<Texture> textures_loaded;
-  vector<Mesh>    meshes;
-  string          directory;
-  bool            gammaCorrection;
+  std::string          name;
+  std::vector<Texture> textures_loaded;
+  std::vector<Mesh>    meshes;
+  std::string          directory;
+  bool                 gammaCorrection;
 
-  Model(string const &path, const string &name, bool gamma = false)
+  Model(std::string const &path, const std::string &name, bool gamma = false)
       : name(name), gammaCorrection(gamma) {
     loadModel(path);
   }
 
   void Draw(Shader &shader) {
     for (unsigned int i = 0; i < meshes.size(); i++)
-      meshes[i].Draw(shader);
+      meshes[i].draw(shader);
   }
 
   std::string StripArmaturePrefix(const std::string &name) {
@@ -61,7 +62,7 @@ public:
     }
 
     for (auto &mesh : meshes) {
-      mesh.Draw(shader);
+      mesh.draw(shader);
     }
   }
 
@@ -77,7 +78,7 @@ public:
 
 private:
   std::map<std::string, glm::mat4> m_GlobalBindPose;
-  std::map<string, BoneInfo>       m_BoneInfoMap;
+  std::map<std::string, BoneInfo>  m_BoneInfoMap;
   int                              m_BoneCounter = 0;
   AssimpNodeData                   m_RootNode;
 
@@ -93,14 +94,14 @@ private:
     }
   }
 
-  void loadModel(string const &path) {
+  void loadModel(std::string const &path) {
     Assimp::Importer importer;
     const aiScene   *scene = importer.ReadFile(path,
                                              aiProcess_Triangulate | aiProcess_GenSmoothNormals |
                                                  aiProcess_CalcTangentSpace | aiProcess_FlipUVs);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-      cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
+      std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
       return;
     }
     directory = path.substr(0, path.find_last_of('/'));
@@ -140,9 +141,9 @@ private:
   }
 
   Mesh processMesh(aiMesh *mesh, const aiScene *scene) {
-    vector<Vertex>       vertices;
-    vector<unsigned int> indices;
-    vector<Texture>      textures;
+    std::vector<Vertex>       vertices;
+    std::vector<unsigned int> indices;
+    std::vector<Texture>      textures;
 
     // Vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -171,25 +172,25 @@ private:
 
     aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
-    vector<Texture> diffuseMaps =
-        loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+    std::vector<Texture> diffuseMaps =
+        loadMaterialTextures(material, aiTextureType_DIFFUSE, TextureType::DIFFUSE);
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-    vector<Texture> specularMaps =
-        loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+    std::vector<Texture> specularMaps =
+        loadMaterialTextures(material, aiTextureType_SPECULAR, TextureType::SPECULAR);
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
     std::vector<Texture> normalMaps =
-        loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+        loadMaterialTextures(material, aiTextureType_HEIGHT, TextureType::NORMAL);
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
     std::vector<Texture> heightMaps =
-        loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+        loadMaterialTextures(material, aiTextureType_AMBIENT, TextureType::HEIGHT);
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
     ExtractBoneWeightForVertices(vertices, mesh, scene);
 
-    return Mesh(vertices, indices, textures, "");
+    return Mesh(std::move(vertices), std::move(indices), std::move(textures), "");
   }
 
   void SetVertexBoneData(Vertex &vertex, int boneID, float weight) {
@@ -240,47 +241,12 @@ private:
     }
   }
 
-  unsigned int TextureFromFile(const char *path, const string &directory, bool gamma = false) {
-    string filename = string(path);
-    filename        = directory + '/' + filename;
-
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-
-    int            width, height, nrComponents;
-    unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-    if (data) {
-      GLenum format;
-      if (nrComponents == 1)
-        format = GL_RED;
-      else if (nrComponents == 3)
-        format = GL_RGB;
-      else
-        format = GL_RGBA;
-
-      glBindTexture(GL_TEXTURE_2D, textureID);
-      glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-      glGenerateMipmap(GL_TEXTURE_2D);
-
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-      stbi_image_free(data);
-    } else {
-      std::cout << "Texture failed to load at path: " << path << std::endl;
-      stbi_image_free(data);
-    }
-
-    return textureID;
-  }
-
-  vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName) {
-    vector<Texture> textures;
-    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+  std::vector<Texture>
+  loadMaterialTextures(aiMaterial *mat, aiTextureType ai_type, TextureType type) {
+    std::vector<Texture> textures;
+    for (unsigned int i = 0; i < mat->GetTextureCount(ai_type); i++) {
       aiString str;
-      mat->GetTexture(type, i, &str);
+      mat->GetTexture(ai_type, i, &str);
 
       bool skip = false;
       for (unsigned int j = 0; j < textures_loaded.size(); j++) {
@@ -293,10 +259,10 @@ private:
       }
 
       if (!skip) {
-        Texture texture;
-        texture.id   = TextureFromFile(str.C_Str(), this->directory);
-        texture.type = typeName;
-        texture.path = str.C_Str();
+        std::string path = std::string(str.C_Str());
+        path             = directory + '/' + path;
+
+        Texture texture("", path, type);
         textures.push_back(texture);
         textures_loaded.push_back(texture);
       }

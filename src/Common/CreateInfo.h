@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Enums.h"
 #include "Model.h"
 #include "Types/Animation/Animator.h"
 #include <glm/glm.hpp>
@@ -9,6 +10,12 @@ struct BulletCreateInfo {
   glm::vec3 direction    = glm::vec3(0);
   int32_t   weapon_index = 0;
   uint32_t  damage       = 0;
+};
+
+struct DecalCreateInfo {
+  DecalType type;
+  glm::vec3 hit_position = glm::vec3(0.0f);
+  glm::vec3 hit_normal   = glm::vec3(0.0f);
 };
 
 struct NpcAnimators {
@@ -32,5 +39,5 @@ struct NpcCreateInfo {
   float     capsule_height;
   glm::vec3 capsule_position;
 
-  unsigned int animator_index = 0;
+  NpcAnimationState animation_state = NpcAnimationState::IDLE;
 };

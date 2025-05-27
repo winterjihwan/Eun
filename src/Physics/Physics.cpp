@@ -167,6 +167,11 @@ void register_static_mesh(const std::vector<Vertex>       &vertices,
   BodyCreationSettings settings(shape, pos, rot, EMotionType::Static, Layers::NON_MOVING);
   Body                *body = _physics_system.GetBodyInterface().CreateBody(settings);
 
+  PhysicsUserData user_data;
+  user_data.physics_type = PhysicsType::RIGID_STATIC;
+  user_data.object_type  = ObjectType::MAP;
+  body->SetUserData(reinterpret_cast<uint64>(new PhysicsUserData(user_data)));
+
   _physics_system.GetBodyInterface().AddBody(body->GetID(), EActivation::DontActivate);
 }
 
@@ -184,9 +189,6 @@ TempAllocatorImpl *get_temp_allocator() {
 
 std::unordered_map<BodyID, PFN_ContactCallback> &get_contact_callbacks() {
   return _contact_callbacks;
-}
-
-void a() {
 }
 
 } // namespace Physics

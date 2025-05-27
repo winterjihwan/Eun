@@ -7,7 +7,7 @@
 #include <memory>
 #include <vector>
 
-unsigned int load_cubemap(vector<std::string> faces);
+unsigned int load_cubemap(std::vector<std::string> faces);
 
 namespace AssetManager {
 std::vector<Model>                      _models;
@@ -15,6 +15,8 @@ std::vector<Mesh>                       _meshes;
 std::vector<std::shared_ptr<Animation>> _animations;
 std::vector<Animator>                   _animators;
 std::vector<Ref<Ragdoll>>               _ragdolls;
+// TODO: Remove Texture from Mesh
+std::vector<Texture> _textures;
 
 // TODO: Index Map
 void init() {
@@ -43,36 +45,41 @@ void init() {
     _animators.emplace_back(&*brian_death_animation, "Brian_Death");
   }
 
+  // Decal
+  {
+    std::vector<Vertex>   quad_v = Util::generate_quad_vertices(0.3f, 0.3f);
+    std::vector<uint32_t> quad_i = Util::generate_quad_indices();
+    std::vector<Texture>  quad_t;
+    quad_t.emplace_back("Bullet_Hole", "res/textures/Bullet_Hole.png", TextureType::DIFFUSE);
+
+    _meshes.emplace_back(quad_v, quad_i, quad_t, "Decal");
+  }
+
   // Pistol
   {
     Model &pistol = _models.emplace_back("res/objects/Pistol/scene.gltf", "Pistol");
     std::shared_ptr<Animation> &pistol_animation = _animations.emplace_back(
         std::make_shared<Animation>("res/objects/Pistol/scene.gltf", &pistol));
 
-    _animators.emplace_back(&*pistol_animation, "Pistol_Draw");
-    Animator *pistol_draw_animator = get_animator_by_name("Pistol_Draw");
-    pistol_draw_animator->SetClip(0.0f, 1.14f);
-    pistol_draw_animator->SetIsLoop(false);
+    Animator *draw_animator = &_animators.emplace_back(&*pistol_animation, "Pistol_Draw");
+    draw_animator->SetClip(0.0f, 1.14f);
+    draw_animator->SetIsLoop(false);
 
-    _animators.emplace_back(&*pistol_animation, "Pistol_Idle");
-    Animator *pistol_idle_animator = get_animator_by_name("Pistol_Idle");
-    pistol_idle_animator->SetClip(10.9f, 11.2f);
-    pistol_idle_animator->SetIsLoop(false);
+    Animator *idle_animator = &_animators.emplace_back(&*pistol_animation, "Pistol_Idle");
+    idle_animator->SetClip(10.9f, 11.2f);
+    idle_animator->SetIsLoop(false);
 
-    _animators.emplace_back(&*pistol_animation, "Pistol_Fire");
-    Animator *pistol_fire_animator = get_animator_by_name("Pistol_Fire");
-    pistol_fire_animator->SetClip(7.5f, 8.0f);
-    pistol_fire_animator->SetIsLoop(false);
+    Animator *fire_animator = &_animators.emplace_back(&*pistol_animation, "Pistol_Fire");
+    fire_animator->SetClip(7.5f, 8.0f);
+    fire_animator->SetIsLoop(false);
 
-    _animators.emplace_back(&*pistol_animation, "Pistol_Reload");
-    Animator *pistol_reload_animator = get_animator_by_name("Pistol_Reload");
-    pistol_reload_animator->SetClip(8.2f, 10.8f);
-    pistol_reload_animator->SetIsLoop(false);
+    Animator *reload_animator = &_animators.emplace_back(&*pistol_animation, "Pistol_Reload");
+    reload_animator->SetClip(8.2f, 10.8f);
+    reload_animator->SetIsLoop(false);
 
-    _animators.emplace_back(&*pistol_animation, "Pistol_Inspect");
-    Animator *pistol_inspect_animator = get_animator_by_name("Pistol_Inspect");
-    pistol_inspect_animator->SetClip(1.5f, 7.0f);
-    pistol_inspect_animator->SetIsLoop(false);
+    Animator *inspect_animator = &_animators.emplace_back(&*pistol_animation, "Pistol_Inspect");
+    inspect_animator->SetClip(1.5f, 7.0f);
+    inspect_animator->SetIsLoop(false);
   }
 
   // HK_416
@@ -81,30 +88,25 @@ void init() {
     std::shared_ptr<Animation> &hk_416_animation = _animations.emplace_back(
         std::make_shared<Animation>("res/objects/HK_416/scene.gltf", &hk_416));
 
-    _animators.emplace_back(&*hk_416_animation, "HK_416_Draw");
-    Animator *hk_416_draw_animator = get_animator_by_name("HK_416_Draw");
-    hk_416_draw_animator->SetClip(0.0f, 2.2f);
-    hk_416_draw_animator->SetIsLoop(false);
+    Animator *draw_animator = &_animators.emplace_back(&*hk_416_animation, "HK_416_Draw");
+    draw_animator->SetClip(0.0f, 2.2f);
+    draw_animator->SetIsLoop(false);
 
-    _animators.emplace_back(&*hk_416_animation, "HK_416_Idle");
-    Animator *hk_416_idle_animator = get_animator_by_name("HK_416_Idle");
-    hk_416_idle_animator->SetClip(8.0f, 8.2f);
-    hk_416_idle_animator->SetIsLoop(false);
+    Animator *idle_animator = &_animators.emplace_back(&*hk_416_animation, "HK_416_Idle");
+    idle_animator->SetClip(8.0f, 8.2f);
+    idle_animator->SetIsLoop(false);
 
-    _animators.emplace_back(&*hk_416_animation, "HK_416_Inspect");
-    Animator *hk_416_inspect_animator = get_animator_by_name("HK_416_Inspect");
-    hk_416_inspect_animator->SetClip(2.2f, 8.0f);
-    hk_416_inspect_animator->SetIsLoop(false);
+    Animator *inspect_animator = &_animators.emplace_back(&*hk_416_animation, "HK_416_Inspect");
+    inspect_animator->SetClip(2.2f, 8.0f);
+    inspect_animator->SetIsLoop(false);
 
-    _animators.emplace_back(&*hk_416_animation, "HK_416_Fire");
-    Animator *hk_416_fire_animator = get_animator_by_name("HK_416_Fire");
-    hk_416_fire_animator->SetClip(21.96f, 22.36f);
-    hk_416_fire_animator->SetIsLoop(false);
+    Animator *fire_animator = &_animators.emplace_back(&*hk_416_animation, "HK_416_Fire");
+    fire_animator->SetClip(21.96f, 22.36f);
+    fire_animator->SetIsLoop(false);
 
-    _animators.emplace_back(&*hk_416_animation, "HK_416_Reload");
-    Animator *hk_416_reload_animator = get_animator_by_name("HK_416_Reload");
-    hk_416_reload_animator->SetClip(8.25f, 14.5f);
-    hk_416_reload_animator->SetIsLoop(false);
+    Animator *reload_animator = &_animators.emplace_back(&*hk_416_animation, "HK_416_Reload");
+    reload_animator->SetClip(8.25f, 14.5f);
+    reload_animator->SetIsLoop(false);
   }
 
   /* Objects */
@@ -172,8 +174,16 @@ Model *get_model_by_name(const std::string &name) {
   assert(0);
 }
 
-std::vector<Ref<Ragdoll>> &get_ragdolls() {
-  return _ragdolls;
+Texture *get_texture_by_name(const std::string &name) {
+  for (auto &texture : _textures) {
+    if (name == texture.name) {
+      return &texture;
+    }
+  }
+
+  std::cout << "AssetManager::get_texture_by_name() failed, no texture with name: " << name
+            << std::endl;
+  assert(0);
 }
 
 } // namespace AssetManager

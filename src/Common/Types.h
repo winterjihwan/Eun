@@ -1,5 +1,9 @@
 #pragma once
+#include "Defines.h"
+#include "Enums.h"
 #include "Keycodes.h"
+#include <glm/glm.hpp>
+#include <string>
 
 // Player
 // TODO: One place for control config
@@ -15,23 +19,25 @@ struct PlayerControls {
   unsigned int FLASHLIGHT    = EUN_KEY_F;
 };
 
-enum struct PhysicsType {
-  NONE = 0,
-  RIGID_DYNAMIC,
-  RIGID_STATIC,
-  UNDEFINED,
-};
-
-enum class ObjectType {
-  NONE = 0,
-  MAP,
-  GAME_OBJECT,
-  DECAL,
-  UNDEFINED,
-};
-
 struct PhysicsUserData {
   // TODO: Object UUID
   PhysicsType physics_type = PhysicsType::NONE;
   ObjectType  object_type  = ObjectType::NONE;
+};
+
+struct Vertex {
+  glm::vec3 position;
+  glm::vec3 normal;
+  glm::vec2 texcoords;
+  glm::vec3 tangent;
+  glm::vec3 bitangent;
+  int       m_BoneIDs[MAX_BONE_INFLUENCE];
+  float     m_Weights[MAX_BONE_INFLUENCE];
+};
+
+// TODO: Replace with Texture class
+struct Texture_t {
+  unsigned int id;
+  TextureType  type;
+  std::string  path;
 };

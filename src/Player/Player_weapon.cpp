@@ -132,9 +132,9 @@ void Player::spawn_bullet(float variance) {
 
   glm::vec3 bullet_direction = Game::get_camera()->get_front();
 
-  // bullet_direction.x += Util::random_float(-(variance * 0.5f), variance * 0.5f);
-  // bullet_direction.y += Util::random_float(-(variance * 0.5f), variance * 0.5f);
-  // bullet_direction.z += Util::random_float(-(variance * 0.5f), variance * 0.5f);
+  bullet_direction.x += Util::random_float(-(variance * 0.5f), variance * 0.5f);
+  bullet_direction.y += Util::random_float(-(variance * 0.5f), variance * 0.5f);
+  bullet_direction.z += Util::random_float(-(variance * 0.5f), variance * 0.5f);
   bullet_direction = glm::normalize(bullet_direction);
 
   BulletCreateInfo createInfo;

@@ -1,3 +1,4 @@
+#include "Types.h"
 #include "Util.h"
 
 namespace Util {
@@ -177,4 +178,25 @@ std::vector<uint32_t> generate_capsule_indices(unsigned int segments) {
 
   return indices;
 }
+
+std::vector<Vertex> generate_quad_vertices(float width, float height) {
+  std::vector<Vertex> vertices;
+
+  float hw = width * 0.5f;
+  float hh = height * 0.5f;
+
+  glm::vec3 normal = glm::vec3(0, 0, 1);
+
+  vertices.push_back(Vertex{{-hw, -hh, 0.0f}, normal, {0.0f, 0.0f}});
+  vertices.push_back(Vertex{{hw, -hh, 0.0f}, normal, {1.0f, 0.0f}});
+  vertices.push_back(Vertex{{hw, hh, 0.0f}, normal, {1.0f, 1.0f}});
+  vertices.push_back(Vertex{{-hw, hh, 0.0f}, normal, {0.0f, 1.0f}});
+
+  return vertices;
+}
+
+std::vector<uint32_t> generate_quad_indices() {
+  return {0, 1, 2, 2, 3, 0};
+}
+
 } // namespace Util

@@ -1,72 +1,56 @@
 #pragma once
 
-#include <glad/glad.h>
-
 #include "Shader.h"
+#include "Texture.h"
+#include "Types.h"
+#include "Util/Util.h"
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <string>
 #include <vector>
-using namespace std;
-
-#define MAX_BONE_INFLUENCE 8
-
-struct Vertex {
-  glm::vec3 position;
-  glm::vec3 normal;
-  glm::vec2 texcoords;
-  glm::vec3 tangent;
-  glm::vec3 bitangent;
-  int       m_BoneIDs[MAX_BONE_INFLUENCE];
-  float     m_Weights[MAX_BONE_INFLUENCE];
-};
-
-struct Texture {
-  unsigned int id;
-  string       type;
-  string       path;
-};
 
 class Mesh {
 public:
-  string               name;
-  vector<Vertex>       vertices;
-  vector<unsigned int> indices;
-  vector<Texture>      textures;
-  unsigned int         VAO;
+  std::string               name;
+  std::vector<Vertex>       vertices;
+  std::vector<unsigned int> indices;
+  std::vector<Texture>      textures;
+  unsigned int              VAO;
 
-  Mesh(vector<Vertex>       vertices,
-       vector<unsigned int> indices,
-       vector<Texture>      textures,
-       string               name) {
+  Mesh(std::vector<Vertex>       vertices,
+       std::vector<unsigned int> indices,
+       std::vector<Texture>      textures,
+       std::string               name) {
     this->vertices = vertices;
     this->indices  = indices;
     this->textures = textures;
     this->name     = name;
 
-    setupMesh();
+    setup_mesh();
   }
 
-  void Draw(Shader &shader) {
+  void draw(Shader &shader) {
     unsigned int diffuseNr  = 1;
     unsigned int specularNr = 1;
     unsigned int normalNr   = 1;
     unsigned int heightNr   = 1;
     for (unsigned int i = 0; i < textures.size(); i++) {
       glActiveTexture(GL_TEXTURE0 + i);
-      string number;
-      string name = textures[i].type;
-      if (name == "texture_diffuse")
+
+      std::string number;
+      TextureType type = textures[i].type;
+      if (type == TextureType::DIFFUSE)
         number = std::to_string(diffuseNr++);
-      else if (name == "texture_specular")
+      else if (type == TextureType::SPECULAR)
         number = std::to_string(specularNr++);
-      else if (name == "texture_normal")
+      else if (type == TextureType::NORMAL)
         number = std::to_string(normalNr++);
-      else if (name == "texture_height")
+      else if (type == TextureType::HEIGHT)
         number = std::to_string(heightNr++);
 
-      glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
-      glBindTexture(GL_TEXTURE_2D, textures[i].id);
+      glUniform1i(glGetUniformLocation(shader.ID, (Util::to_string(type) + number).c_str()), i);
+      glBindTexture(GL_TEXTURE_2D, textures[i].get_handle());
     }
 
     glBindVertexArray(VAO);
@@ -79,7 +63,7 @@ public:
 private:
   unsigned int VBO, EBO;
 
-  void setupMesh() {
+  void setup_mesh() {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);

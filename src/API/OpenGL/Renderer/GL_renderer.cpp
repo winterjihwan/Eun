@@ -5,7 +5,7 @@
 #include "Types/Game/AnimEntity.h"
 #include <glm/gtx/string_cast.hpp>
 
-unsigned int load_cubemap(vector<std::string> faces);
+unsigned int load_cubemap(std::vector<std::string> faces);
 
 namespace OpenGLRenderer {
 std::unordered_map<std::string, Shader>            _shaders;
@@ -24,6 +24,7 @@ void init() {
   _shaders["Model"] = Shader("shaders/model.vert", "shaders/model.frag");
   _shaders["Sky"]   = Shader("shaders/sky.vert", "shaders/sky.frag");
   _shaders["Anim"]  = Shader("shaders/anim.vert", "shaders/anim.frag");
+  _shaders["Decal"] = Shader("shaders/decal.vert", "shaders/decal.frag");
 
   // Skybox
   float skybox_vertices[] = {-1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
@@ -55,9 +56,10 @@ void init() {
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
 
   _cubemap_views["NightSky"] = OpenGLCubemapView();
+  Shader &sky_shader         = _shaders["Sky"];
 
-  _shaders["Sky"].use();
-  _shaders["Sky"].setInt("skybox", 0);
+  sky_shader.use();
+  sky_shader.setInt("skybox", 0);
 }
 
 void render_game() {
@@ -76,6 +78,7 @@ void render_game() {
   geometry_pass();
   skybox_pass();
   anim_pass();
+  decal_pass();
 }
 
 } // namespace OpenGLRenderer

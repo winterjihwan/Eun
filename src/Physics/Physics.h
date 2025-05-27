@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Mesh.h"
 #include <Jolt/Jolt.h>
-#include <vector>
 
+#include "Types.h"
 #include <Jolt/Core/Factory.h>
 #include <Jolt/Core/JobSystemThreadPool.h>
 #include <Jolt/Core/TempAllocator.h>
@@ -21,6 +20,7 @@
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/Physics/Ragdoll/Ragdoll.h>
 #include <Jolt/RegisterTypes.h>
+#include <vector>
 
 using namespace JPH;
 

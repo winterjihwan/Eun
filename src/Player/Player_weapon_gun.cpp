@@ -42,7 +42,7 @@ void Player::fire_gun() {
 
   // Actual fire logic
 
-  spawn_bullet(0.5f);
+  spawn_bullet(0.02f);
 }
 
 void Player::inspect_gun() {
