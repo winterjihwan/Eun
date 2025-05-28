@@ -1,7 +1,12 @@
 #version 410 core
 
-layout(location = 0) in vec3 a_Position;
-layout(location = 2) in vec2 a_Texcoord;
+layout(location = 0) in vec3 pos;
+layout(location = 1) in vec3 norm;
+layout(location = 2) in vec2 tex;
+layout(location = 3) in vec3 tangent;
+layout(location = 4) in vec3 bitangent;
+layout(location = 5) in ivec4 boneIds;
+layout(location = 6) in vec4 weights;
 
 uniform mat4 u_model;
 uniform mat4 u_view;
@@ -23,9 +28,9 @@ void main() {
     vec3 u_HeightOffset = vec3(0, 0, 0);
 
     float currentSpeed = 1.0 / (u_NumOfFrames / float(u_Speed));
-    float timeInFrames = ((ceil(fract(-u_Time * currentSpeed) * float(u_NumOfFrames))) / float(u_NumOfFrames)) + (1.0 / float(u_NumOfFrames));
+    float timeInFrames = ((ceil(fract(u_Time * currentSpeed) * float(u_NumOfFrames))) / float(u_NumOfFrames)) + (1.0 / float(u_NumOfFrames));
 
-    vec2 uv = a_Texcoord;
+    vec2 uv = tex;
 
     vec4 texturePos = textureLod(u_PosTex, vec2(uv.x, timeInFrames + uv.y), 0.0);
     vec4 textureNorm = textureLod(u_NormTex, vec2(uv.x, timeInFrames + uv.y), 0.0);

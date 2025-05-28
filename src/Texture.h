@@ -11,6 +11,8 @@ struct Texture {
   std::string path;
   TextureType type;
 
+  Texture() = default;
+
   Texture(std::string name, std::string path, TextureType type) {
     this->name = name;
     this->path = path;

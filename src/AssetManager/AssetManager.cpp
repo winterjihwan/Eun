@@ -61,8 +61,8 @@ void init() {
   {
     _models.emplace_back("res/objects/Blood/blood_mesh.obj", "Blood");
 
-    _exr_textures.emplace_back("res/textures/Blood/blood_norm.exr", "blood_pos");
-    _exr_textures.emplace_back("res/textures/Blood/blood_pos.exr", "blood_norm");
+    _exr_textures.emplace_back("res/textures/Blood/blood_pos.exr", "blood_pos");
+    _exr_textures.emplace_back("res/textures/Blood/blood_norm.exr", "blood_norm");
   }
 
   // Pistol

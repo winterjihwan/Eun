@@ -10,35 +10,43 @@ void blood_volumetric_pass() {
   Shader                        &shader            = _shaders["BloodVolumetric"];
   std::vector<BloodVolumetric *> blood_volumetrics = RenderDataManager::get_blood_volumetrics();
 
-  printf("blood_volumetric_pass(): count = %zu\n", blood_volumetrics.size());
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glDisable(GL_BLEND);
+  glCullFace(GL_BACK);
+
+  shader.use();
+  shader.setMat4("u_view", _view);
+  shader.setMat4("u_projection", _projection);
+
+  GLuint vao;
+  glGenVertexArrays(1, &vao);
+  glBindVertexArray(vao);
 
   for (BloodVolumetric *blood_volumetric : blood_volumetrics) {
-    printf("  [BloodVolumetric] time = %.3f\n", blood_volumetric->_current_time);
-
     GLuint texPos  = blood_volumetric->get_exr_texture_pos()->get_handle();
     GLuint texNorm = blood_volumetric->get_exr_texture_norm()->get_handle();
-    printf("    TexPos = %u, TexNorm = %u\n", texPos, texNorm);
 
-    for (Mesh &mesh : blood_volumetric->get_model()->meshes) {
-      printf("    Mesh VAO = %u, index count = %zu\n", mesh.VAO, mesh.indices.size());
+    Mesh &mesh = blood_volumetric->get_model()->meshes[0];
 
-      shader.use();
-      shader.setMat4("u_view", _view);
-      shader.setMat4("u_projection", _projection);
-      shader.setMat4("u_model", glm::mat4(1.0f));
-      shader.setFloat("u_Time", blood_volumetric->_current_time);
+    // HACK
+    glm::mat4 model_blood = glm::mat4(1.0f);
+    model_blood           = glm::translate(model_blood, glm::vec3(13.0f, 0.0f, -1.0f));
+    model_blood           = glm::scale(model_blood, glm::vec3(10.0f));
+    shader.setMat4("u_model", model_blood);
+    shader.setFloat("u_Time", blood_volumetric->_current_time);
 
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, texPos);
-      glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, texNorm);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texPos);
 
-      mesh.draw(shader);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texNorm);
 
-      // glBindVertexArray(mesh.VAO);
-      // glDrawElements(
-      //     GL_TRIANGLES, static_cast<GLsizei>(mesh.indices.size()), GL_UNSIGNED_INT, nullptr);
-    }
+    mesh.draw(shader);
   }
+
+  glDepthMask(GL_TRUE);
+  glDisable(GL_CULL_FACE);
+  glBindVertexArray(0);
 }
 } // namespace OpenGLRenderer

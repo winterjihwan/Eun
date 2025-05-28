@@ -1,9 +1,5 @@
 #version 410 core
 
-// layout(location = 0) out vec4 gAlbedo;
-// layout(location = 1) out vec3 gNormal;
-// layout(location = 2) out vec3 gRMA;
-
 out vec4 FragColor;
 
 in vec3 v_WorldNormal;
@@ -12,16 +8,7 @@ uniform float u_Time;
 
 void main()
 {
-    if (u_Time > 0.9)
-        discard;
+    vec3 bloodColor = vec3(0.2, 0, 0);
 
-    vec3 bloodColor = vec3(0.2, 0, 0); //  vec4(0.31, 0, 0, 1);
-
-    bloodColor.r += 0.2;
-    // gAlbedo.rgba = vec4(bloodColor, 1);
-    // gNormal = normalize(v_WorldNormal);
-    // gRMA = vec3(0.15, 0.85, 0);
-    // gRMA = vec3(0.65, 0.2, 1);
-
-    FragColor = bloodColor;
+    FragColor = vec4(bloodColor, 1.0);
 }

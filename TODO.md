@@ -23,6 +23,7 @@
      - [x] Decal
      - [ ] Ammo System
 - [ ] Blood Decal
+- [ ] Blood Volumetric
 - [ ] Better Character Virtual Controller
 - [ ] G-buffer
 - [ ] Deferred Rendering
@@ -44,4 +45,3 @@
 - [ ] SSBO
 - [ ] PhysX, Jolt is just too new
 - [ ] Ragdoll using PhysX  
-- [ ] Blood Volumetric (EXR). Sampling in VS is unstable on macOS
