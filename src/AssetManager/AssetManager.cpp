@@ -3,6 +3,7 @@
 #include "Physics/Physics.h"
 #include "Renderer/Renderer.h"
 #include "Types/Animation/Animation.h"
+#include "Types/Texture/ExrTexture.h"
 #include "World/World.h"
 #include <memory>
 #include <vector>
@@ -16,7 +17,8 @@ std::vector<std::shared_ptr<Animation>> _animations;
 std::vector<Animator>                   _animators;
 std::vector<Ref<Ragdoll>>               _ragdolls;
 // TODO: Remove Texture from Mesh
-std::vector<Texture> _textures;
+std::vector<Texture>    _textures;
+std::vector<ExrTexture> _exr_textures;
 
 // TODO: Index Map
 void init() {
@@ -53,6 +55,14 @@ void init() {
     quad_t.emplace_back("Bullet_Hole", "res/textures/Bullet_Hole.png", TextureType::DIFFUSE);
 
     _meshes.emplace_back(quad_v, quad_i, quad_t, "Decal");
+  }
+
+  // Volumetric blood
+  {
+    _models.emplace_back("res/objects/Blood/blood_mesh.obj", "Blood");
+
+    _exr_textures.emplace_back("res/textures/Blood/blood_norm.exr", "blood_pos");
+    _exr_textures.emplace_back("res/textures/Blood/blood_pos.exr", "blood_norm");
   }
 
   // Pistol
@@ -182,6 +192,18 @@ Texture *get_texture_by_name(const std::string &name) {
   }
 
   std::cout << "AssetManager::get_texture_by_name() failed, no texture with name: " << name
+            << std::endl;
+  assert(0);
+}
+
+ExrTexture *get_exr_texture_by_name(const std::string &name) {
+  for (auto &texture : _exr_textures) {
+    if (name == texture.name) {
+      return &texture;
+    }
+  }
+
+  std::cout << "AssetManager::get_exr_texture_by_name() failed, no exr texture with name: " << name
             << std::endl;
   assert(0);
 }

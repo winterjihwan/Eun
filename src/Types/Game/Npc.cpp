@@ -25,13 +25,13 @@ void Npc::init(NpcCreateInfo &&npc_create_info) {
   CapsuleShapeSettings shape_settings(capsule_height / 2, capsule_radius);
   ShapeRefC            shape = shape_settings.Create().Get();
 
-  BodyCreationSettings settings(shape, pos, rot, EMotionType::Dynamic, Layers::MOVING);
+  BodyCreationSettings settings(shape, pos, rot, EMotionType::Static, Layers::NON_MOVING);
   BodyInterface       &bi   = Physics::get_physics_system().GetBodyInterface();
   Body                *body = bi.CreateBody(settings);
 
   PhysicsUserData user_data;
   user_data.physics_type = PhysicsType::RIGID_DYNAMIC;
-  user_data.object_type  = ObjectType::GAME_OBJECT;
+  user_data.object_type  = ObjectType::NPC;
   body->SetUserData(reinterpret_cast<uint64>(new PhysicsUserData(user_data)));
   // TODO: Activate upon self created map
   bi.AddBody(body->GetID(), EActivation::DontActivate);

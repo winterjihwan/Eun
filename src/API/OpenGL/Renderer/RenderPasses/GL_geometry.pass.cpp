@@ -57,6 +57,6 @@ void geometry_pass() {
   model_test_sphere = glm::translate(model_test_sphere, glm::vec3(0.0f, 0.0f, -3.0f));
   shader.setMat4("model", model_test_sphere);
   Mesh *test_sphere = AssetManager::get_mesh_by_name("Test_Sphere");
-  test_sphere->draw(shader);
+  // test_sphere->draw(shader);
 }
 } // namespace OpenGLRenderer

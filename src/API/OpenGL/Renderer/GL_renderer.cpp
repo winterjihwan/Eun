@@ -21,10 +21,11 @@ unsigned int _sky_vao;
 
 void init() {
   /* Shaders */
-  _shaders["Model"] = Shader("shaders/model.vert", "shaders/model.frag");
-  _shaders["Sky"]   = Shader("shaders/sky.vert", "shaders/sky.frag");
-  _shaders["Anim"]  = Shader("shaders/anim.vert", "shaders/anim.frag");
-  _shaders["Decal"] = Shader("shaders/decal.vert", "shaders/decal.frag");
+  _shaders["Model"]           = Shader("shaders/model.vert", "shaders/model.frag");
+  _shaders["Sky"]             = Shader("shaders/sky.vert", "shaders/sky.frag");
+  _shaders["Anim"]            = Shader("shaders/anim.vert", "shaders/anim.frag");
+  _shaders["BloodVolumetric"] = Shader("shaders/blood.vert", "shaders/blood.frag");
+  _shaders["Decal"]           = Shader("shaders/decal.vert", "shaders/decal.frag");
 
   // Skybox
   float skybox_vertices[] = {-1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
@@ -78,6 +79,7 @@ void render_game() {
   geometry_pass();
   skybox_pass();
   anim_pass();
+  blood_volumetric_pass();
   decal_pass();
 }
 

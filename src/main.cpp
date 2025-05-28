@@ -2,11 +2,15 @@
 #include "Backend/Backend.h"
 #include "Core/Game.h"
 #include "Input/Input.h"
-#include "Renderer/Renderer.h"
-#define STB_IMAGE_IMPLEMENTATION
 #include "Keycodes.h"
-#include "stb_image/stb_image.h"
+#include "Renderer/Renderer.h"
 #include <iostream>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image/stb_image.h>
+#define TINYEXR_IMPLEMENTATION
+#include <zlib.h>
+#define TINYEXR_USE_MINIZ 0
+#include <tinyexr/tinyexr.hpp>
 
 int main(void) {
   std::cout << "Eunnnnnnnnni" << std::endl;

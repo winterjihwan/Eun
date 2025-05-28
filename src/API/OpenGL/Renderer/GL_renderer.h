@@ -7,5 +7,6 @@ void render_game();
 void geometry_pass();
 void skybox_pass();
 void anim_pass();
+void blood_volumetric_pass();
 void decal_pass();
 } // namespace OpenGLRenderer

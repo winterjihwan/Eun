@@ -11,6 +11,7 @@ enum class WeaponAction {
 enum class DecalType {
   GLASS,
   PLASTER,
+  BLOOD,
 };
 
 enum class NpcAnimationState {
@@ -30,6 +31,7 @@ enum class ObjectType {
   NONE = 0,
   MAP,
   GAME_OBJECT,
+  NPC,
   DECAL,
   UNDEFINED,
 };

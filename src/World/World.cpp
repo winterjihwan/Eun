@@ -2,13 +2,15 @@
 #include "AssetManager/AssetManager.h"
 #include "CreateInfo.h"
 #include "Keycodes.h"
+#include "Types/Game/BloodVolumetric.h"
 #include <vector>
 
 namespace World {
-std::vector<AnimEntity> _anim_entities;
-std::vector<Bullet>     _bullets;
-std::vector<Decal>      _decals;
-std::vector<Npc>        _npcs;
+std::vector<AnimEntity>      _anim_entities;
+std::vector<Bullet>          _bullets;
+std::vector<Decal>           _decals;
+std::vector<Npc>             _npcs;
+std::vector<BloodVolumetric> _blood_volumetrics;
 
 void init() {
   // Npc
@@ -30,6 +32,23 @@ void init() {
     Npc &npc = _npcs.emplace_back();
     npc.init(std::move(npc_create_info));
   }
+
+  // HACK
+  // Blood Volumetric
+  {
+    BloodVolumetricCreateInfo blood_volumetric_create_info;
+    blood_volumetric_create_info.position = glm::vec3(13.0f, 0.0f, -5.0f);
+    blood_volumetric_create_info.front    = glm::vec3(0.0f, 0.0f, -1.0f);
+    blood_volumetric_create_info.rotation = glm::vec3(1.0f);
+    blood_volumetric_create_info.model    = AssetManager::get_model_by_name("Blood");
+    blood_volumetric_create_info.exr_texture_pos =
+        AssetManager::get_exr_texture_by_name("blood_pos");
+    blood_volumetric_create_info.exr_texture_norm =
+        AssetManager::get_exr_texture_by_name("blood_norm");
+
+    BloodVolumetric &blood_volumetric = _blood_volumetrics.emplace_back();
+    blood_volumetric.init(std::move(blood_volumetric_create_info));
+  }
 }
 
 void submit_render_items() {
@@ -42,6 +61,11 @@ void submit_render_items() {
   // Anim Entities
   for (AnimEntity &anim_entity : _anim_entities) {
     anim_entity.submit_render_item();
+  }
+
+  // Blood Volumetrics
+  for (BloodVolumetric &blood_volumetric : _blood_volumetrics) {
+    blood_volumetric.submit_render_item();
   }
 
   // Decals

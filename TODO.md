@@ -20,9 +20,10 @@
      - [x] Raycast
      - [ ] Muzzle Flash
      - [ ] Bullet Casing
-     - [ ] Decal
+     - [x] Decal
      - [ ] Ammo System
-- [ ] Blood Splash
+- [ ] Blood Decal
+- [ ] Better Character Virtual Controller
 - [ ] G-buffer
 - [ ] Deferred Rendering
 - [ ] Z fighting  
@@ -43,3 +44,4 @@
 - [ ] SSBO
 - [ ] PhysX, Jolt is just too new
 - [ ] Ragdoll using PhysX  
+- [ ] Blood Volumetric (EXR). Sampling in VS is unstable on macOS

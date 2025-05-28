@@ -13,7 +13,8 @@ glm::vec3 from_jolt_vec3(const JPH::Vec3 &v);
 std::string to_string(TextureType type);
 
 // Math
-float random_float(float min, float max);
+float     random_float(float min, float max);
+glm::vec3 random_dir_in_hemisphere(const glm::vec3 &normal);
 
 // Geometry
 std::vector<Vertex>   generate_sphere_vertices(float radius, int segments);

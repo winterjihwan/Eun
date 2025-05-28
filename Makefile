@@ -24,6 +24,7 @@ LDFLAGS      := vendor/glad/src/glad.c \
 								-framework OpenGL \
 								/opt/homebrew/Cellar/glfw/3.4/lib/libglfw.3.4.dylib \
 								-L/opt/homebrew/lib -lassimp \
+								-lz \
 
 all: $(OUT_FILE)
 

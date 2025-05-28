@@ -26,7 +26,7 @@ public:
   std::string          directory;
   bool                 gammaCorrection;
 
-  Model(std::string const &path, const std::string &name, bool gamma = false)
+  Model(const std::string &path, const std::string &name, bool gamma = false)
       : name(name), gammaCorrection(gamma) {
     loadModel(path);
   }
@@ -41,29 +41,6 @@ public:
     if (name.rfind(prefix, 0) == 0)
       return name.substr(prefix.size());
     return name;
-  }
-
-  void DrawWithRagdollPose(Shader &shader, const std::map<std::string, glm::mat4> &ragdollGlobals) {
-    std::vector<glm::mat4> boneMatrices(m_BoneCounter, glm::mat4(1.0f));
-
-    for (auto &[name, boneInfo] : m_BoneInfoMap) {
-      std::string strippedName = StripArmaturePrefix(name);
-      auto        it_bind      = m_GlobalBindPose.find(name);
-      auto        it_ragdoll   = ragdollGlobals.find(strippedName);
-      if (it_bind != m_GlobalBindPose.end() && it_ragdoll != ragdollGlobals.end()) {
-        glm::mat4 invBind         = glm::inverse(it_bind->second);
-        glm::mat4 ragdollGlobal   = it_ragdoll->second;
-        boneMatrices[boneInfo.id] = ragdollGlobal * invBind;
-      }
-    }
-
-    for (int i = 0; i < boneMatrices.size(); ++i) {
-      shader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", boneMatrices[i]);
-    }
-
-    for (auto &mesh : meshes) {
-      mesh.draw(shader);
-    }
   }
 
   auto &GetBoneInfoMap() {

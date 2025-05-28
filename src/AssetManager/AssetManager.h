@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Texture.h"
 #include "Types/Animation/Animator.h"
+#include "Types/Texture/ExrTexture.h"
 #include "Util/Util.h"
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyID.h>
@@ -21,5 +22,6 @@ Mesh              *get_mesh_by_name(const std::string &name);
 std::vector<Model> &get_models();
 Model              *get_model_by_name(const std::string &name);
 
-Texture *get_texture_by_name(const std::string &name);
+Texture    *get_texture_by_name(const std::string &name);
+ExrTexture *get_exr_texture_by_name(const std::string &name);
 } // namespace AssetManager
