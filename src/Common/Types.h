@@ -3,7 +3,20 @@
 #include "Enums.h"
 #include "Keycodes.h"
 #include <glm/glm.hpp>
-#include <string>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+struct Transform {
+  glm::vec3 position = glm::vec3(0);
+  glm::vec3 rotation = glm::vec3(0);
+  glm::vec3 scale    = glm::vec3(1);
+  glm::mat4 to_mat4() {
+    glm::mat4 m = glm::translate(glm::mat4(1), position);
+    m *= glm::mat4_cast(glm::quat(rotation));
+    m = glm::scale(m, scale);
+    return m;
+  };
+};
 
 // Player
 // TODO: One place for control config
@@ -33,11 +46,4 @@ struct Vertex {
   glm::vec3 bitangent;
   int       m_BoneIDs[MAX_BONE_INFLUENCE];
   float     m_Weights[MAX_BONE_INFLUENCE];
-};
-
-// TODO: Replace with Texture class
-struct Texture_t {
-  unsigned int id;
-  TextureType  type;
-  std::string  path;
 };

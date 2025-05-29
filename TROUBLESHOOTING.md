@@ -38,3 +38,6 @@ UNSUPPORTED (log once): POSSIBLE ISSUE: unit 0 GLD_TEXTURE_INDEX_2D is unloadabl
 
 Trying to investigate why the driver won't recognize the textures I have sent  
 Perhaps macOS issues..? Reddit, github, stackoverflow, and all communities don't have clear answers  
+
+Ok FIXED  
+It was with importing EXR, will comprehend later  

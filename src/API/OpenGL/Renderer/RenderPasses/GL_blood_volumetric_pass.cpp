@@ -16,24 +16,20 @@ void blood_volumetric_pass() {
   glCullFace(GL_BACK);
 
   shader.use();
-  shader.setMat4("u_view", _view);
-  shader.setMat4("u_projection", _projection);
+  shader.setMat4("u_View", _view);
+  shader.setMat4("u_Projection", _projection);
 
   GLuint vao;
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
 
   for (BloodVolumetric *blood_volumetric : blood_volumetrics) {
-    GLuint texPos  = blood_volumetric->get_exr_texture_pos()->get_handle();
-    GLuint texNorm = blood_volumetric->get_exr_texture_norm()->get_handle();
+    Mesh     &mesh            = blood_volumetric->get_model()->meshes[0];
+    GLuint    texPos          = blood_volumetric->get_exr_texture_pos()->get_handle();
+    GLuint    texNorm         = blood_volumetric->get_exr_texture_norm()->get_handle();
+    glm::mat4 model_transform = blood_volumetric->get_model_transform();
 
-    Mesh &mesh = blood_volumetric->get_model()->meshes[0];
-
-    // HACK
-    glm::mat4 model_blood = glm::mat4(1.0f);
-    model_blood           = glm::translate(model_blood, glm::vec3(13.0f, 0.0f, -1.0f));
-    model_blood           = glm::scale(model_blood, glm::vec3(10.0f));
-    shader.setMat4("u_model", model_blood);
+    shader.setMat4("u_Model", model_transform);
     shader.setFloat("u_Time", blood_volumetric->_current_time);
 
     glActiveTexture(GL_TEXTURE0);

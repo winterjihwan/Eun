@@ -22,7 +22,7 @@ void init() {
     npc_create_info.animators.walk  = AssetManager::get_animator_by_name("Brian_Walk");
     npc_create_info.animators.death = AssetManager::get_animator_by_name("Brian_Death");
     npc_create_info.model_transform = glm::translate(glm::mat4(1.0f), glm::vec3(13.0f, 0, -5.0f));
-    npc_create_info.capsule_radius  = 0.3f;
+    npc_create_info.capsule_radius  = 0.2f;
     npc_create_info.capsule_height  = 1.2f;
     npc_create_info.capsule_position =
         glm::vec3(13.0f,
@@ -31,23 +31,6 @@ void init() {
 
     Npc &npc = _npcs.emplace_back();
     npc.init(std::move(npc_create_info));
-  }
-
-  // HACK
-  // Blood Volumetric
-  {
-    BloodVolumetricCreateInfo blood_volumetric_create_info;
-    blood_volumetric_create_info.position = glm::vec3(13.0f, 0.0f, -5.0f);
-    blood_volumetric_create_info.front    = glm::vec3(0.0f, 0.0f, -1.0f);
-    blood_volumetric_create_info.rotation = glm::vec3(1.0f);
-    blood_volumetric_create_info.model    = AssetManager::get_model_by_name("Blood");
-    blood_volumetric_create_info.exr_texture_pos =
-        AssetManager::get_exr_texture_by_name("blood_pos");
-    blood_volumetric_create_info.exr_texture_norm =
-        AssetManager::get_exr_texture_by_name("blood_norm");
-
-    BloodVolumetric &blood_volumetric = _blood_volumetrics.emplace_back();
-    blood_volumetric.init(std::move(blood_volumetric_create_info));
   }
 }
 
@@ -84,6 +67,10 @@ void add_bullet(Bullet &&bullet) {
 
 void add_decal(Decal &&decal) {
   _decals.push_back(std::move(decal));
+}
+
+void add_blood_volumetric(BloodVolumetric &&blood_volumetric) {
+  _blood_volumetrics.push_back(std::move(blood_volumetric));
 }
 
 std::vector<Bullet> &get_bullets() {

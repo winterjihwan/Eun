@@ -1,3 +1,4 @@
+#include "AssetManager/AssetManager.h"
 #include "CreateInfo.h"
 #include "Enums.h"
 #include "Input/Input.h"
@@ -41,8 +42,13 @@ void update(float delta_time) {
   }
 
   // Blood Volumetrics
-  for (BloodVolumetric &blood_volumetric : _blood_volumetrics) {
-    blood_volumetric.update(delta_time);
+  for (auto it = _blood_volumetrics.begin(); it != _blood_volumetrics.end();) {
+    if (it->_current_time > 0.9f) {
+      it = _blood_volumetrics.erase(it);
+    } else {
+      it->update(delta_time);
+      it++;
+    }
   }
 }
 
@@ -87,6 +93,7 @@ void process_bullets() {
       continue;
     }
 
+    // Bullet hole decal
     if (data->physics_type == PhysicsType::RIGID_STATIC) {
       DecalCreateInfo decal_create_info;
       decal_create_info.hit_position = Util::from_jolt_vec3(hit_pos);
@@ -102,7 +109,20 @@ void process_bullets() {
     // Blood
     if (data->physics_type == PhysicsType::RIGID_DYNAMIC) {
       if (data->object_type == ObjectType::NPC) {
+        // Blood Volumetric
+        BloodVolumetricCreateInfo blood_volumetric_create_info;
+        blood_volumetric_create_info.position = Util::from_jolt_vec3(hit_pos);
+        blood_volumetric_create_info.rotation = glm::vec3(0.0f);
+        blood_volumetric_create_info.front    = bullet.get_direction();
+        blood_volumetric_create_info.model    = AssetManager::get_model_by_name("Blood_6");
+        blood_volumetric_create_info.exr_texture_pos =
+            AssetManager::get_exr_texture_by_name("blood_pos_6");
+        blood_volumetric_create_info.exr_texture_norm =
+            AssetManager::get_exr_texture_by_name("blood_norm_6");
 
+        add_blood_volumetric(BloodVolumetric(blood_volumetric_create_info));
+
+        // Blood Decal
         JPH::Vec3 blood_origin = hit_pos + 0.02f * hit_normal;
         JPH::Vec3 blood_dir =
             Util::to_jolt_vec3(Util::random_dir_in_hemisphere(Util::from_jolt_vec3(hit_normal)))

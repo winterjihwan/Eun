@@ -3,7 +3,7 @@
 out vec4 FragColor;
 
 in vec3 v_WorldNormal;
-uniform mat4 u_MatrixWorld;
+
 uniform float u_Time;
 
 void main()

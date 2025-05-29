@@ -16,29 +16,29 @@ void ExrTexture::load(const std::string &file_path) {
 
   if (!out) {
     std::cerr << "ExrTexture::load, no image: " << file_path << std::endl;
-    return;
+    assert(0);
   }
 
   if (err) {
     std::cout << "ExrTexture::load, just error: " << err << std::endl;
     FreeEXRErrorMessage(err);
-    return;
+    assert(0);
   }
 
   if (ret != TINYEXR_SUCCESS) {
     std::cout << "ExrTexture::load, no success: " << err << std::endl;
+    assert(0);
   }
 
   // Load to GL
   glGenTextures(1, &_texture_id);
   glBindTexture(GL_TEXTURE_2D, _texture_id);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16, width, height, 0, GL_RGBA, GL_FLOAT, out);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glActiveTexture(GL_TEXTURE0);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16, width, height, 0, GL_RGBA, GL_FLOAT, out);
 
   GLenum error = glGetError();
   if (error != GL_NO_ERROR) {

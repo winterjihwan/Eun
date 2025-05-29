@@ -2,6 +2,9 @@
 
 #include <glm/glm.hpp>
 
+// MATH
+constexpr float EUN_PI = 3.141592653589793f;
+
 // Game
 const unsigned int WIDTH  = 1280;
 const unsigned int HEIGHT = 800;

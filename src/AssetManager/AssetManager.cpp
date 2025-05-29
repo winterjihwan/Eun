@@ -16,9 +16,8 @@ std::vector<Mesh>                       _meshes;
 std::vector<std::shared_ptr<Animation>> _animations;
 std::vector<Animator>                   _animators;
 std::vector<Ref<Ragdoll>>               _ragdolls;
-// TODO: Remove Texture from Mesh
-std::vector<Texture>    _textures;
-std::vector<ExrTexture> _exr_textures;
+std::vector<Texture>                    _textures; // TODO: Remove Texture from Mesh
+std::vector<ExrTexture>                 _exr_textures;
 
 // TODO: Index Map
 void init() {
@@ -59,10 +58,10 @@ void init() {
 
   // Volumetric blood
   {
-    _models.emplace_back("res/objects/Blood/blood_mesh.obj", "Blood");
+    _models.emplace_back("res/objects/Blood/blood_mesh6.obj", "Blood_6");
 
-    _exr_textures.emplace_back("res/textures/Blood/blood_pos.exr", "blood_pos");
-    _exr_textures.emplace_back("res/textures/Blood/blood_norm.exr", "blood_norm");
+    _exr_textures.emplace_back("res/textures/Blood/blood_pos6.exr", "blood_pos_6");
+    _exr_textures.emplace_back("res/textures/Blood/blood_norm6.exr", "blood_norm_6");
   }
 
   // Pistol

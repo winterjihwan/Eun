@@ -2,19 +2,17 @@
 
 #include "CreateInfo.h"
 #include "Model.h"
+#include "Types.h"
 #include "Types/Texture/ExrTexture.h"
 #include <glm/glm.hpp>
 
 struct BloodVolumetric {
 public:
   float     _current_time = 0.0f;
-  glm::vec3 _position;
-  glm::vec3 _rotation;
+  Transform _transform;
   glm::vec3 _front;
 
-  BloodVolumetric() = default;
-
-  void init(BloodVolumetricCreateInfo create_info);
+  BloodVolumetric(const BloodVolumetricCreateInfo create_info);
   void update(float deltaTime);
 
   void submit_render_item();
@@ -22,6 +20,7 @@ public:
   Model      *get_model();
   ExrTexture *get_exr_texture_pos();
   ExrTexture *get_exr_texture_norm();
+  glm::mat4   get_model_transform();
 
 private:
   Model      *_model;
