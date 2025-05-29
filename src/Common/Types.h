@@ -2,6 +2,9 @@
 #include "Defines.h"
 #include "Enums.h"
 #include "Keycodes.h"
+#include <Jolt/Jolt.h>
+#include <Jolt/Physics/Collision/CastResult.h>
+#include <Jolt/Physics/Collision/NarrowPhaseQuery.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -46,4 +49,13 @@ struct Vertex {
   glm::vec3 bitangent;
   int       m_BoneIDs[MAX_BONE_INFLUENCE];
   float     m_Weights[MAX_BONE_INFLUENCE];
+};
+
+struct RayHitInfo {
+  const JPH::Body      *body;
+  PhysicsUserData      *user_data;
+  JPH::TransformedShape ts;
+  JPH::Vec3             hit_pos;
+  JPH::Vec3             hit_normal;
+  JPH::RayCastResult    result;
 };

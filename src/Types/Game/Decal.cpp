@@ -1,10 +1,11 @@
 #include "Decal.h"
-#include "AssetManager/AssetManager.h"
+#include "Enums.h"
 #include "Renderer/RenderDataManager.h"
 
 Decal::Decal(const DecalCreateInfo &create_info) {
   const glm::vec3 &hit_position = create_info.hit_position;
   const glm::vec3 &hit_normal   = create_info.hit_normal;
+  Mesh            *mesh         = create_info.mesh;
 
   glm::vec3 pos = hit_position + 0.01f * hit_normal;
   glm::vec3 up  = glm::vec3(0, 1, 0);
@@ -15,10 +16,15 @@ Decal::Decal(const DecalCreateInfo &create_info) {
                                  glm::vec4(bitangent, 0.0f),
                                  glm::vec4(hit_normal, 0.0f),
                                  glm::vec4(0, 0, 0, 1));
+  glm::mat4 scale     = glm::mat4(1.0f);
 
-  _model_transform = glm::translate(glm::mat4(1.0f), pos) * rotation *
-                     glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-  _mesh = AssetManager::get_mesh_by_name("Decal");
+  if (create_info.type == DecalType::PLASTER) {
+    scale = glm::scale(scale, glm::vec3(0.2f));
+  }
+
+  _model_transform = glm::translate(glm::mat4(1.0f), pos) * rotation * scale;
+  _mesh            = mesh;
+  _type            = create_info.type;
 }
 
 void Decal::submit_render_item() {
@@ -31,4 +37,8 @@ glm::mat4 Decal::get_model_transform() {
 
 Mesh *Decal::get_mesh() {
   return _mesh;
+}
+
+DecalType Decal::get_type() {
+  return _type;
 }

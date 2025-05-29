@@ -8,7 +8,7 @@ uniform float u_Time;
 
 void main()
 {
-    vec3 bloodColor = vec3(0.2, 0, 0);
+    vec3 bloodColor = vec3(0.4, 0, 0);
 
     FragColor = vec4(bloodColor, 1.0);
 }

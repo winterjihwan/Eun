@@ -48,12 +48,40 @@ void init() {
 
   // Decal
   {
-    std::vector<Vertex>   quad_v = Util::generate_quad_vertices(0.3f, 0.3f);
-    std::vector<uint32_t> quad_i = Util::generate_quad_indices();
-    std::vector<Texture>  quad_t;
-    quad_t.emplace_back("Bullet_Hole", "res/textures/Bullet_Hole.png", TextureType::DIFFUSE);
+    // Bullet Hole
+    {
+      std::vector<Vertex>   quad_v = Util::generate_quad_vertices(0.3f, 0.3f);
+      std::vector<uint32_t> quad_i = Util::generate_quad_indices();
+      std::vector<Texture>  quad_t;
+      quad_t.emplace_back("Bullet_Hole", "res/textures/Bullet_Hole.png", TextureType::DIFFUSE);
 
-    _meshes.emplace_back(quad_v, quad_i, quad_t, "Decal");
+      _meshes.emplace_back(quad_v, quad_i, quad_t, "Bullet_Hole");
+    }
+
+    // Blood decal
+    {
+      std::vector<Vertex>   quad_v = Util::generate_quad_vertices(1.0f, 1.0f);
+      std::vector<uint32_t> quad_i = Util::generate_quad_indices();
+      std::vector<Texture>  quad_t_1;
+      quad_t_1.emplace_back(
+          "Blood_Stain_1", "res/textures/Blood/blood_decal_1.png", TextureType::DIFFUSE);
+      _meshes.emplace_back(quad_v, quad_i, quad_t_1, "Blood_Stain_1");
+
+      std::vector<Texture> quad_t_2;
+      quad_t_2.emplace_back(
+          "Blood_Stain_2", "res/textures/Blood/blood_decal_2.png", TextureType::DIFFUSE);
+      _meshes.emplace_back(quad_v, quad_i, quad_t_2, "Blood_Stain_2");
+
+      std::vector<Texture> quad_t_3;
+      quad_t_3.emplace_back(
+          "Blood_Stain_3", "res/textures/Blood/blood_decal_3.png", TextureType::DIFFUSE);
+      _meshes.emplace_back(quad_v, quad_i, quad_t_3, "Blood_Stain_3");
+
+      std::vector<Texture> quad_t_4;
+      quad_t_4.emplace_back(
+          "Blood_Stain_4", "res/textures/Blood/blood_decal_4.png", TextureType::DIFFUSE);
+      _meshes.emplace_back(quad_v, quad_i, quad_t_4, "Blood_Stain_4");
+    }
   }
 
   // Volumetric blood

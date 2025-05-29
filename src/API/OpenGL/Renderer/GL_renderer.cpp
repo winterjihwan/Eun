@@ -26,6 +26,7 @@ void init() {
   _shaders["Anim"]            = Shader("shaders/anim.vert", "shaders/anim.frag");
   _shaders["BloodVolumetric"] = Shader("shaders/blood.vert", "shaders/blood.frag");
   _shaders["Decal"]           = Shader("shaders/decal.vert", "shaders/decal.frag");
+  _shaders["DecalBlood"]      = Shader("shaders/decal.vert", "shaders/decal_blood.frag");
 
   // Skybox
   float skybox_vertices[] = {-1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,

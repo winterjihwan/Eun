@@ -175,6 +175,39 @@ void register_static_mesh(const std::vector<Vertex>       &vertices,
   _physics_system.GetBodyInterface().AddBody(body->GetID(), EActivation::DontActivate);
 }
 
+std::optional<RayHitInfo> raycast(const JPH::Vec3 &origin, const JPH::Vec3 &dir, float dist) {
+  const NarrowPhaseQuery &query = get_physics_system().GetNarrowPhaseQuery();
+  RRayCast                ray(origin, dir * dist);
+  RayCastResult           result;
+
+  if (!query.CastRay(ray, result))
+    return std::nullopt;
+
+  const Body *body =
+      Physics::get_physics_system().GetBodyLockInterface().TryGetBody(result.mBodyID);
+
+  if (!body)
+    return std::nullopt;
+
+  JPH::RVec3       pos   = body->GetPosition();
+  JPH::Quat        rot   = body->GetRotation();
+  const Shape     *shape = body->GetShape();
+  TransformedShape ts(pos, rot, shape, body->GetID());
+
+  JPH::Vec3 hit_pos    = origin + dir * (result.mFraction * dist);
+  JPH::Vec3 hit_normal = ts.GetWorldSpaceSurfaceNormal(result.mSubShapeID2, hit_pos);
+
+  RayHitInfo ray_hit_info;
+  ray_hit_info.body       = body;
+  ray_hit_info.user_data  = reinterpret_cast<PhysicsUserData *>(body->GetUserData());
+  ray_hit_info.ts         = ts;
+  ray_hit_info.hit_pos    = hit_pos;
+  ray_hit_info.hit_normal = hit_normal;
+  ray_hit_info.ts         = ts;
+
+  return ray_hit_info;
+}
+
 void register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback) {
   _contact_callbacks[id] = std::move(callback);
 }

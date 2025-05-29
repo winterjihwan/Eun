@@ -31,12 +31,12 @@ void init();
 void update(float delta_time);
 void shutdown();
 
-void register_static_mesh(const std::vector<Vertex>       &vertices,
-                          const std::vector<unsigned int> &indices,
-                          const glm::mat4                 &transform);
-void register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback);
-
-void submit_debug_lines();
+void                      register_static_mesh(const std::vector<Vertex>       &vertices,
+                                               const std::vector<unsigned int> &indices,
+                                               const glm::mat4                 &transform);
+std::optional<RayHitInfo> raycast(const JPH::Vec3 &origin, const JPH::Vec3 &dir, float dist);
+void                      register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback);
+void                      submit_debug_lines();
 
 PhysicsSystem                                   &get_physics_system();
 std::unordered_map<BodyID, PFN_ContactCallback> &get_contact_callbacks();

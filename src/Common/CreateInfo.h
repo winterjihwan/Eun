@@ -17,6 +17,8 @@ struct DecalCreateInfo {
   DecalType type;
   glm::vec3 hit_position = glm::vec3(0.0f);
   glm::vec3 hit_normal   = glm::vec3(0.0f);
+
+  Mesh *mesh;
 };
 
 struct NpcAnimators {
