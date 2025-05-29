@@ -23,7 +23,8 @@ public:
   glm::mat4   get_model_transform();
 
 private:
-  Model      *_model;
-  ExrTexture *_exr_texture_pos;
-  ExrTexture *_exr_texture_norm;
+  Model       *_model;
+  unsigned int _exr_texture_index;
+  ExrTexture  *_exr_texture_pos;
+  ExrTexture  *_exr_texture_norm;
 };

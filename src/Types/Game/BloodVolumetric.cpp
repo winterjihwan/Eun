@@ -1,10 +1,14 @@
 #include "BloodVolumetric.h"
+#include "AssetManager/AssetManager.h"
 #include "Renderer/RenderDataManager.h"
 
 BloodVolumetric::BloodVolumetric(const BloodVolumetricCreateInfo create_info) {
-  _model            = create_info.model;
-  _exr_texture_pos  = create_info.exr_texture_pos;
-  _exr_texture_norm = create_info.exr_texture_norm;
+  _model             = create_info.model;
+  _exr_texture_index = create_info.exr_texture_index;
+  _exr_texture_pos =
+      AssetManager::get_exr_texture_by_name(std::format("blood_pos_{}", _exr_texture_index));
+  _exr_texture_norm =
+      AssetManager::get_exr_texture_by_name(std::format("blood_norm_{}", _exr_texture_index));
 
   _transform.position = create_info.position;
   _transform.rotation = create_info.rotation;
@@ -37,9 +41,20 @@ glm::mat4 BloodVolumetric::get_model_transform() {
   blood_base.position = _transform.position;
   blood_base.scale    = _transform.scale;
 
-  // TODO: Apply different offsets for all blood volumetrics
   Transform blood_offset;
-  blood_offset.position = glm::vec3(-0.05f, -0.25f, -0.13f);
+  if (_exr_texture_index == 1) {
+    blood_offset.position = glm::vec3(-0.08f, -0.23f, -0.16f);
+  } else if (_exr_texture_index == 2) {
+    blood_offset.position = glm::vec3(-0.05f, -0.41f, -0.19f);
+  } else if (_exr_texture_index == 3) {
+    blood_offset.position = glm::vec3(-0.08f, -0.38f, -0.15f);
+  } else if (_exr_texture_index == 4) {
+    blood_offset.position = glm::vec3(-0.23f, -0.5f, -0.22f);
+  } else if (_exr_texture_index == 5) {
+    blood_offset.position = glm::vec3(-0.17f, -0.23f, -0.18f);
+  } else if (_exr_texture_index == 6) {
+    blood_offset.position = glm::vec3(-0.05f, -0.25f, -0.13f);
+  }
 
   return blood_base.to_mat4() * blood_offset.to_mat4();
 }

@@ -86,16 +86,18 @@ void process_bullets() {
     // Blood
     if (data->physics_type == PhysicsType::RIGID_DYNAMIC && data->object_type == ObjectType::NPC) {
 
+      static unsigned int blood_volumetric_index = 1;
+      if (++blood_volumetric_index > 6)
+        blood_volumetric_index = 1;
+
       // Blood Volumetric
       BloodVolumetricCreateInfo blood_volumetric_create_info;
-      blood_volumetric_create_info.position = Util::from_jolt_vec3(hit->hit_pos);
-      blood_volumetric_create_info.rotation = glm::vec3(0.0f);
-      blood_volumetric_create_info.front    = bullet.get_direction();
-      blood_volumetric_create_info.model    = AssetManager::get_model_by_name("Blood_6");
-      blood_volumetric_create_info.exr_texture_pos =
-          AssetManager::get_exr_texture_by_name("blood_pos_6");
-      blood_volumetric_create_info.exr_texture_norm =
-          AssetManager::get_exr_texture_by_name("blood_norm_6");
+      blood_volumetric_create_info.position          = Util::from_jolt_vec3(hit->hit_pos);
+      blood_volumetric_create_info.rotation          = glm::vec3(0.0f);
+      blood_volumetric_create_info.front             = bullet.get_direction();
+      blood_volumetric_create_info.exr_texture_index = blood_volumetric_index;
+      blood_volumetric_create_info.model =
+          AssetManager::get_model_by_name(std::format("Blood_{}", blood_volumetric_index));
 
       add_blood_volumetric(BloodVolumetric(blood_volumetric_create_info));
 

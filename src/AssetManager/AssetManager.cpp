@@ -86,9 +86,25 @@ void init() {
 
   // Volumetric blood
   {
+    _models.emplace_back("res/objects/Blood/blood_mesh1.obj", "Blood_1");
+    _models.emplace_back("res/objects/Blood/blood_mesh2.obj", "Blood_2");
+    _models.emplace_back("res/objects/Blood/blood_mesh3.obj", "Blood_3");
+    _models.emplace_back("res/objects/Blood/blood_mesh4.obj", "Blood_4");
+    _models.emplace_back("res/objects/Blood/blood_mesh5.obj", "Blood_5");
     _models.emplace_back("res/objects/Blood/blood_mesh6.obj", "Blood_6");
 
+    _exr_textures.emplace_back("res/textures/Blood/blood_pos1.exr", "blood_pos_1");
+    _exr_textures.emplace_back("res/textures/Blood/blood_pos2.exr", "blood_pos_2");
+    _exr_textures.emplace_back("res/textures/Blood/blood_pos3.exr", "blood_pos_3");
+    _exr_textures.emplace_back("res/textures/Blood/blood_pos4.exr", "blood_pos_4");
+    _exr_textures.emplace_back("res/textures/Blood/blood_pos5.exr", "blood_pos_5");
     _exr_textures.emplace_back("res/textures/Blood/blood_pos6.exr", "blood_pos_6");
+
+    _exr_textures.emplace_back("res/textures/Blood/blood_norm1.exr", "blood_norm_1");
+    _exr_textures.emplace_back("res/textures/Blood/blood_norm2.exr", "blood_norm_2");
+    _exr_textures.emplace_back("res/textures/Blood/blood_norm3.exr", "blood_norm_3");
+    _exr_textures.emplace_back("res/textures/Blood/blood_norm4.exr", "blood_norm_4");
+    _exr_textures.emplace_back("res/textures/Blood/blood_norm5.exr", "blood_norm_5");
     _exr_textures.emplace_back("res/textures/Blood/blood_norm6.exr", "blood_norm_6");
   }
 

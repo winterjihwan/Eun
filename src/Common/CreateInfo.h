@@ -3,7 +3,6 @@
 #include "Enums.h"
 #include "Model.h"
 #include "Types/Animation/Animator.h"
-#include "Types/Texture/ExrTexture.h"
 #include <glm/glm.hpp>
 
 struct BulletCreateInfo {
@@ -46,9 +45,8 @@ struct NpcCreateInfo {
 };
 
 struct BloodVolumetricCreateInfo {
-  Model      *model;
-  ExrTexture *exr_texture_pos;
-  ExrTexture *exr_texture_norm;
+  Model       *model;
+  unsigned int exr_texture_index;
 
   glm::vec3 position;
   glm::vec3 rotation;
