@@ -10,8 +10,8 @@ float  _last_frame = 0.0f;
 
 // TODO: Move camera out of here
 Camera _camera;
-float  _lastX       = WIDTH / 2.0f;
-float  _lastY       = HEIGHT / 2.0f;
+float  _lastX       = VIEWPORT_WIDTH / 2.0f;
+float  _lastY       = VIEWPORT_HEIGHT / 2.0f;
 bool   _first_mouse = true;
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);

@@ -15,7 +15,6 @@ std::vector<Model>                      _models;
 std::vector<Mesh>                       _meshes;
 std::vector<std::shared_ptr<Animation>> _animations;
 std::vector<Animator>                   _animators;
-std::vector<Ref<Ragdoll>>               _ragdolls;
 std::vector<Texture>                    _textures; // TODO: Remove Texture from Mesh
 std::vector<ExrTexture>                 _exr_textures;
 
@@ -26,6 +25,11 @@ void init() {
   Model &map = _models.emplace_back("res/objects/Map_v1/Map_v1.obj", "Map");
   for (const Mesh &mesh : map.meshes) {
     Physics::register_static_mesh(mesh.vertices, mesh.indices, glm::mat4(1.0f));
+  }
+
+  // Font
+  {
+    _textures.emplace_back("StandardFont", "res/fonts/StandardFont.png", TextureType::DIFFUSE);
   }
 
   // Brian
@@ -162,22 +166,11 @@ void init() {
     reload_animator->SetIsLoop(false);
   }
 
-  /* Objects */
-
-  // Test Sphere
-  float                 radius   = 0.5f;
-  int                   segments = 64;
-  std::vector<Vertex>   sphere_v = Util::generate_sphere_vertices(radius, segments);
-  std::vector<uint32_t> sphere_i = Util::generate_sphere_indices(segments);
-  std::vector<Texture>  sphere_t;
-  _meshes.emplace_back(sphere_v, sphere_i, sphere_t, "Test_Sphere");
-
   World::init();
   Renderer::init();
 }
 
 void shutdown() {
-  _ragdolls.clear();
 }
 
 std::vector<Animator> &get_animators() {

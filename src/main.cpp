@@ -1,4 +1,4 @@
-#include "Audio/Audio.h"
+// #include "Audio/Audio.h"
 #include "Backend/Backend.h"
 #include "Core/Game.h"
 #include "Input/Input.h"
@@ -7,6 +7,8 @@
 #include <iostream>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image/stb_image.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image/stb_image_write.h>
 #define TINYEXR_IMPLEMENTATION
 #include <zlib.h>
 #define TINYEXR_USE_MINIZ 0
@@ -23,8 +25,8 @@ int main(void) {
   // HACK
   Game::init();
 
-  // HACK
-  Audio::loop_audio("Dark_ambient.mp3", 0.5f);
+  // // HACK
+  // Audio::loop_audio("Dark_ambient.mp3", 0.5f);
 
   while (Backend::is_window_open()) {
     Backend::update_subsystems();

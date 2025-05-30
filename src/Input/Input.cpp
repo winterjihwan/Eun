@@ -1,4 +1,5 @@
 #include "Input.h"
+#include "Defines.h"
 
 #include <GLFW/glfw3.h>
 
@@ -201,7 +202,7 @@ bool cursor_visible() {
 }
 
 void center_mouse_cursor() {
-  set_cursor_position(800 / 2, 600 / 2);
+  set_cursor_position(VIEWPORT_WIDTH / 2, VIEWPORT_HEIGHT / 2);
 }
 
 int get_cursor_screen_x() {

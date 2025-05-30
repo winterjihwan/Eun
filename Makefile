@@ -18,7 +18,6 @@ INCLUDES     := -Isrc \
 								-Ivendor/glad/include \
 								-I/opt/homebrew/include \
 								-I/opt/homebrew/include \
-								-Ivendor/JoltPhysics \
 
 LDFLAGS      := vendor/glad/src/glad.c \
 								-framework OpenGL \

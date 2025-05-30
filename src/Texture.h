@@ -11,6 +11,10 @@ struct Texture {
   std::string path;
   TextureType type;
 
+  int width        = 0;
+  int height       = 0;
+  int nrComponents = 0;
+
   Texture() = default;
 
   Texture(std::string name, std::string path, TextureType type) {
@@ -24,7 +28,6 @@ struct Texture {
   void load_texture(std::string &path) {
     glGenTextures(1, &_texture_id);
 
-    int            width, height, nrComponents;
     unsigned char *data = stbi_load(path.data(), &width, &height, &nrComponents, 0);
     if (data) {
       GLenum format;

@@ -42,3 +42,13 @@ enum class TextureType {
   NORMAL,
   HEIGHT,
 };
+
+enum class UIAlignment {
+  CENTERED,
+  CENTERED_HORIZONTAL,
+  CENTERED_VERTICAL,
+  TOP_LEFT,
+  TOP_RIGHT,
+  BOTTOM_LEFT,
+  BOTTOM_RIGHT
+};

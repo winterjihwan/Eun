@@ -27,6 +27,7 @@ void init() {
   _shaders["BloodVolumetric"] = Shader("shaders/blood.vert", "shaders/blood.frag");
   _shaders["Decal"]           = Shader("shaders/decal.vert", "shaders/decal.frag");
   _shaders["DecalBlood"]      = Shader("shaders/decal.vert", "shaders/decal_blood.frag");
+  _shaders["UI"]              = Shader("shaders/ui.vert", "shaders/ui.frag");
 
   // Skybox
   float skybox_vertices[] = {-1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
@@ -70,7 +71,7 @@ void render_game() {
 
   // Per Frame Transformations
   _projection = glm::perspective(
-      glm::radians(camera->get_zoom()), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+      glm::radians(camera->get_zoom()), (float)VIEWPORT_WIDTH / (float)VIEWPORT_HEIGHT, NEAR, FAR);
   _view = glm::lookAt(player->get_pos(), player->get_pos() + camera->get_front(), camera->get_up());
 
   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -82,6 +83,7 @@ void render_game() {
   anim_pass();
   blood_volumetric_pass();
   decal_pass();
+  ui_pass();
 }
 
 } // namespace OpenGLRenderer

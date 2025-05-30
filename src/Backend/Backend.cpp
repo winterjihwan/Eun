@@ -4,9 +4,11 @@
 #include "Backend/GLFW.h"
 #include "Core/Debug.h"
 #include "Core/Game.h"
+#include "Enums.h"
 #include "Input/Input.h"
 #include "Physics/Physics.h"
 #include "Renderer/RenderDataManager.h"
+#include "UI/UIBackend.h"
 #include "Weapon/WeaponManager.h"
 #include "World/World.h"
 
@@ -18,6 +20,7 @@ bool init() {
 
   Physics::init();
   AssetManager::init();
+  UIBackend::init();
   Audio::init();
   Input::init(get_window_pointer());
   WeaponManager::init();
@@ -34,12 +37,17 @@ void begin_frame() {
 void update_game() {
   float delta_time = Game::get_delta_time();
 
+  // HACK
+  UIBackend::blit_text("Welcome to Eun", "StandardFont", 0, 0, UIAlignment::TOP_LEFT, 2.0f);
+
   Game::update();
   Physics::update(delta_time);
 
+  UIBackend::submit_render_items();
   World::submit_render_items();
 
   Debug::update();
+  UIBackend::update();
   RenderDataManager::update();
 }
 
@@ -48,13 +56,13 @@ void update_subsystems() {
 }
 
 void end_frame() {
+  UIBackend::end_frame();
   GLFW::end_frame();
 }
 
 void clean_up() {
   AssetManager::shutdown();
   Physics::shutdown();
-
   GLFW::shutdown();
 }
 

@@ -22,8 +22,8 @@
      - [ ] Bullet Casing
      - [x] Decal
      - [ ] Ammo System
-- [ ] Blood Decal
-- [ ] Blood Volumetric
+- [x] Blood Decal
+- [x] Blood Volumetric
 - [ ] Better Character Virtual Controller
 - [ ] G-buffer
 - [ ] Deferred Rendering
@@ -31,7 +31,8 @@
 - [ ] Loading (offscreen)  
 - [ ] Fog of war  
 - [ ] Loading Screen  
-- [ ] UI Pass  
+- [x] UI Pass  
+- [ ] True Font
 - [ ] Hot reloading  
 - [ ] Arena Allocator
 - [ ] Array-ify instead of std::vector  
@@ -41,7 +42,7 @@
 - [ ] Npc Intelligence
 
 ## When I buy Windows ...
-- [ ] Compute Skinning Pass <- Defer this to when I buy Windows, macOS only supports OpenGL 4.1
+- [ ] Compute Skinning Pass <- Defer this to when I buy Windows, macOS only supports OpenGL 4.1. Perhaps just general compute pass
 - [ ] SSBO
 - [ ] PhysX, Jolt is just too new
 - [ ] Ragdoll using PhysX  
