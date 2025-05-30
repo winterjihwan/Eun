@@ -4,6 +4,7 @@
 #include "Backend/GLFW.h"
 #include "Core/Debug.h"
 #include "Core/Game.h"
+#include "Defines.h"
 #include "Enums.h"
 #include "Input/Input.h"
 #include "Physics/Physics.h"
@@ -38,7 +39,8 @@ void update_game() {
   float delta_time = Game::get_delta_time();
 
   // HACK
-  UIBackend::blit_text("Welcome to Eun", "StandardFont", 0, 0, UIAlignment::TOP_LEFT, 2.0f);
+  UIBackend::blit_text(
+      "Welcome to Eun", "NoScary", 0, VIEWPORT_HEIGHT - 32, UIAlignment::CENTERED, 1.0f);
 
   Game::update();
   Physics::update(delta_time);

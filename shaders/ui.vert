@@ -1,15 +1,13 @@
 #version 410 core
 
-layout(location = 0) in vec2 vPosition;
-layout(location = 1) in vec2 vUV;
-layout(location = 2) in vec4 vColor;
+layout(location = 0) in vec4 aVertex;
 
-out vec4 Color;
-out vec2 TexCoord;
+out vec2 vTexCoords;
 
-void main() {
-    Color = vColor;
-    TexCoord = vUV;
+uniform mat4 u_Projection;
 
-    gl_Position = vec4(vPosition, 1.0, 1.0);
+void main()
+{
+    gl_Position = u_Projection * vec4(aVertex.xy, 0.0, 1.0);
+    vTexCoords = aVertex.zw;
 }

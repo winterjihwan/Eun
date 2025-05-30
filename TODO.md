@@ -32,7 +32,7 @@
 - [ ] Fog of war  
 - [ ] Loading Screen  
 - [x] UI Pass  
-- [ ] True Font
+- [x] True Font
 - [ ] Hot reloading  
 - [ ] Arena Allocator
 - [ ] Array-ify instead of std::vector  

@@ -18,11 +18,13 @@ INCLUDES     := -Isrc \
 								-Ivendor/glad/include \
 								-I/opt/homebrew/include \
 								-I/opt/homebrew/include \
+								-I/opt/homebrew/opt/freetype/include/freetype2 \
 
 LDFLAGS      := vendor/glad/src/glad.c \
 								-framework OpenGL \
 								/opt/homebrew/Cellar/glfw/3.4/lib/libglfw.3.4.dylib \
 								-L/opt/homebrew/lib -lassimp \
+								-lfreetype \
 								-lz \
 
 all: $(OUT_FILE)

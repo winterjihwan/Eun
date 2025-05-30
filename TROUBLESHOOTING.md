@@ -42,8 +42,12 @@ Perhaps macOS issues..? Reddit, github, stackoverflow, and all communities don't
 Ok FIXED  
 It was with importing EXR, will comprehend later  
 
-5. 2025.05.30 UI
+5. 2025.05.30 UI  
 I tried everything, I debugged with xcode metal debugger, logged out all the uniforms and attributes  
 that were supposed to go to the shaders  
 everything was clear and good but nothing rendered on the screen  
 turned out that the triangle vertices order was clockwise  
+
+6. 2025.05.30 UI  
+Reminder to myself  
+Please set uniforms after binding shader PLEASE  

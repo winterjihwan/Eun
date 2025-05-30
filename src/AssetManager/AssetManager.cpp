@@ -27,11 +27,6 @@ void init() {
     Physics::register_static_mesh(mesh.vertices, mesh.indices, glm::mat4(1.0f));
   }
 
-  // Font
-  {
-    _textures.emplace_back("StandardFont", "res/fonts/StandardFont.png", TextureType::DIFFUSE);
-  }
-
   // Brian
   {
     Model &brian = _models.emplace_back("res/objects/Brian/Idle.dae", "Brian");

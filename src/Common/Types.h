@@ -2,7 +2,6 @@
 #include "Defines.h"
 #include "Enums.h"
 #include "Keycodes.h"
-#include "Texture.h"
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Collision/CastResult.h>
 #include <Jolt/Physics/Collision/NarrowPhaseQuery.h>
@@ -62,19 +61,23 @@ struct RayHitInfo {
 };
 
 struct Vertex2D {
-  glm::vec2 position;
-  glm::vec2 uv;
-  glm::vec4 color;
+  glm::vec4 position;
 };
 
 struct Mesh2DData {
-  std::vector<Vertex2D>     vertices;
-  std::vector<unsigned int> indices;
+  std::vector<Vertex2D> vertices;
+  unsigned int          texture_id;
 };
 
 struct UIRenderItem {
-  int      base_vertex = 0;
-  int      base_index  = 0;
-  int      index_count = 0;
-  Texture *texture;
+  int          base_vertex  = 0;
+  unsigned int vertex_count = 0;
+  unsigned int texture_id;
+};
+
+struct Character {
+  unsigned int texture_id;
+  glm::ivec2   size;
+  glm::ivec2   bearing;
+  unsigned int advance;
 };

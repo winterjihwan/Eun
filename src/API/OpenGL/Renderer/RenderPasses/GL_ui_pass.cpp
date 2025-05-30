@@ -1,9 +1,11 @@
 #include "API/OpenGL/Renderer/GL_renderer.h"
+#include "Defines.h"
 #include "Renderer/RenderDataManager.h"
 #include "Shader.h"
-#include "Types.h"
 #include "UI/Mesh2D.h"
 #include "UI/UIBackend.h"
+#include <glad/glad.h>
+#include <glm/glm.hpp>
 #include <string>
 #include <unordered_map>
 
@@ -14,30 +16,28 @@ void ui_pass() {
   Shader shader = _shaders["UI"];
 
   glDisable(GL_CULL_FACE);
+  glDisable(GL_DEPTH_TEST);
 
-  std::vector<UIRenderItem *> ui_render_items = RenderDataManager::get_ui_render_items();
-  Mesh2D                     &ui_mesh         = UIBackend::get_ui_mesh();
+  Mesh2D &mesh = UIBackend::get_ui_mesh();
+  glBindVertexArray(mesh.get_vao());
 
   shader.use();
+  glm::mat4 ortho = glm::ortho(
+      0.0f, static_cast<float>(VIEWPORT_WIDTH), 0.0f, static_cast<float>(VIEWPORT_HEIGHT));
+  shader.setMat4("u_Projection", ortho);
 
-  glDisable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glBindVertexArray(ui_mesh.get_vao());
 
-  for (UIRenderItem *ui_render_item : ui_render_items) {
+  for (UIRenderItem *render_item : RenderDataManager::get_ui_render_items()) {
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, ui_render_item->texture->get_handle());
-    glDrawElementsInstancedBaseVertex(GL_TRIANGLES,
-                                      ui_render_item->index_count,
-                                      GL_UNSIGNED_INT,
-                                      (void *)(sizeof(unsigned int) * ui_render_item->base_index),
-                                      1,
-                                      ui_render_item->base_vertex);
+    glBindTexture(GL_TEXTURE_2D, render_item->texture_id);
+    glDrawArrays(GL_TRIANGLES, render_item->base_vertex, render_item->vertex_count);
   }
 
-  glDisable(GL_BLEND);
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glDisable(GL_BLEND);
 }
 
 } // namespace OpenGLRenderer
