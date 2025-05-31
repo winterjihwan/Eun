@@ -8,6 +8,7 @@
 #include "Input/Input.h"
 #include "Physics/Physics.h"
 #include "Renderer/RenderDataManager.h"
+#include "Renderer/Renderer.h"
 #include "UI/UIBackend.h"
 #include "Weapon/WeaponManager.h"
 #include "World/World.h"
@@ -18,6 +19,7 @@ bool init() {
     return false;
   }
 
+  Renderer::init();
   HotReload::init();
   Physics::init();
   AssetManager::init();

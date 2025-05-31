@@ -6,31 +6,34 @@
 #include <tinyexr/tinyexr.hpp>
 
 void ExrTexture::load(const std::string &file_path) {
+  _path                = file_path;
   const char *filename = file_path.c_str();
+  const char *err      = nullptr;
 
-  // Load RGBA
-  int         width, height;
-  float      *out;
-  const char *err = 0;
-  int         ret = LoadEXR(&out, &width, &height, filename, &err);
+  float *out = 0;
+  int    ret = LoadEXR(&out, &_width, &_height, filename, &err);
 
-  if (!out) {
-    std::cerr << "ExrTexture::load, no image: " << file_path << std::endl;
+  if (ret != TINYEXR_SUCCESS || !out) {
+    std::cerr << "ExrTexture::load_cpu failed: " << err << std::endl;
+    if (err) {
+      FreeEXRErrorMessage(err);
+    }
     assert(0);
   }
 
-  if (err) {
-    std::cout << "ExrTexture::load, just error: " << err << std::endl;
-    FreeEXRErrorMessage(err);
+  _pixel_data.reset(out);
+}
+
+std::future<void> ExrTexture::load_async(const std::string &path) {
+  return std::async(std::launch::async, [this, path]() { this->load(path); });
+}
+
+void ExrTexture::upload_to_gpu() {
+  if (_texture_id != 0 || !_pixel_data) {
+    std::cerr << "ExrTexture::upload_to_gpu missing data" << std::endl;
     assert(0);
   }
 
-  if (ret != TINYEXR_SUCCESS) {
-    std::cout << "ExrTexture::load, no success: " << err << std::endl;
-    assert(0);
-  }
-
-  // Load to GL
   glGenTextures(1, &_texture_id);
   glBindTexture(GL_TEXTURE_2D, _texture_id);
 
@@ -38,16 +41,20 @@ void ExrTexture::load(const std::string &file_path) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16, width, height, 0, GL_RGBA, GL_FLOAT, out);
+  glTexImage2D(
+      GL_TEXTURE_2D, 0, GL_RGB16, _width, _height, 0, GL_RGBA, GL_FLOAT, _pixel_data.get());
 
-  GLenum error = glGetError();
-  if (error != GL_NO_ERROR) {
-    std::cout << "ExrTexture::load, gl error: " << err << std::endl;
-  }
+  GLenum err = glGetError();
+  if (err != GL_NO_ERROR)
+    std::cerr << "ExrTexture::upload_to_gpu OpenGL error: " << err << std::endl;
 
-  free(out);
+  _pixel_data.reset();
 }
 
 unsigned int &ExrTexture::get_handle() {
   return _texture_id;
+}
+
+std::string &ExrTexture::get_name() {
+  return _name;
 }

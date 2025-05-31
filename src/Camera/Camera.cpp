@@ -55,7 +55,7 @@ void Camera::first_person_view(const glm::vec3 &watch) {
 
 void Camera::third_person_view(const glm::vec3 &watch) {
   float distance_behind = 5.0f;
-  float height_above    = 2.0f;
+  float height_above    = 0.5f;
 
   glm::vec3 offset = -get_front() * distance_behind + glm::vec3(0.0f, height_above, 0.0f);
   _position        = watch + offset;

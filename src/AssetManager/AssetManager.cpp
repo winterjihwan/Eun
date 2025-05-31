@@ -2,7 +2,6 @@
 
 #include "Core/Game.h"
 #include "Physics/Physics.h"
-#include "Renderer/Renderer.h"
 #include "Types/Animation/Animation.h"
 #include "Types/Texture/ExrTexture.h"
 #include "UI/UIBackend.h"
@@ -34,6 +33,7 @@ void init() {
   _animations.reserve(16);
   _animators.reserve(32);
   _textures.reserve(64);
+  _exr_textures.reserve(36);
 
   // Map
   {
@@ -141,24 +141,50 @@ void init() {
     };
 
     for (size_t i = 0; i < blood_model_names.size(); ++i) {
-      Model            &model  = _models.emplace_back(blood_model_names[i]);
+      Model &model = _models.emplace_back(blood_model_names[i]);
+
       std::future<void> future = model.load_async(blood_model_paths[i]);
       _deferred_tasks.push_back({std::move(future), 0});
     }
 
-    _exr_textures.emplace_back("res/textures/Blood/blood_pos1.exr", "blood_pos_1");
-    _exr_textures.emplace_back("res/textures/Blood/blood_pos2.exr", "blood_pos_2");
-    _exr_textures.emplace_back("res/textures/Blood/blood_pos3.exr", "blood_pos_3");
-    _exr_textures.emplace_back("res/textures/Blood/blood_pos4.exr", "blood_pos_4");
-    _exr_textures.emplace_back("res/textures/Blood/blood_pos5.exr", "blood_pos_5");
-    _exr_textures.emplace_back("res/textures/Blood/blood_pos6.exr", "blood_pos_6");
+    std::vector<std::string> exr_paths = {
+        "res/textures/Blood/blood_pos1.exr",
+        "res/textures/Blood/blood_pos2.exr",
+        "res/textures/Blood/blood_pos3.exr",
+        "res/textures/Blood/blood_pos4.exr",
+        "res/textures/Blood/blood_pos5.exr",
+        "res/textures/Blood/blood_pos6.exr",
+        "res/textures/Blood/blood_norm1.exr",
+        "res/textures/Blood/blood_norm2.exr",
+        "res/textures/Blood/blood_norm3.exr",
+        "res/textures/Blood/blood_norm4.exr",
+        "res/textures/Blood/blood_norm5.exr",
+        "res/textures/Blood/blood_norm6.exr",
+    };
 
-    _exr_textures.emplace_back("res/textures/Blood/blood_norm1.exr", "blood_norm_1");
-    _exr_textures.emplace_back("res/textures/Blood/blood_norm2.exr", "blood_norm_2");
-    _exr_textures.emplace_back("res/textures/Blood/blood_norm3.exr", "blood_norm_3");
-    _exr_textures.emplace_back("res/textures/Blood/blood_norm4.exr", "blood_norm_4");
-    _exr_textures.emplace_back("res/textures/Blood/blood_norm5.exr", "blood_norm_5");
-    _exr_textures.emplace_back("res/textures/Blood/blood_norm6.exr", "blood_norm_6");
+    std::vector<std::string> exr_names = {
+        "blood_pos_1",
+        "blood_pos_2",
+        "blood_pos_3",
+        "blood_pos_4",
+        "blood_pos_5",
+        "blood_pos_6",
+        "blood_norm_1",
+        "blood_norm_2",
+        "blood_norm_3",
+        "blood_norm_4",
+        "blood_norm_5",
+        "blood_norm_6",
+    };
+
+    for (size_t i = 0; i < exr_paths.size(); ++i) {
+      std::string path = exr_paths[i];
+      std::string name = exr_names[i];
+
+      ExrTexture       &exr_texture = _exr_textures.emplace_back(name);
+      std::future<void> future      = exr_texture.load_async(path);
+      _deferred_tasks.push_back({std::move(future), 0});
+    }
   }
 
   // Pistol
@@ -227,25 +253,20 @@ void init() {
 }
 
 void update_loading() {
-  UIBackend::blit_text("E U N",
-                       "NoScary",
-                       VIEWPORT_WIDTH / 2 - 8,
-                       VIEWPORT_HEIGHT / 2 - 16,
-                       UIAlignment::CENTERED,
-                       1.0f);
+  UIBackend::blit_text("Eunnnnnn", "NoScary", 0, VIEWPORT_HEIGHT - 32, UIAlignment::CENTERED, 1.0f);
 
   if (_loading_complete) {
     std::cout << "AssetManager::update_loading(), Why update loading again?" << std::endl;
     assert(0);
   }
 
-  _loading_complete = true;
   for (DeferredTask &task : _deferred_tasks) {
     if (task.future.wait_for(std::chrono::seconds(0)) != std::future_status::ready) {
-      _loading_complete = false;
-      break;
+      return;
     }
   }
+
+  _loading_complete = true;
 
   if (_loading_complete) {
     for (DeferredTask &task : _deferred_tasks) {
@@ -268,8 +289,11 @@ void update_loading() {
       texture.upload_to_gpu();
     }
 
+    for (ExrTexture &texture : _exr_textures) {
+      texture.upload_to_gpu();
+    }
+
     World::init();
-    Renderer::init();
     Game::init();
   }
 }
@@ -338,7 +362,7 @@ Texture *get_texture_by_name(const std::string &name) {
 
 ExrTexture *get_exr_texture_by_name(const std::string &name) {
   for (auto &texture : _exr_textures) {
-    if (name == texture.name) {
+    if (name == texture.get_name()) {
       return &texture;
     }
   }

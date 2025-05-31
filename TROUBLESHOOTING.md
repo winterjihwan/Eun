@@ -51,3 +51,16 @@ turned out that the triangle vertices order was clockwise
 6. 2025.05.30 UI  
 Reminder to myself  
 Please set uniforms after binding shader PLEASE  
+
+7. 2025.05.31  
+Previously used  
+```c++
+float *_pixel_data;
+```
+To store pixel data, which will be used later when uploading to GPU  
+However seldomly segfaults  
+Not because the vector resized, had to copy ExrTexture  <- need to figure out more  
+```c++
+std::unique_ptr<float[]> _pixel_data;
+```
+So I used Rust-like solution to Box it out and OWN the address  

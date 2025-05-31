@@ -1,27 +1,28 @@
 #pragma once
 
+#include <future>
 #include <string>
 
 struct ExrTexture {
-  std::string name;
-  std::string path;
-
-  ExrTexture(const std::string &path, const std::string &name) {
-    this->path = path;
-    this->name = name;
-
-    load(path);
+  ExrTexture(const std::string &name) {
+    _name = name;
   };
 
-  void load(const std::string &path);
-  bool get_exr_layers(std::string &file_name);
-  bool load_exr_rgba(float **rgba, int *w, int *h, const char *filename, const char *layername);
+  void              load(const std::string &path);
+  std::future<void> load_async(const std::string &path);
+  void              upload_to_gpu();
 
   unsigned int &get_handle();
-
-  std::string _filename;
-  std::string _filetype;
+  std::string  &get_name();
 
 private:
-  unsigned int _texture_id;
+  std::string              _name;
+  std::string              _path;
+  int                      _width  = 0;
+  int                      _height = 0;
+  std::unique_ptr<float[]> _pixel_data;
+  unsigned int             _texture_id;
+
+  bool get_exr_layers(std::string &file_name);
+  bool load_exr_rgba(float **rgba, int *w, int *h, const char *filename, const char *layername);
 };
