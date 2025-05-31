@@ -47,8 +47,8 @@ struct Vertex {
   glm::vec2 texcoords;
   glm::vec3 tangent;
   glm::vec3 bitangent;
-  int       m_BoneIDs[MAX_BONE_INFLUENCE];
-  float     m_Weights[MAX_BONE_INFLUENCE];
+  int       bone_ids[MAX_BONE_INFLUENCE];
+  float     weights[MAX_BONE_INFLUENCE];
 };
 
 struct RayHitInfo {

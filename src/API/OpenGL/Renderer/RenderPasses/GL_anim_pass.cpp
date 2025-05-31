@@ -25,7 +25,7 @@ void anim_pass() {
     }
 
     _shaders["Anim"].setMat4("model", model_transform);
-    model->Draw(_shaders["Anim"]);
+    model->draw(_shaders["Anim"]);
   }
 }
 } // namespace OpenGLRenderer

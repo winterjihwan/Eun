@@ -8,7 +8,6 @@
 #include "UI/UIBackend.h"
 #include "World/World.h"
 #include <future>
-#include <memory>
 #include <vector>
 
 unsigned int load_cubemap(std::vector<std::string> faces);
@@ -19,14 +18,14 @@ struct DeferredTask {
 };
 
 namespace AssetManager {
-std::vector<Model>                      _models;
-std::vector<Mesh>                       _meshes;
-std::vector<std::shared_ptr<Animation>> _animations;
-std::vector<Animator>                   _animators;
-std::vector<Texture>                    _textures; // TODO: Remove Texture from Mesh
-std::vector<ExrTexture>                 _exr_textures;
-std::vector<DeferredTask>               _deferred_tasks;
-bool                                    _loading_complete = false;
+std::vector<Model>        _models;
+std::vector<Mesh>         _meshes;
+std::vector<Animation>    _animations;
+std::vector<Animator>     _animators;
+std::vector<Texture>      _textures; // TODO: Remove Texture from Mesh
+std::vector<ExrTexture>   _exr_textures;
+std::vector<DeferredTask> _deferred_tasks;
+bool                      _loading_complete = false;
 
 // TODO: Index Map
 void init() {
@@ -55,17 +54,17 @@ void init() {
     std::future<void>     future   = brian.load_async("res/objects/Brian/Idle.dae");
     std::function<void()> callback = [&brian]() {
       // Animations
-      std::shared_ptr<Animation> &brian_idle_animation = _animations.emplace_back(
-          std::make_shared<Animation>("res/objects/Brian/Idle.dae", &brian));
-      _animators.emplace_back(&*brian_idle_animation, "Brian_Idle");
+      Animation &brian_idle_animation =
+          _animations.emplace_back(Animation("res/objects/Brian/Idle.dae", &brian));
+      _animators.emplace_back(&brian_idle_animation, "Brian_Idle");
 
-      std::shared_ptr<Animation> &brian_walk_animation = _animations.emplace_back(
-          std::make_shared<Animation>("res/objects/Brian/Walk.dae", &brian));
-      _animators.emplace_back(&*brian_walk_animation, "Brian_Walk");
+      Animation &brian_walk_animation =
+          _animations.emplace_back(Animation("res/objects/Brian/Walk.dae", &brian));
+      _animators.emplace_back(&brian_walk_animation, "Brian_Walk");
 
-      std::shared_ptr<Animation> &brian_death_animation = _animations.emplace_back(
-          std::make_shared<Animation>("res/objects/Brian/Death.dae", &brian));
-      _animators.emplace_back(&*brian_death_animation, "Brian_Death");
+      Animation &brian_death_animation =
+          _animations.emplace_back(Animation("res/objects/Brian/Death.dae", &brian));
+      _animators.emplace_back(&brian_death_animation, "Brian_Death");
     };
     _deferred_tasks.push_back({std::move(future), callback});
   }
@@ -154,26 +153,26 @@ void init() {
 
     std::future<void>     future   = pistol.load_async("res/objects/Pistol/scene.gltf");
     std::function<void()> callback = [&pistol]() {
-      std::shared_ptr<Animation> &pistol_animation = _animations.emplace_back(
-          std::make_shared<Animation>("res/objects/Pistol/scene.gltf", &pistol));
+      Animation &pistol_animation =
+          _animations.emplace_back(Animation("res/objects/Pistol/scene.gltf", &pistol));
 
-      Animator *draw_animator = &_animators.emplace_back(&*pistol_animation, "Pistol_Draw");
+      Animator *draw_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Draw");
       draw_animator->SetClip(0.0f, 1.14f);
       draw_animator->SetIsLoop(false);
 
-      Animator *idle_animator = &_animators.emplace_back(&*pistol_animation, "Pistol_Idle");
+      Animator *idle_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Idle");
       idle_animator->SetClip(10.9f, 11.2f);
       idle_animator->SetIsLoop(false);
 
-      Animator *fire_animator = &_animators.emplace_back(&*pistol_animation, "Pistol_Fire");
+      Animator *fire_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Fire");
       fire_animator->SetClip(7.5f, 8.0f);
       fire_animator->SetIsLoop(false);
 
-      Animator *reload_animator = &_animators.emplace_back(&*pistol_animation, "Pistol_Reload");
+      Animator *reload_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Reload");
       reload_animator->SetClip(8.2f, 10.8f);
       reload_animator->SetIsLoop(false);
 
-      Animator *inspect_animator = &_animators.emplace_back(&*pistol_animation, "Pistol_Inspect");
+      Animator *inspect_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Inspect");
       inspect_animator->SetClip(1.5f, 7.0f);
       inspect_animator->SetIsLoop(false);
     };
@@ -186,26 +185,26 @@ void init() {
 
     std::future<void>     future   = hk_416.load_async("res/objects/HK_416/scene.gltf");
     std::function<void()> callback = [&hk_416]() {
-      std::shared_ptr<Animation> &hk_416_animation = _animations.emplace_back(
-          std::make_shared<Animation>("res/objects/HK_416/scene.gltf", &hk_416));
+      Animation &hk_416_animation =
+          _animations.emplace_back(Animation("res/objects/HK_416/scene.gltf", &hk_416));
 
-      Animator *draw_animator = &_animators.emplace_back(&*hk_416_animation, "HK_416_Draw");
+      Animator *draw_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Draw");
       draw_animator->SetClip(0.0f, 2.2f);
       draw_animator->SetIsLoop(false);
 
-      Animator *idle_animator = &_animators.emplace_back(&*hk_416_animation, "HK_416_Idle");
+      Animator *idle_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Idle");
       idle_animator->SetClip(8.0f, 8.2f);
       idle_animator->SetIsLoop(false);
 
-      Animator *inspect_animator = &_animators.emplace_back(&*hk_416_animation, "HK_416_Inspect");
+      Animator *inspect_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Inspect");
       inspect_animator->SetClip(2.2f, 8.0f);
       inspect_animator->SetIsLoop(false);
 
-      Animator *fire_animator = &_animators.emplace_back(&*hk_416_animation, "HK_416_Fire");
+      Animator *fire_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Fire");
       fire_animator->SetClip(21.96f, 22.36f);
       fire_animator->SetIsLoop(false);
 
-      Animator *reload_animator = &_animators.emplace_back(&*hk_416_animation, "HK_416_Reload");
+      Animator *reload_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Reload");
       reload_animator->SetClip(8.25f, 14.5f);
       reload_animator->SetIsLoop(false);
     };
@@ -244,18 +243,11 @@ void update_loading() {
 
     // GPU Upload
     for (Model &model : _models) {
-      for (Mesh &mesh : model.meshes) {
-        // TODO: Maybe include textures upload iinside here
-        mesh.upload_to_gpu();
-      }
+      model.upload_to_gpu();
     }
 
-    for (Model &model : _models) {
-      for (Mesh &mesh : model.meshes) {
-        for (Texture &texture : mesh.textures) {
-          texture.upload_to_gpu();
-        }
-      }
+    for (Mesh &mesh : _meshes) {
+      mesh.upload_to_gpu();
     }
 
     for (Texture &texture : _textures) {

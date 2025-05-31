@@ -55,8 +55,8 @@ private:
   void ReadMissingBones(const aiAnimation *animation, Model &model) {
     int size = animation->mNumChannels;
 
-    auto &boneInfoMap = model.GetBoneInfoMap();
-    int  &boneCount   = model.GetBoneCount();
+    auto &boneInfoMap = model.get_bone_info_map();
+    int  &boneCount   = model.get_bone_count();
 
     for (int i = 0; i < size; i++) {
       auto        channel  = animation->mChannels[i];

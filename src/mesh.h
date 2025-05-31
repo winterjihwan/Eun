@@ -12,7 +12,7 @@
 
 class Mesh {
 private:
-  unsigned int VBO, EBO;
+  unsigned int _VBO, _EBO;
 
 public:
   std::string               name;
@@ -61,32 +61,21 @@ public:
     glActiveTexture(GL_TEXTURE0);
   }
 
-  void update_mesh(const std::vector<Vertex>       &new_vertices,
-                   const std::vector<unsigned int> &new_indices) {
-    vertices = new_vertices;
-    indices  = new_indices;
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 indices.size() * sizeof(unsigned int),
-                 &indices[0],
-                 GL_STATIC_DRAW);
-  }
-
   void upload_to_gpu() {
+    for (Texture &texture : textures) {
+      texture.upload_to_gpu();
+    }
+
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+    glGenBuffers(1, &_VBO);
+    glGenBuffers(1, &_EBO);
 
     glBindVertexArray(VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  indices.size() * sizeof(unsigned int),
                  &indices[0],
@@ -118,12 +107,12 @@ public:
 
     // Ids
     glEnableVertexAttribArray(5);
-    glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void *)offsetof(Vertex, m_BoneIDs));
+    glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void *)offsetof(Vertex, bone_ids));
 
     // Weights
     glEnableVertexAttribArray(6);
     glVertexAttribPointer(
-        6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, m_Weights));
+        6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, weights));
     glBindVertexArray(0);
   }
 };

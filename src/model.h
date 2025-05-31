@@ -25,11 +25,11 @@ public:
   std::vector<Texture> textures_loaded;
   std::vector<Mesh>    meshes;
   std::string          directory;
-  bool                 gammaCorrection;
+  bool                 gamma_correction;
 
   Model(const std::string &name, bool gamma = false) {
-    this->name            = name;
-    this->gammaCorrection = gamma;
+    this->name             = name;
+    this->gamma_correction = gamma;
   }
 
   std::future<void> load_async(const std::string &path) {
@@ -48,74 +48,82 @@ public:
     }
     directory = path.substr(0, path.find_last_of('/'));
 
-    processNode(scene->mRootNode, scene);
-    ReadHierarchyData(m_RootNode, scene->mRootNode);
+    process_node(scene->mRootNode, scene);
+    read_hierarchy_data(_root_node, scene->mRootNode);
     glm::mat4 identity = glm::mat4(1.0f);
-    ComputeGlobalBindPose(m_RootNode, identity);
+    compute_global_bind_pose(_root_node, identity);
   }
 
-  void Draw(Shader &shader) {
+  void draw(Shader &shader) {
     for (unsigned int i = 0; i < meshes.size(); i++)
       meshes[i].draw(shader);
   }
 
-  auto &GetBoneInfoMap() {
-    return m_BoneInfoMap;
+  void upload_to_gpu() {
+    for (Mesh &mesh : meshes) {
+      mesh.upload_to_gpu();
+    }
   }
-  int &GetBoneCount() {
-    return m_BoneCounter;
+
+  auto &get_bone_info_map() {
+    return _bone_info_map;
   }
-  AssimpNodeData &GetRootNode() {
-    return m_RootNode;
+
+  int &get_bone_count() {
+    return _bone_counter;
+  }
+
+  AssimpNodeData &get_root_node() {
+    return _root_node;
   }
 
 private:
-  std::map<std::string, glm::mat4> m_GlobalBindPose;
-  std::map<std::string, BoneInfo>  m_BoneInfoMap;
-  int                              m_BoneCounter = 0;
-  AssimpNodeData                   m_RootNode;
+  std::map<std::string, glm::mat4> _global_bind_pose;
+  std::map<std::string, BoneInfo>  _bone_info_map;
+  int                              _bone_counter = 0;
+  AssimpNodeData                   _root_node;
 
-  void ReadHierarchyData(AssimpNodeData &dest, const aiNode *src) {
+  void read_hierarchy_data(AssimpNodeData &dest, const aiNode *src) {
     dest.name           = src->mName.data;
     dest.transformation = AssimpUtils::ConvertMatrixToGLMFormat(src->mTransformation);
     dest.childrenCount  = src->mNumChildren;
 
     for (int i = 0; i < src->mNumChildren; i++) {
       AssimpNodeData child;
-      ReadHierarchyData(child, src->mChildren[i]);
+      read_hierarchy_data(child, src->mChildren[i]);
       dest.children.push_back(child);
     }
   }
 
-  void ComputeGlobalBindPose(const AssimpNodeData &node, const glm::mat4 &parentTransform) {
+  void compute_global_bind_pose(const AssimpNodeData &node, const glm::mat4 &parentTransform) {
     glm::mat4 globalTransform = parentTransform * node.transformation;
-    if (m_BoneInfoMap.find(node.name) != m_BoneInfoMap.end()) {
-      m_GlobalBindPose[node.name] = globalTransform;
+    if (_bone_info_map.find(node.name) != _bone_info_map.end()) {
+      _global_bind_pose[node.name] = globalTransform;
     }
 
     for (const auto &child : node.children) {
-      ComputeGlobalBindPose(child, globalTransform);
+      compute_global_bind_pose(child, globalTransform);
     }
   }
 
-  void processNode(aiNode *node, const aiScene *scene) {
+  void process_node(aiNode *node, const aiScene *scene) {
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
       aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-      meshes.push_back(processMesh(mesh, scene));
+      meshes.push_back(process_mesh(mesh, scene));
     }
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
-      processNode(node->mChildren[i], scene);
+      process_node(node->mChildren[i], scene);
     }
   }
 
-  void SetVertexBoneDataToDefault(Vertex &vertex) {
+  void set_vertex_bone_data_to_default(Vertex &vertex) {
     for (int i = 0; i < MAX_BONE_INFLUENCE; i++) {
-      vertex.m_BoneIDs[i] = -1;
-      vertex.m_Weights[i] = 0.0f;
+      vertex.bone_ids[i] = -1;
+      vertex.weights[i]  = 0.0f;
     }
   }
 
-  Mesh processMesh(aiMesh *mesh, const aiScene *scene) {
+  Mesh process_mesh(aiMesh *mesh, const aiScene *scene) {
     std::vector<Vertex>       vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture>      textures;
@@ -123,7 +131,7 @@ private:
     // Vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
       Vertex vertex;
-      SetVertexBoneDataToDefault(vertex);
+      set_vertex_bone_data_to_default(vertex);
       vertex.position = AssimpUtils::GetGLMVec(mesh->mVertices[i]);
       vertex.normal   = AssimpUtils::GetGLMVec(mesh->mNormals[i]);
 
@@ -147,44 +155,45 @@ private:
 
     aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
-    std::vector<Texture> diffuseMaps =
-        loadMaterialTextures(material, aiTextureType_DIFFUSE, TextureType::DIFFUSE);
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+    std::vector<Texture> diffuse_maps =
+        load_material_textures(material, aiTextureType_DIFFUSE, TextureType::DIFFUSE);
+    textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-    std::vector<Texture> specularMaps =
-        loadMaterialTextures(material, aiTextureType_SPECULAR, TextureType::SPECULAR);
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    std::vector<Texture> specular_maps =
+        load_material_textures(material, aiTextureType_SPECULAR, TextureType::SPECULAR);
+    textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
-    std::vector<Texture> normalMaps =
-        loadMaterialTextures(material, aiTextureType_HEIGHT, TextureType::NORMAL);
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    std::vector<Texture> normal_maps =
+        load_material_textures(material, aiTextureType_HEIGHT, TextureType::NORMAL);
+    textures.insert(textures.end(), normal_maps.begin(), normal_maps.end());
 
-    std::vector<Texture> heightMaps =
-        loadMaterialTextures(material, aiTextureType_AMBIENT, TextureType::HEIGHT);
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+    std::vector<Texture> height_maps =
+        load_material_textures(material, aiTextureType_AMBIENT, TextureType::HEIGHT);
+    textures.insert(textures.end(), height_maps.begin(), height_maps.end());
 
-    ExtractBoneWeightForVertices(vertices, mesh, scene);
+    extract_bone_weight_for_vertices(vertices, mesh, scene);
 
     return Mesh(std::move(vertices), std::move(indices), std::move(textures), "");
   }
 
-  void SetVertexBoneData(Vertex &vertex, int boneID, float weight) {
+  void set_vertex_bone_data(Vertex &vertex, int boneID, float weight) {
     if (weight == 0.0f)
       return;
 
     for (int i = 0; i < MAX_BONE_INFLUENCE; ++i) {
-      if (vertex.m_BoneIDs[i] < 0) {
-        vertex.m_Weights[i] = weight;
-        vertex.m_BoneIDs[i] = boneID;
+      if (vertex.bone_ids[i] < 0) {
+        vertex.weights[i]  = weight;
+        vertex.bone_ids[i] = boneID;
         break;
       }
     }
   }
 
-  void
-  ExtractBoneWeightForVertices(std::vector<Vertex> &vertices, aiMesh *mesh, const aiScene *scene) {
-    auto &boneInfoMap = m_BoneInfoMap;
-    int  &boneCount   = m_BoneCounter;
+  void extract_bone_weight_for_vertices(std::vector<Vertex> &vertices,
+                                        aiMesh              *mesh,
+                                        const aiScene       *scene) {
+    auto &boneInfoMap = _bone_info_map;
+    int  &boneCount   = _bone_counter;
 
     for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
       int         boneID   = -1;
@@ -211,13 +220,13 @@ private:
         int   vertexId = weights[weightIndex].mVertexId;
         float weight   = weights[weightIndex].mWeight;
         assert(vertexId <= vertices.size());
-        SetVertexBoneData(vertices[vertexId], boneID, weight);
+        set_vertex_bone_data(vertices[vertexId], boneID, weight);
       }
     }
   }
 
   std::vector<Texture>
-  loadMaterialTextures(aiMaterial *mat, aiTextureType ai_type, TextureType type) {
+  load_material_textures(aiMaterial *mat, aiTextureType ai_type, TextureType type) {
     std::vector<Texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(ai_type); i++) {
       aiString str;

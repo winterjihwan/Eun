@@ -49,7 +49,7 @@ void geometry_pass() {
   glm::mat4 model_scene = glm::mat4(1.0f);
   shader.setMat4("model", model_scene);
   Model *scene = AssetManager::get_model_by_name("Map");
-  scene->Draw(shader);
+  scene->draw(shader);
 
   // Test Sphere
   glm::mat4 model_test_sphere = glm::mat4(1.0f);
