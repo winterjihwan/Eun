@@ -51,20 +51,34 @@ void init() {
   {
     Model &brian = _models.emplace_back("Brian");
 
-    std::future<void>     future   = brian.load_async("res/objects/Brian/Idle.dae");
+    std::future<void>     future   = brian.load_async("res/objects/Brian/brian.dae");
     std::function<void()> callback = [&brian]() {
       // Animations
       Animation &brian_idle_animation =
-          _animations.emplace_back(Animation("res/objects/Brian/Idle.dae", &brian));
+          _animations.emplace_back(Animation("res/animations/Breath_Idle.dae", &brian));
       _animators.emplace_back(&brian_idle_animation, "Brian_Idle");
+    };
+    _deferred_tasks.push_back({std::move(future), callback});
+  }
 
-      Animation &brian_walk_animation =
-          _animations.emplace_back(Animation("res/objects/Brian/Walk.dae", &brian));
-      _animators.emplace_back(&brian_walk_animation, "Brian_Walk");
+  // Glock
+  {
+    Model &glock = _models.emplace_back("Glock");
 
-      Animation &brian_death_animation =
-          _animations.emplace_back(Animation("res/objects/Brian/Death.dae", &brian));
-      _animators.emplace_back(&brian_death_animation, "Brian_Death");
+    std::future<void> future = glock.load_async("res/objects/Glock/Glock.obj");
+    _deferred_tasks.push_back({std::move(future), 0});
+  }
+
+  // Pete
+  {
+    Model &pete = _models.emplace_back("Pete");
+
+    std::future<void>     future   = pete.load_async("res/objects/Pete/Pete.dae");
+    std::function<void()> callback = [&pete]() {
+      // Animations
+      Animation &brian_idle_animation =
+          _animations.emplace_back(Animation("res/animations/Gun_Idle.dae", &pete));
+      _animators.emplace_back(&brian_idle_animation, "Pete_Idle");
     };
     _deferred_tasks.push_back({std::move(future), callback});
   }

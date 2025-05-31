@@ -66,6 +66,8 @@ public:
 
     glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
+    m_GlobalTransforms[nodeName] = globalTransformation;
+
     const auto &boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
     if (boneInfoMap.find(nodeName) != boneInfoMap.end()) {
       int       index            = boneInfoMap.at(nodeName).id;
@@ -84,6 +86,17 @@ public:
 
   std::vector<glm::mat4> GetFinalBoneMatrices() {
     return m_FinalBoneMatrices;
+  }
+
+  glm::mat4 GetBoneGlobalTransform(const std::string &boneName) const {
+    auto it = m_GlobalTransforms.find(boneName);
+    if (it != m_GlobalTransforms.end()) {
+      return it->second;
+    }
+
+    std::cout << "Animator::GetBoneGlobalTransform fail, unknown bone name: " << boneName
+              << std::endl;
+    assert(0);
   }
 
   std::string &GetName() {
@@ -105,13 +118,14 @@ public:
   }
 
 private:
-  std::string            m_Name;
-  bool                   m_Loop = true;
-  bool                   m_Done = false;
-  std::vector<glm::mat4> m_FinalBoneMatrices;
-  Animation             *m_CurrentAnimation;
-  float                  m_CurrentTime;
-  float                  m_DeltaTime;
-  float                  m_ClipStart;
-  float                  m_ClipEnd;
+  std::string                      m_Name;
+  bool                             m_Loop = true;
+  bool                             m_Done = false;
+  std::vector<glm::mat4>           m_FinalBoneMatrices;
+  std::map<std::string, glm::mat4> m_GlobalTransforms;
+  Animation                       *m_CurrentAnimation;
+  float                            m_CurrentTime;
+  float                            m_DeltaTime;
+  float                            m_ClipStart;
+  float                            m_ClipEnd;
 };

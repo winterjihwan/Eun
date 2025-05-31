@@ -21,6 +21,12 @@ struct Transform {
   };
 };
 
+struct TransformConfig {
+  glm::vec3 translate  = glm::vec3(0.0f);
+  glm::vec3 rotate_deg = glm::vec3(0.0f);
+  glm::vec3 scale      = glm::vec3(1.0f);
+};
+
 // Player
 // TODO: One place for control config
 struct PlayerControls {

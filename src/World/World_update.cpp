@@ -19,14 +19,14 @@ extern std::vector<BloodVolumetric> _blood_volumetrics;
 
 void update(float delta_time) {
   // HACK
-  if (Input::key_pressed(EUN_KEY_5)) {
-    Npc *brian = get_npc_by_name("Brian");
-    brian->set_animation_state(NpcAnimationState::DEATH);
-  }
-  if (Input::key_pressed(EUN_KEY_6)) {
-    Npc *brian = get_npc_by_name("Brian");
-    brian->set_animation_state(NpcAnimationState::WALK);
-  }
+  // if (Input::key_pressed(EUN_KEY_5)) {
+  //   Npc *brian = get_npc_by_name("Brian");
+  //   brian->set_animation_state(NpcAnimationState::DEATH);
+  // }
+  // if (Input::key_pressed(EUN_KEY_6)) {
+  //   Npc *brian = get_npc_by_name("Brian");
+  //   brian->set_animation_state(NpcAnimationState::WALK);
+  // }
 
   process_bullets();
 

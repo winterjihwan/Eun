@@ -4,6 +4,7 @@
 #include "Backend/GLFW.h"
 #include "Core/Debug.h"
 #include "Core/Game.h"
+#include "HotReload/HotReload.h"
 #include "Input/Input.h"
 #include "Physics/Physics.h"
 #include "Renderer/RenderDataManager.h"
@@ -17,6 +18,7 @@ bool init() {
     return false;
   }
 
+  HotReload::init();
   Physics::init();
   AssetManager::init();
   UIBackend::init();
@@ -35,6 +37,11 @@ void begin_frame() {
 
 void update_game() {
   float delta_time = Game::get_delta_time();
+
+  // HACK
+  if (Input::key_pressed(EUN_KEY_0)) {
+    HotReload::hot_reload();
+  }
 
   Game::update();
   Physics::update(delta_time);

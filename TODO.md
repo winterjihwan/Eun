@@ -27,19 +27,22 @@
 - [ ] Better Character Virtual Controller
 - [ ] G-buffer
 - [ ] Deferred Rendering
-- [ ] Z fighting  
+- [x] Z fighting  
 - [x] Async Loading
 - [ ] Fog of war  
 - [x] Loading Screen  
 - [x] UI Pass  
 - [x] True Font
 - [ ] Hot reloading  
+- [ ] Attach weapons to bones
 - [ ] Arena Allocator
 - [ ] Array-ify instead of std::vector  
 - [ ] Remove dependency OpenGLRenderer <-> Player  
 - [ ] Precise Audio Handle  
 - [ ] Sanity Checks ~20% coverage
 - [ ] Npc Intelligence
+- [ ] Custom Map
+- [ ] Map Editor
 
 ## When I buy Windows ...
 - [ ] Compute Skinning Pass <- Defer this to when I buy Windows, macOS only supports OpenGL 4.1. Perhaps just general compute pass
