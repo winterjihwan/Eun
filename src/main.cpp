@@ -1,6 +1,5 @@
-// #include "Audio/Audio.h"
+#include "AssetManager/AssetManager.h"
 #include "Backend/Backend.h"
-#include "Core/Game.h"
 #include "Input/Input.h"
 #include "Keycodes.h"
 #include "Renderer/Renderer.h"
@@ -22,21 +21,20 @@ int main(void) {
     return -1;
   }
 
-  // HACK
-  Game::init();
-
-  // // HACK
-  // Audio::loop_audio("Dark_ambient.mp3", 0.5f);
-
   while (Backend::is_window_open()) {
     Backend::update_subsystems();
     Backend::begin_frame();
-    // TODO: Loading
 
-    {
+    if (!AssetManager::loading_complete()) {
+      AssetManager::update_loading();
+      Renderer::render_loading_screen();
+    }
+
+    else {
       Backend::update_game();
       Renderer::render_game();
     }
+
     Backend::end_frame();
 
     // HACK

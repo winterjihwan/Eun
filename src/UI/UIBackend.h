@@ -14,7 +14,6 @@ void blit_text(const std::string &text,
                UIAlignment        alignment,
                float              scale = 1.0f,
                glm::vec4          color = glm::vec4(1.0f));
-void submit_render_items();
 void end_frame();
 
 Mesh2D                    &get_ui_mesh();

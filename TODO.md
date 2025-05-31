@@ -28,9 +28,9 @@
 - [ ] G-buffer
 - [ ] Deferred Rendering
 - [ ] Z fighting  
-- [ ] Loading (offscreen)  
+- [x] Async Loading
 - [ ] Fog of war  
-- [ ] Loading Screen  
+- [x] Loading Screen  
 - [x] UI Pass  
 - [x] True Font
 - [ ] Hot reloading  

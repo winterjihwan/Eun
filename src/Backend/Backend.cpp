@@ -4,8 +4,6 @@
 #include "Backend/GLFW.h"
 #include "Core/Debug.h"
 #include "Core/Game.h"
-#include "Defines.h"
-#include "Enums.h"
 #include "Input/Input.h"
 #include "Physics/Physics.h"
 #include "Renderer/RenderDataManager.h"
@@ -38,14 +36,9 @@ void begin_frame() {
 void update_game() {
   float delta_time = Game::get_delta_time();
 
-  // HACK
-  UIBackend::blit_text(
-      "Welcome to Eun", "NoScary", 0, VIEWPORT_HEIGHT - 32, UIAlignment::CENTERED, 1.0f);
-
   Game::update();
   Physics::update(delta_time);
 
-  UIBackend::submit_render_items();
   World::submit_render_items();
 
   Debug::update();

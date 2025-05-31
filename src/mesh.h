@@ -11,6 +11,9 @@
 #include <vector>
 
 class Mesh {
+private:
+  unsigned int VBO, EBO;
+
 public:
   std::string               name;
   std::vector<Vertex>       vertices;
@@ -26,8 +29,6 @@ public:
     this->indices  = indices;
     this->textures = textures;
     this->name     = name;
-
-    setup_mesh();
   }
 
   void draw(Shader &shader) {
@@ -75,10 +76,7 @@ public:
                  GL_STATIC_DRAW);
   }
 
-private:
-  unsigned int VBO, EBO;
-
-  void setup_mesh() {
+  void upload_to_gpu() {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);

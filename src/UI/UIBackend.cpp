@@ -1,7 +1,6 @@
 #include "UIBackend.h"
 #include "Defines.h"
 #include "Font.h"
-#include "Renderer/RenderDataManager.h"
 #include "Text.h"
 #include "Types.h"
 
@@ -48,12 +47,6 @@ void blit_text(const std::string &text,
     render_item.texture_id    = chunk.texture_id;
 
     base_vertex += chunk.vertices.size();
-  }
-}
-
-void submit_render_items() {
-  for (UIRenderItem &render_item : _render_items) {
-    RenderDataManager::submit_ui_render_item(&render_item);
   }
 }
 

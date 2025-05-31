@@ -1,6 +1,5 @@
 #include "API/OpenGL/Renderer/GL_renderer.h"
 #include "Defines.h"
-#include "Renderer/RenderDataManager.h"
 #include "Shader.h"
 #include "UI/Mesh2D.h"
 #include "UI/UIBackend.h"
@@ -29,10 +28,10 @@ void ui_pass() {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  for (UIRenderItem *render_item : RenderDataManager::get_ui_render_items()) {
+  for (UIRenderItem &render_item : UIBackend::get_render_items()) {
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, render_item->texture_id);
-    glDrawArrays(GL_TRIANGLES, render_item->base_vertex, render_item->vertex_count);
+    glBindTexture(GL_TEXTURE_2D, render_item.texture_id);
+    glDrawArrays(GL_TRIANGLES, render_item.base_vertex, render_item.vertex_count);
   }
 
   glEnable(GL_DEPTH_TEST);

@@ -24,4 +24,7 @@ Model              *get_model_by_name(const std::string &name);
 
 Texture    *get_texture_by_name(const std::string &name);
 ExrTexture *get_exr_texture_by_name(const std::string &name);
+
+bool loading_complete();
+void update_loading();
 } // namespace AssetManager

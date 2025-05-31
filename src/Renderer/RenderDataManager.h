@@ -13,11 +13,9 @@ void update();
 void submit_anim_entity(AnimEntity *anim_entity);
 void submit_decal(Decal *decal);
 void submit_blood_volumetric(BloodVolumetric *blood_volumetric);
-void submit_ui_render_item(UIRenderItem *ui_render_item);
 
 const std::vector<AnimEntity *>      &get_anim_entities();
 const std::vector<Decal *>           &get_decals();
 const std::vector<BloodVolumetric *> &get_blood_volumetrics();
-const std::vector<UIRenderItem *>    &get_ui_render_items();
 
 } // namespace RenderDataManager

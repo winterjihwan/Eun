@@ -10,6 +10,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
+#include <future>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -26,21 +27,36 @@ public:
   std::string          directory;
   bool                 gammaCorrection;
 
-  Model(const std::string &path, const std::string &name, bool gamma = false)
-      : name(name), gammaCorrection(gamma) {
-    loadModel(path);
+  Model(const std::string &name, bool gamma = false) {
+    this->name            = name;
+    this->gammaCorrection = gamma;
+  }
+
+  std::future<void> load_async(const std::string &path) {
+    return std::async(std::launch::async, [this, path]() { this->load(path); });
+  }
+
+  void load(std::string const &path) {
+    Assimp::Importer importer;
+    const aiScene   *scene = importer.ReadFile(path,
+                                             aiProcess_Triangulate | aiProcess_GenSmoothNormals |
+                                                 aiProcess_CalcTangentSpace | aiProcess_FlipUVs);
+
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+      std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
+      return;
+    }
+    directory = path.substr(0, path.find_last_of('/'));
+
+    processNode(scene->mRootNode, scene);
+    ReadHierarchyData(m_RootNode, scene->mRootNode);
+    glm::mat4 identity = glm::mat4(1.0f);
+    ComputeGlobalBindPose(m_RootNode, identity);
   }
 
   void Draw(Shader &shader) {
     for (unsigned int i = 0; i < meshes.size(); i++)
       meshes[i].draw(shader);
-  }
-
-  std::string StripArmaturePrefix(const std::string &name) {
-    const std::string prefix = "Armature_";
-    if (name.rfind(prefix, 0) == 0)
-      return name.substr(prefix.size());
-    return name;
   }
 
   auto &GetBoneInfoMap() {
@@ -69,24 +85,6 @@ private:
       ReadHierarchyData(child, src->mChildren[i]);
       dest.children.push_back(child);
     }
-  }
-
-  void loadModel(std::string const &path) {
-    Assimp::Importer importer;
-    const aiScene   *scene = importer.ReadFile(path,
-                                             aiProcess_Triangulate | aiProcess_GenSmoothNormals |
-                                                 aiProcess_CalcTangentSpace | aiProcess_FlipUVs);
-
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-      std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
-      return;
-    }
-    directory = path.substr(0, path.find_last_of('/'));
-
-    processNode(scene->mRootNode, scene);
-    ReadHierarchyData(m_RootNode, scene->mRootNode);
-    glm::mat4 identity = glm::mat4(1.0f);
-    ComputeGlobalBindPose(m_RootNode, identity);
   }
 
   void ComputeGlobalBindPose(const AssimpNodeData &node, const glm::mat4 &parentTransform) {
@@ -227,7 +225,7 @@ private:
 
       bool skip = false;
       for (unsigned int j = 0; j < textures_loaded.size(); j++) {
-        if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0) {
+        if (std::strcmp(textures_loaded[j].path.c_str(), str.C_Str()) == 0) {
           textures.push_back(textures_loaded[j]);
           skip = true;
 
@@ -241,6 +239,7 @@ private:
 
         Texture texture("", path, type);
         textures.push_back(texture);
+        // TODO: Resource waste
         textures_loaded.push_back(texture);
       }
     }
