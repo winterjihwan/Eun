@@ -33,7 +33,9 @@
 - [x] Loading Screen  
 - [x] UI Pass  
 - [x] True Font
-- [ ] Hot reloading  
+- [x] Simple Hot reloading  
+- [ ] Hot reloading with DLL
+- [x] Third Person View
 - [ ] Attach weapons to bones
 - [ ] Arena Allocator
 - [ ] Array-ify instead of std::vector  

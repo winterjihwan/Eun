@@ -67,12 +67,11 @@ void init() {
 
 void render_game() {
   Camera *camera = Game::get_camera();
-  Player *player = Game::get_player();
 
   // Per Frame Transformations
   _projection = glm::perspective(
       glm::radians(camera->get_zoom()), (float)VIEWPORT_WIDTH / (float)VIEWPORT_HEIGHT, NEAR, FAR);
-  _view = glm::lookAt(player->get_pos(), player->get_pos() + camera->get_front(), camera->get_up());
+  _view = camera->view_matrix();
 
   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

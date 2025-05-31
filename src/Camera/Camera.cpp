@@ -1,4 +1,7 @@
 #include "Camera.h"
+#include "Enums.h"
+#include "Input/Input.h"
+#include "Keycodes.h"
 
 void Camera::process_mouse_movement(float xoffset, float yoffset, GLboolean constrainPitch) {
   xoffset *= _mouse_sensitivity;
@@ -23,6 +26,47 @@ void Camera::process_mouse_scroll(float yoffset) {
     _zoom = 1.0f;
   if (_zoom > 45.0f)
     _zoom = 45.0f;
+}
+
+void Camera::update(const glm::vec3 &watch) {
+  if (Input::key_pressed(EUN_KEY_P)) {
+    toggle_view(watch);
+  }
+
+  if (_view_mode == ViewMode::First) {
+    _view = glm::lookAt(watch, watch + _front, _up);
+  } else {
+    third_person_view(watch);
+    _view = glm::lookAt(_position, watch, _up);
+  }
+}
+
+void Camera::toggle_view(const glm::vec3 &watch) {
+  if (_view_mode == ViewMode::First) {
+    _view_mode = ViewMode::Third;
+  } else {
+    _view_mode = ViewMode::First;
+  }
+}
+
+void Camera::first_person_view(const glm::vec3 &watch) {
+  _position = watch;
+}
+
+void Camera::third_person_view(const glm::vec3 &watch) {
+  float distance_behind = 5.0f;
+  float height_above    = 2.0f;
+
+  glm::vec3 offset = -get_front() * distance_behind + glm::vec3(0.0f, height_above, 0.0f);
+  _position        = watch + offset;
+}
+
+glm::mat4 Camera::view_matrix() {
+  return _view;
+}
+
+glm::vec3 Camera::get_pos() {
+  return _position;
 }
 
 glm::vec3 Camera::get_front() {

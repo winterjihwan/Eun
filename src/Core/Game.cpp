@@ -34,6 +34,7 @@ void update() {
   _last_frame        = currentFrame;
 
   _player.update(_delta_time, _camera);
+  _camera.update(_player.get_pos());
 
   World::update(_delta_time);
 }

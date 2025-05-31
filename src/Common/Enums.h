@@ -52,3 +52,8 @@ enum class UIAlignment {
   BOTTOM_LEFT,
   BOTTOM_RIGHT
 };
+
+enum class ViewMode {
+  First,
+  Third,
+};
