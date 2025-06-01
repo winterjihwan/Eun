@@ -64,4 +64,5 @@ enum class PlayerState {
   WALKING_BACKWARD,
   WALKING_LEFT,
   WALKING_RIGHT,
+  JUMPING,
 };

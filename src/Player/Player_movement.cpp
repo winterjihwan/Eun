@@ -23,7 +23,10 @@ void Player::update_movement(float delta_time, Camera camera) {
     walk_dir = glm::normalize(walk_dir);
 
   // Update Player State
-  if (glm::length(walk_dir) > 0.0f) {
+  if (_character->GetGroundState() != CharacterBase::EGroundState::OnGround) {
+    _player_state = PlayerState::JUMPING;
+
+  } else if (glm::length(walk_dir) > 0.0f) {
     walk_dir = glm::normalize(walk_dir);
     front    = glm::normalize(front);
     right    = glm::normalize(right);
@@ -39,8 +42,6 @@ void Player::update_movement(float delta_time, Camera camera) {
       _player_state = PlayerState::WALKING_RIGHT;
     else if (right_dot < -0.5f)
       _player_state = PlayerState::WALKING_LEFT;
-    else
-      _player_state = PlayerState::IDLE;
   } else {
     _player_state = PlayerState::IDLE;
   }

@@ -21,26 +21,18 @@ void Player::init_weapon() {
     state.has          = false;
   }
 
-  // Default weapon
-  give_weapon("Pistol");
-  give_weapon("HK_416");
-
-  // Anim Entity
-  {
-    AnimEntity weapon_view;
-    // Model     *pistol_model = AssetManager::get_model_by_name("Pistol");
-    // Animator  *pistol_idle_animation = AssetManager::get_animator_by_name("Pistol_Idle");
-    glm::mat4 weapon_transform = weapon_view_transform();
-
-    // weapon_view.init("Weapon_View", pistol_model, pistol_idle_animation, weapon_transform);
-    // World::add_anim_entity(std::move(weapon_view));
-    // _weapon_anim_entity = World::get_anim_entity_by_name("Weapon_View");
-  }
+  // Default weapons
+  // TODO: Equip immediately
+  give_weapon("Glock");
 }
 
 void Player::update_weapon(float delta_time) {
   if (Input::key_pressed(EUN_KEY_Q)) {
     next_weapon();
+  }
+
+  if (!_equipped) {
+    return;
   }
 
   WeaponInfo *weapon_info = get_current_weapon_info();
@@ -51,7 +43,7 @@ void Player::update_weapon(float delta_time) {
   }
 
   switch (weapon_info->type) {
-  case WeaponType::PISTOL:
+  case WeaponType::HANDGUN:
   case WeaponType::AUTOMATIC:
     update_weapon_gun(delta_time);
     break;
@@ -85,18 +77,21 @@ void Player::update_weapon(float delta_time) {
 }
 
 void Player::next_weapon() {
-  _current_weapon_index++;
-  if (_current_weapon_index == _weapon_states.size()) {
-    _current_weapon_index = 0;
+  if (_weapon_states.empty()) {
+    return;
   }
-  while (!_weapon_states[_current_weapon_index].has) {
-    _current_weapon_index++;
-    if (_current_weapon_index == _weapon_states.size()) {
-      _current_weapon_index = 0;
+
+  int size = _weapon_states.size();
+  for (int i = 1; i <= size; ++i) {
+    int next_index = (_current_weapon_index + i) % size;
+    if (_weapon_states[next_index].has) {
+      _current_weapon_index = next_index;
+      switch_weapon(_weapon_states[next_index].name);
+      return;
     }
   }
 
-  switch_weapon(_weapon_states[_current_weapon_index].name);
+  // No Weapon
 }
 
 void Player::switch_weapon(const std::string &name) {
@@ -104,7 +99,8 @@ void Player::switch_weapon(const std::string &name) {
   WeaponInfo  *weapon_info = WeaponManager::get_weapon_info_by_name(name);
 
   if (!state || !weapon_info) {
-    return;
+    std::cout << "Player::switch_weapon() failed, weapon name: " << name << std::endl;
+    assert(0);
   }
 
   for (int i = 0; i < _weapon_states.size(); i++) {
@@ -113,14 +109,30 @@ void Player::switch_weapon(const std::string &name) {
     }
   }
 
-  Model *weapon_model = AssetManager::get_model_by_name(weapon_info->model_name);
-  // Animator *weapon_animator =
-  // AssetManager::get_animator_by_name(weapon_info->animation_names.draw);
-  // _weapon_anim_entity->set_model(weapon_model);
-  // _weapon_anim_entity->set_animator(weapon_animator);
+  equip_weapon(weapon_info->model_name);
 
-  // weapon_animator->PlayAnimation();
   _weapon_action = WeaponAction::DRAW;
+  _equipped      = true;
+  _player_animator.play_animation(_player_animations.gun_draw);
+}
+
+void Player::equip_weapon(const std::string &name) {
+  Model *glock = AssetManager::get_model_by_name(name);
+  // glm::mat4 hand_transform = _animator->GetBoneGlobalTransform("mixamorig12_LeftHand");
+
+  // glm::mat4 pete_transform = glm::translate(glm::mat4(1.0f), glm::vec3(13.0f, 0, -5.0f));
+  //
+  // glm::mat4 local_offset = glm::mat4(1.0f);
+  // local_offset           = glm::translate(local_offset, glm::vec3(0.0f, 15.0f, 0.1f));
+  // local_offset *=
+  //     glm::eulerAngleXYZ(glm::radians(0.0f), glm::radians(180.0f), glm::radians(270.0f));
+  // local_offset = glm::scale(local_offset, glm::vec3(100.0f));
+  //
+  // glm::mat4 model_glock = pete_transform * hand_transform * local_offset;
+  // model_glock           = pete_transform * hand_transform * local_offset;
+  //
+  // shader.setMat4("model", model_glock);
+  // glock->draw(shader);
 }
 
 void Player::give_weapon(const std::string &name) {

@@ -22,15 +22,6 @@ struct Player {
   bool get_flashlight_on();
 
   // Weapon
-  void init_weapon();
-  void switch_weapon(const std::string &name);
-  void next_weapon();
-  void reload_gun();
-  void fire_gun();
-  void inspect_gun();
-  void give_weapon(const std::string &name);
-  void spawn_bullet(float variance);
-
   WeaponState *get_weapon_state_by_name(const std::string &name);
   WeaponState *get_current_weapon_state();
   WeaponInfo  *get_current_weapon_info();
@@ -57,13 +48,22 @@ private:
   void update_flashlight();
 
   // Weapon
+  bool                     _equipped             = false;
   int                      _current_weapon_index = 0;
   std::vector<WeaponState> _weapon_states;
-  WeaponAction             _weapon_action;
-  // AnimEntity              *_weapon_anim_entity;
+  WeaponAction             _weapon_action = WeaponAction::IDLE;
 
+  void init_weapon();
   void update_weapon(float delta_time);
   void update_weapon_gun(float delta_time);
+  void equip_weapon(const std::string &name);
+  void switch_weapon(const std::string &name);
+  void next_weapon();
+  void reload_gun();
+  void fire_gun();
+  void inspect_gun();
+  void give_weapon(const std::string &name);
+  void spawn_bullet(float variance);
 
   glm::mat4 weapon_view_transform();
 };

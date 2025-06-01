@@ -18,6 +18,16 @@ void Player::init(glm::vec3 position) {
   _player_animations.walk_backward = AssetManager::get_animation_by_name("Walk_Backward");
   _player_animations.walk_left     = AssetManager::get_animation_by_name("Walk_Left");
   _player_animations.walk_right    = AssetManager::get_animation_by_name("Walk_Right");
+  _player_animations.jump          = AssetManager::get_animation_by_name("Jump");
+
+  _player_animations.gun_idle          = AssetManager::get_animation_by_name("Gun_Idle");
+  _player_animations.gun_fire          = AssetManager::get_animation_by_name("Gun_Fire");
+  _player_animations.gun_draw          = AssetManager::get_animation_by_name("Gun_Draw");
+  _player_animations.gun_walk_forward  = AssetManager::get_animation_by_name("Gun_Walk_Forward");
+  _player_animations.gun_walk_backward = AssetManager::get_animation_by_name("Gun_Walk_Backward");
+  _player_animations.gun_walk_left     = AssetManager::get_animation_by_name("Gun_Walk_Left");
+  _player_animations.gun_walk_right    = AssetManager::get_animation_by_name("Gun_Walk_Right");
+  _player_animations.gun_jump          = AssetManager::get_animation_by_name("Gun_Jump");
 
   // Player Anim Entity
   AnimEntityCreateInfo anim_entity_create_info;
@@ -43,19 +53,28 @@ void Player::update(float delta_time, Camera camera) {
 void Player::update_anim_entity() {
   switch (_player_state) {
   case (PlayerState::IDLE):
-    _player_anim_entity->play_animation(_player_animations.idle);
+    _equipped ? _player_anim_entity->play_animation(_player_animations.gun_idle)
+              : _player_anim_entity->play_animation(_player_animations.idle);
     break;
   case (PlayerState::WALKING_FORWARD):
-    _player_anim_entity->play_animation(_player_animations.walk_forward);
+    _equipped ? _player_anim_entity->play_animation(_player_animations.gun_walk_forward)
+              : _player_anim_entity->play_animation(_player_animations.walk_forward);
     break;
   case (PlayerState::WALKING_BACKWARD):
-    _player_anim_entity->play_animation(_player_animations.walk_backward);
+    _equipped ? _player_anim_entity->play_animation(_player_animations.gun_walk_backward)
+              : _player_anim_entity->play_animation(_player_animations.walk_backward);
     break;
   case (PlayerState::WALKING_LEFT):
-    _player_anim_entity->play_animation(_player_animations.walk_left);
+    _equipped ? _player_anim_entity->play_animation(_player_animations.gun_walk_left)
+              : _player_anim_entity->play_animation(_player_animations.walk_left);
     break;
   case (PlayerState::WALKING_RIGHT):
-    _player_anim_entity->play_animation(_player_animations.walk_right);
+    _equipped ? _player_anim_entity->play_animation(_player_animations.gun_walk_right)
+              : _player_anim_entity->play_animation(_player_animations.walk_right);
+    break;
+  case (PlayerState::JUMPING):
+    _equipped ? _player_anim_entity->play_animation(_player_animations.gun_jump)
+              : _player_anim_entity->play_animation(_player_animations.jump);
     break;
   };
 

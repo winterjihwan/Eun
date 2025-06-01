@@ -52,28 +52,23 @@ void init() {
     std::future<void>     future   = brian.load_async("res/objects/Brian/Brian.dae");
     std::function<void()> callback = [&brian]() {
       // Base
-      _animations.emplace_back(
-          Animation("Breathe_Idle", "res/animations/Breathe_Idle.dae", &brian));
-      _animations.emplace_back(
-          Animation("Walk_Forward", "res/animations/Walk_Forward.dae", &brian));
-      _animations.emplace_back(
-          Animation("Walk_Backward", "res/animations/Walk_Backward.dae", &brian));
-      _animations.emplace_back(Animation("Walk_Left", "res/animations/Walk_Left.dae", &brian));
-      _animations.emplace_back(Animation("Walk_Right", "res/animations/Walk_Right.dae", &brian));
+      _animations.emplace_back("Breathe_Idle", "res/animations/Breathe_Idle.dae", &brian);
+      _animations.emplace_back("Walk_Forward", "res/animations/Walk_Forward.dae", &brian);
+      _animations.emplace_back("Walk_Backward", "res/animations/Walk_Backward.dae", &brian);
+      _animations.emplace_back("Walk_Left", "res/animations/Walk_Left.dae", &brian);
+      _animations.emplace_back("Walk_Right", "res/animations/Walk_Right.dae", &brian);
+      _animations.emplace_back("Jump", "res/animations/Jump.dae", &brian);
 
       // Gun
-      _animations.emplace_back(Animation("Pistol_Idle", "res/animations/Pistol_Idle.dae", &brian));
-      _animations.emplace_back(
-          Animation("Pistol_Shoot", "res/animations/Pistol_Shoot.dae", &brian));
-      _animations.emplace_back(Animation("Pistol_Jump", "res/animations/Pistol_Jump.dae", &brian));
-      _animations.emplace_back(
-          Animation("Pistol_Walk_Forward", "res/animations/Pistol_Walk_Forward.dae", &brian));
-      _animations.emplace_back(
-          Animation("Pistol_Walk_Backward", "res/animations/Pistol_Walk_Backward.dae", &brian));
-      _animations.emplace_back(
-          Animation("Pistol_Walk_Left", "res/animations/Pistol_Walk_Right.dae", &brian));
-      _animations.emplace_back(
-          Animation("Pistol_Walk_Right", "res/animations/Pistol_Walk_Right.dae", &brian));
+      _animations.emplace_back("Gun_Idle", "res/animations/Gun_Idle.dae", &brian);
+      _animations.emplace_back("Gun_Fire", "res/animations/Gun_Fire.dae", &brian);
+      _animations.emplace_back("Gun_Draw", "res/animations/Gun_Draw.dae", &brian);
+      _animations.emplace_back("Gun_Walk_Forward", "res/animations/Gun_Walk_Forward.dae", &brian);
+      _animations.emplace_back("Gun_Walk_Backward", "res/animations/Gun_Walk_Backward.dae", &brian);
+      _animations.emplace_back("Gun_Walk_Left", "res/animations/Gun_Walk_Right.dae", &brian);
+      _animations.emplace_back("Gun_Walk_Right", "res/animations/Gun_Walk_Right.dae", &brian);
+      _animations.emplace_back("Gun_Jump", "res/animations/Gun_Jump.dae", &brian);
+      _animations.emplace_back("Gun_Whip", "res/animations/Gun_Whip.dae", &brian);
     };
     _deferred_tasks.push_back({std::move(future), callback});
   }
@@ -93,7 +88,7 @@ void init() {
     std::future<void>     future   = pete.load_async("res/objects/Pete/Pete.dae");
     std::function<void()> callback = [&pete]() {
       // Animations
-      _animations.emplace_back(Animation("Gun_Idle", "res/animations/Pistol_Idle.dae", &pete));
+      _animations.emplace_back("Gun_Idle", "res/animations/Gun_Idle.dae", &pete);
     };
     _deferred_tasks.push_back({std::move(future), callback});
   }
@@ -204,7 +199,8 @@ void init() {
 }
 
 void update_loading() {
-  UIBackend::blit_text("Eunnnnnn", "NoScary", 0, VIEWPORT_HEIGHT - 32, UIAlignment::CENTERED, 1.0f);
+  UIBackend::blit_text(
+      "Eunnnnnn", "AncizarSerif", 0, VIEWPORT_HEIGHT - 32, UIAlignment::CENTERED, 1.0f);
 
   if (_loading_complete) {
     std::cout << "AssetManager::update_loading(), Why update loading again?" << std::endl;

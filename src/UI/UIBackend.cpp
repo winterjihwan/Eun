@@ -13,7 +13,7 @@ std::vector<UIRenderItem> _render_items;
 void init() {
   Text::init();
 
-  Text::add_font("res/fonts/NoScary.ttf", "NoScary");
+  Text::add_font("res/fonts/AncizarSerif.ttf", "AncizarSerif");
 }
 
 void update() {

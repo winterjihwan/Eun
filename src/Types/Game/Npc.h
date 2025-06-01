@@ -16,7 +16,7 @@ struct Npc {
   const std::string &get_name();
 
 private:
-  std::string   _name = "NPC";
+  std::string   _name = "Npc";
   Model        *_model;
   Animator      _npc_animator;
   NpcAnimations _npc_animations;

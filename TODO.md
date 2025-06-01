@@ -28,9 +28,11 @@
 - [ ] Better Chracter Animations
     - [x] Idle
     - [x] Walk
+    - [x] Jump
     - [ ] Knife?
     - [ ] Gun
 - [x] Animation Blend
+- [ ] Hybrid ECS
 - [ ] G-buffer
 - [ ] Deferred Rendering
 - [x] Z fighting  

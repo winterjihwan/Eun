@@ -1,4 +1,3 @@
-#include "AssetManager/AssetManager.h"
 #include "Audio/Audio.h"
 #include "Input/Input.h"
 #include "Keycodes.h"
@@ -11,10 +10,6 @@ void Player::update_weapon_gun(float delta_time) {
 
   if (Input::key_pressed(EUN_KEY_R)) {
     reload_gun();
-  }
-
-  if (Input::key_pressed(EUN_KEY_E)) {
-    inspect_gun();
   }
 }
 
@@ -44,14 +39,4 @@ void Player::fire_gun() {
   // Actual fire logic
 
   spawn_bullet(0.02f);
-}
-
-void Player::inspect_gun() {
-  WeaponInfo *weapon_info = get_current_weapon_info();
-
-  _weapon_action = WeaponAction::INSPECT;
-  // Animator *weapon_animator =
-  //     AssetManager::get_animator_by_name(weapon_info->animation_names.inspect);
-  // _weapon_anim_entity->set_animator(weapon_animator);
-  // weapon_animator->PlayAnimation();
 }

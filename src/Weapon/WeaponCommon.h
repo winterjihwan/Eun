@@ -2,12 +2,17 @@
 
 #include <string>
 
-enum class WeaponType { MELEE, PISTOL, SHOTGUN, AUTOMATIC, UNDEFINED };
+enum class WeaponType {
+  MELEE = 0,
+  HANDGUN,
+  SHOTGUN,
+  AUTOMATIC,
+  UNDEFINED,
+};
 
 struct AnimationNames {
   std::string draw;
   std::string idle;
-  std::string inspect;
   std::string fire;
   std::string reload;
 };
