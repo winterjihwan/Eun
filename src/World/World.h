@@ -14,10 +14,10 @@ void submit_render_items();
 
 void process_bullets();
 
-void add_anim_entity(AnimEntity &&anim_entity);
-void add_bullet(Bullet &&bullet);
-void add_decal(Decal &&decal);
-void add_blood_volumetric(BloodVolumetric &&blood_volumetric);
+AnimEntity *add_anim_entity(AnimEntity &&anim_entity);
+void        add_bullet(Bullet &&bullet);
+void        add_decal(Decal &&decal);
+void        add_blood_volumetric(BloodVolumetric &&blood_volumetric);
 
 std::vector<Bullet> &get_bullets();
 AnimEntity          *get_anim_entity_by_name(const std::string &name);

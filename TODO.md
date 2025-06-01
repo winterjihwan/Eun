@@ -25,6 +25,12 @@
 - [x] Blood Decal
 - [x] Blood Volumetric
 - [ ] Better Character Virtual Controller
+- [ ] Better Chracter Animations
+    - [x] Idle
+    - [x] Walk
+    - [ ] Knife?
+    - [ ] Gun
+    - [ ] Blend
 - [ ] G-buffer
 - [ ] Deferred Rendering
 - [x] Z fighting  
@@ -37,6 +43,7 @@
 - [ ] Hot reloading with DLL
 - [x] Third Person View
 - [ ] Attach weapons to bones
+- [ ] Knife or Sledge Hammer
 - [ ] Arena Allocator
 - [ ] Array-ify instead of std::vector  
 - [ ] Remove dependency OpenGLRenderer <-> Player  
@@ -50,4 +57,4 @@
 - [ ] Compute Skinning Pass <- Defer this to when I buy Windows, macOS only supports OpenGL 4.1. Perhaps just general compute pass
 - [ ] SSBO
 - [ ] PhysX, Jolt is just too new
-- [ ] Ragdoll using PhysX  
+- [ ] Ragdoll using PhysX

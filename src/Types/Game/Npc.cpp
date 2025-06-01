@@ -1,4 +1,5 @@
 #include "Npc.h"
+#include "CreateInfo.h"
 #include "Enums.h"
 #include "Keycodes.h"
 #include "Physics/Physics.h"
@@ -13,7 +14,14 @@ void Npc::init(NpcCreateInfo &&npc_create_info) {
   _animators       = npc_create_info.animators;
   _model_transform = npc_create_info.model_transform;
   _animation_state = npc_create_info.animation_state;
-  _anim_entity.init(_name, _model, _animators.idle, _model_transform);
+
+  AnimEntityCreateInfo anim_entity_create_info;
+  anim_entity_create_info.name      = _name;
+  anim_entity_create_info.model     = _model;
+  anim_entity_create_info.animator  = &_animators.idle;
+  anim_entity_create_info.transform = _model_transform;
+
+  _anim_entity.init(std::move(anim_entity_create_info));
 
   // Physics
   float     capsule_radius   = npc_create_info.capsule_radius;
@@ -49,13 +57,13 @@ void Npc::set_animation_state(NpcAnimationState npc_animation_state) {
 
   switch (_animation_state) {
   case NpcAnimationState::IDLE:
-    _anim_entity.set_animator(_animators.idle);
+    _anim_entity.set_animator(&_animators.idle);
     break;
   case NpcAnimationState::WALK:
-    _anim_entity.set_animator(_animators.walk);
+    _anim_entity.set_animator(&_animators.walk);
     break;
   case NpcAnimationState::DEATH:
-    _anim_entity.set_animator(_animators.death);
+    _anim_entity.set_animator(&_animators.death);
     break;
   }
 

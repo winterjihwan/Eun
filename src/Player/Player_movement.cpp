@@ -22,6 +22,29 @@ void Player::update_movement(float delta_time, Camera camera) {
   if (glm::length(walk_dir) > 0.0f)
     walk_dir = glm::normalize(walk_dir);
 
+  // Update Player State
+  if (glm::length(walk_dir) > 0.0f) {
+    walk_dir = glm::normalize(walk_dir);
+    front    = glm::normalize(front);
+    right    = glm::normalize(right);
+
+    float forward_dot = glm::dot(walk_dir, front);
+    float right_dot   = glm::dot(walk_dir, right);
+
+    if (forward_dot > 0.5f)
+      _player_state = PlayerState::WALKING_FORWARD;
+    else if (forward_dot < -0.5f)
+      _player_state = PlayerState::WALKING_BACKWARD;
+    else if (right_dot > 0.5f)
+      _player_state = PlayerState::WALKING_RIGHT;
+    else if (right_dot < -0.5f)
+      _player_state = PlayerState::WALKING_LEFT;
+    else
+      _player_state = PlayerState::IDLE;
+  } else {
+    _player_state = PlayerState::IDLE;
+  }
+
   Vec3 move    = Vec3(walk_dir.x, 0.0f, walk_dir.z) * _speed;
   Vec3 cur_vel = _character->GetLinearVelocity();
   Vec3 new_vel = move + Vec3(0, cur_vel.GetY(), 0);

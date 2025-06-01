@@ -29,8 +29,13 @@ std::future<void> ExrTexture::load_async(const std::string &path) {
 }
 
 void ExrTexture::upload_to_gpu() {
-  if (_texture_id != 0 || !_pixel_data) {
-    std::cerr << "ExrTexture::upload_to_gpu missing data" << std::endl;
+  if (_texture_id != 0) {
+    std::cerr << "ExrTexture::upload_to_gpu, already has texture id" << std::endl;
+    assert(0);
+  }
+
+  if (!_pixel_data) {
+    std::cerr << "ExrTexture::upload_to_gpu, missing pixel data" << std::endl;
     assert(0);
   }
 

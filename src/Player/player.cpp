@@ -1,12 +1,35 @@
 #include "Player.h"
+#include "AssetManager/AssetManager.h"
+#include "Core/Game.h"
 #include "Defines.h"
+#include "Enums.h"
 #include "Keycodes.h"
+#include "Types/Animation/Animator.h"
+#include "World/World.h"
 #include <glm/glm.hpp>
 
 void Player::init(glm::vec3 position) {
   _position  = position;
   _character = create_character_virtual(
       glm::vec3(_position.x, _position.y, _position.z), PLAYER_HEIGHT, 0.25f);
+
+  // Animators
+  _player_animators.idle          = Animator(AssetManager::get_animation_by_name("Breathe_Idle"));
+  _player_animators.walk_forward  = Animator(AssetManager::get_animation_by_name("Walk_Forward"));
+  _player_animators.walk_backward = Animator(AssetManager::get_animation_by_name("Walk_Backward"));
+  _player_animators.walk_left     = Animator(AssetManager::get_animation_by_name("Walk_Left"));
+  _player_animators.walk_right    = Animator(AssetManager::get_animation_by_name("Walk_Right"));
+
+  // Player Anim Entity
+  AnimEntityCreateInfo anim_entity_create_info;
+  anim_entity_create_info.name      = "Player";
+  anim_entity_create_info.model     = AssetManager::get_model_by_name("Brian");
+  anim_entity_create_info.animator  = &_player_animators.idle;
+  anim_entity_create_info.transform = glm::translate(glm::mat4(1.0f), _position);
+
+  AnimEntity player_entity;
+  player_entity.init(std::move(anim_entity_create_info));
+  _player_anim_entity = World::add_anim_entity(std::move(player_entity));
 
   init_weapon();
 }
@@ -15,6 +38,29 @@ void Player::update(float delta_time, Camera camera) {
   update_movement(delta_time, camera);
   update_weapon(delta_time);
   update_flashlight();
+  update_anim_entity();
+}
+
+void Player::update_anim_entity() {
+  switch (_player_state) {
+  case (PlayerState::IDLE):
+    _player_anim_entity->set_animator(&_player_animators.idle);
+    break;
+  case (PlayerState::WALKING_FORWARD):
+    _player_anim_entity->set_animator(&_player_animators.walk_forward);
+    break;
+  case (PlayerState::WALKING_BACKWARD):
+    _player_anim_entity->set_animator(&_player_animators.walk_backward);
+    break;
+  case (PlayerState::WALKING_LEFT):
+    _player_anim_entity->set_animator(&_player_animators.walk_left);
+    break;
+  case (PlayerState::WALKING_RIGHT):
+    _player_anim_entity->set_animator(&_player_animators.walk_right);
+    break;
+  };
+
+  _player_anim_entity->set_model_transform(player_view_transform());
 }
 
 glm::vec3 Player::get_pos() {
@@ -22,4 +68,19 @@ glm::vec3 Player::get_pos() {
   glm::vec3  result = glm::vec3(pos.GetX(), pos.GetY() + PLAYER_HEIGHT * 0.5f, pos.GetZ());
 
   return result;
+}
+
+glm::vec3 Player::get_pos_feet() {
+  return _position - glm::vec3(0, PLAYER_HEIGHT, 0);
+}
+
+glm::mat4 Player::player_view_transform() {
+  glm::vec3 pos = get_pos_feet();
+  float     yaw = Game::get_camera()->get_yaw();
+
+  glm::mat4 transform = glm::mat4(1.0f);
+  transform           = glm::translate(transform, pos);
+  transform           = glm::rotate(transform, glm::radians(-yaw + 90.0f), glm::vec3(0, 1, 0));
+
+  return transform;
 }

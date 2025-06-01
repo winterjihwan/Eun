@@ -9,10 +9,12 @@
 class Animation {
 public:
   std::string _path;
+  std::string _name;
 
   Animation() = default;
 
-  Animation(const std::string &animationPath, Model *model) {
+  Animation(const std::string &name, const std::string &animationPath, Model *model) {
+    _name = name;
     _path = animationPath;
     Assimp::Importer _importer;
     const aiScene   *scene = _importer.ReadFile(animationPath, aiProcess_Triangulate);

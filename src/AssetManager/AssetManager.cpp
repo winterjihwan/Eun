@@ -20,7 +20,6 @@ namespace AssetManager {
 std::vector<Model>        _models;
 std::vector<Mesh>         _meshes;
 std::vector<Animation>    _animations;
-std::vector<Animator>     _animators;
 std::vector<Texture>      _textures; // TODO: Remove Texture from Mesh
 std::vector<ExrTexture>   _exr_textures;
 std::vector<DeferredTask> _deferred_tasks;
@@ -31,7 +30,6 @@ void init() {
   // Reserve
   _models.reserve(16);
   _animations.reserve(16);
-  _animators.reserve(32);
   _textures.reserve(64);
   _exr_textures.reserve(36);
 
@@ -54,9 +52,13 @@ void init() {
     std::future<void>     future   = brian.load_async("res/objects/Brian/brian.dae");
     std::function<void()> callback = [&brian]() {
       // Animations
-      Animation &brian_idle_animation =
-          _animations.emplace_back(Animation("res/animations/Breath_Idle.dae", &brian));
-      _animators.emplace_back(&brian_idle_animation, "Brian_Idle");
+      _animations.emplace_back(Animation("Breathe_Idle", "res/animations/Breath_Idle.dae", &brian));
+      _animations.emplace_back(
+          Animation("Walk_Forward", "res/animations/Walk_Forward.dae", &brian));
+      _animations.emplace_back(
+          Animation("Walk_Backward", "res/animations/Walk_Backward.dae", &brian));
+      _animations.emplace_back(Animation("Walk_Left", "res/animations/Walk_Left.dae", &brian));
+      _animations.emplace_back(Animation("Walk_Right", "res/animations/Walk_Right.dae", &brian));
     };
     _deferred_tasks.push_back({std::move(future), callback});
   }
@@ -76,9 +78,7 @@ void init() {
     std::future<void>     future   = pete.load_async("res/objects/Pete/Pete.dae");
     std::function<void()> callback = [&pete]() {
       // Animations
-      Animation &brian_idle_animation =
-          _animations.emplace_back(Animation("res/animations/Gun_Idle.dae", &pete));
-      _animators.emplace_back(&brian_idle_animation, "Pete_Idle");
+      _animations.emplace_back(Animation("Gun_Idle", "res/animations/Gun_Idle.dae", &pete));
     };
     _deferred_tasks.push_back({std::move(future), callback});
   }
@@ -193,28 +193,27 @@ void init() {
 
     std::future<void>     future   = pistol.load_async("res/objects/Pistol/scene.gltf");
     std::function<void()> callback = [&pistol]() {
-      Animation &pistol_animation =
-          _animations.emplace_back(Animation("res/objects/Pistol/scene.gltf", &pistol));
+      _animations.emplace_back(Animation("Pistol", "res/objects/Pistol/scene.gltf", &pistol));
 
-      Animator *draw_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Draw");
-      draw_animator->SetClip(0.0f, 1.14f);
-      draw_animator->SetIsLoop(false);
-
-      Animator *idle_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Idle");
-      idle_animator->SetClip(10.9f, 11.2f);
-      idle_animator->SetIsLoop(false);
-
-      Animator *fire_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Fire");
-      fire_animator->SetClip(7.5f, 8.0f);
-      fire_animator->SetIsLoop(false);
-
-      Animator *reload_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Reload");
-      reload_animator->SetClip(8.2f, 10.8f);
-      reload_animator->SetIsLoop(false);
-
-      Animator *inspect_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Inspect");
-      inspect_animator->SetClip(1.5f, 7.0f);
-      inspect_animator->SetIsLoop(false);
+      // Animator *draw_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Draw");
+      // draw_animator->SetClip(0.0f, 1.14f);
+      // draw_animator->SetIsLoop(false);
+      //
+      // Animator *idle_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Idle");
+      // idle_animator->SetClip(10.9f, 11.2f);
+      // idle_animator->SetIsLoop(false);
+      //
+      // Animator *fire_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Fire");
+      // fire_animator->SetClip(7.5f, 8.0f);
+      // fire_animator->SetIsLoop(false);
+      //
+      // Animator *reload_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Reload");
+      // reload_animator->SetClip(8.2f, 10.8f);
+      // reload_animator->SetIsLoop(false);
+      //
+      // Animator *inspect_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Inspect");
+      // inspect_animator->SetClip(1.5f, 7.0f);
+      // inspect_animator->SetIsLoop(false);
     };
     _deferred_tasks.push_back({std::move(future), callback});
   }
@@ -225,28 +224,27 @@ void init() {
 
     std::future<void>     future   = hk_416.load_async("res/objects/HK_416/scene.gltf");
     std::function<void()> callback = [&hk_416]() {
-      Animation &hk_416_animation =
-          _animations.emplace_back(Animation("res/objects/HK_416/scene.gltf", &hk_416));
+      _animations.emplace_back(Animation("HK_416", "res/objects/HK_416/scene.gltf", &hk_416));
 
-      Animator *draw_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Draw");
-      draw_animator->SetClip(0.0f, 2.2f);
-      draw_animator->SetIsLoop(false);
-
-      Animator *idle_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Idle");
-      idle_animator->SetClip(8.0f, 8.2f);
-      idle_animator->SetIsLoop(false);
-
-      Animator *inspect_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Inspect");
-      inspect_animator->SetClip(2.2f, 8.0f);
-      inspect_animator->SetIsLoop(false);
-
-      Animator *fire_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Fire");
-      fire_animator->SetClip(21.96f, 22.36f);
-      fire_animator->SetIsLoop(false);
-
-      Animator *reload_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Reload");
-      reload_animator->SetClip(8.25f, 14.5f);
-      reload_animator->SetIsLoop(false);
+      // Animator *draw_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Draw");
+      // draw_animator->SetClip(0.0f, 2.2f);
+      // draw_animator->SetIsLoop(false);
+      //
+      // Animator *idle_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Idle");
+      // idle_animator->SetClip(8.0f, 8.2f);
+      // idle_animator->SetIsLoop(false);
+      //
+      // Animator *inspect_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Inspect");
+      // inspect_animator->SetClip(2.2f, 8.0f);
+      // inspect_animator->SetIsLoop(false);
+      //
+      // Animator *fire_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Fire");
+      // fire_animator->SetClip(21.96f, 22.36f);
+      // fire_animator->SetIsLoop(false);
+      //
+      // Animator *reload_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Reload");
+      // reload_animator->SetClip(8.25f, 14.5f);
+      // reload_animator->SetIsLoop(false);
     };
     _deferred_tasks.push_back({std::move(future), callback});
   }
@@ -301,18 +299,14 @@ void update_loading() {
 void shutdown() {
 }
 
-std::vector<Animator> &get_animators() {
-  return _animators;
-}
-
-Animator *get_animator_by_name(const std::string &name) {
-  for (auto &animator : _animators) {
-    if (name == animator.GetName()) {
-      return &animator;
+Animation *get_animation_by_name(const std::string &name) {
+  for (Animation &animation : _animations) {
+    if (name == animation._name) {
+      return &animation;
     }
   }
 
-  std::cout << "AssetManager::get_animator_by_name() failed, no animator with name: " << name
+  std::cout << "AssetManager::get_animation_by_name() failed, no animation with name: " << name
             << std::endl;
   assert(0);
 }

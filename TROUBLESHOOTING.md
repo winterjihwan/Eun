@@ -59,8 +59,18 @@ float *_pixel_data;
 ```
 To store pixel data, which will be used later when uploading to GPU  
 However seldomly segfaults  
-Not because the vector resized, had to copy ExrTexture  <- need to figure out more  
+Not because the vector resized, had to copy ExrTexture
 ```c++
 std::unique_ptr<float[]> _pixel_data;
 ```
 So I used Rust-like solution to Box it out and OWN the address  
+
+```c++
+unsigned int             _texture_id;
+
+if (_texture_id != 0) {
+    std::cerr << "ExrTexture::upload_to_gpu, already has texture id" << std::endl;
+    assert(0);
+}
+```
+_texture_id needed to be zero initialized, or some dump value might be placed   

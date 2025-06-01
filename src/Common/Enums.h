@@ -54,6 +54,14 @@ enum class UIAlignment {
 };
 
 enum class ViewMode {
-  First,
-  Third,
+  FIRST,
+  THIRD,
+};
+
+enum class PlayerState {
+  IDLE,
+  WALKING_FORWARD,
+  WALKING_BACKWARD,
+  WALKING_LEFT,
+  WALKING_RIGHT,
 };

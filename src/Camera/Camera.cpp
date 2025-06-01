@@ -33,7 +33,7 @@ void Camera::update(const glm::vec3 &watch) {
     toggle_view(watch);
   }
 
-  if (_view_mode == ViewMode::First) {
+  if (_view_mode == ViewMode::FIRST) {
     _view = glm::lookAt(watch, watch + _front, _up);
   } else {
     third_person_view(watch);
@@ -42,10 +42,10 @@ void Camera::update(const glm::vec3 &watch) {
 }
 
 void Camera::toggle_view(const glm::vec3 &watch) {
-  if (_view_mode == ViewMode::First) {
-    _view_mode = ViewMode::Third;
+  if (_view_mode == ViewMode::FIRST) {
+    _view_mode = ViewMode::THIRD;
   } else {
-    _view_mode = ViewMode::First;
+    _view_mode = ViewMode::FIRST;
   }
 }
 
@@ -79,6 +79,11 @@ glm::vec3 Camera::get_right() {
 
 glm::vec3 Camera::get_up() {
   return _up;
+}
+
+float Camera::get_yaw() {
+  // return glm::degrees(atan2(_front.z, _front.x));
+  return _yaw;
 }
 
 float Camera::get_zoom() {

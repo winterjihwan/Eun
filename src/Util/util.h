@@ -11,6 +11,7 @@ glm::vec3 from_jolt_vec3(const JPH::Vec3 &v);
 
 // To String
 std::string to_string(TextureType type);
+std::string to_string(const std::string &name, const glm::mat4 &mat);
 
 // Math
 float     random_float(float min, float max);

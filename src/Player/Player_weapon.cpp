@@ -28,13 +28,13 @@ void Player::init_weapon() {
   // Anim Entity
   {
     AnimEntity weapon_view;
-    Model     *pistol_model          = AssetManager::get_model_by_name("Pistol");
-    Animator  *pistol_idle_animation = AssetManager::get_animator_by_name("Pistol_Idle");
-    glm::mat4  weapon_transform      = weapon_view_transform();
+    Model     *pistol_model = AssetManager::get_model_by_name("Pistol");
+    // Animator  *pistol_idle_animation = AssetManager::get_animator_by_name("Pistol_Idle");
+    glm::mat4 weapon_transform = weapon_view_transform();
 
-    weapon_view.init("Weapon_View", pistol_model, pistol_idle_animation, weapon_transform);
-    World::add_anim_entity(std::move(weapon_view));
-    _weapon_anim_entity = World::get_anim_entity_by_name("Weapon_View");
+    // weapon_view.init("Weapon_View", pistol_model, pistol_idle_animation, weapon_transform);
+    // World::add_anim_entity(std::move(weapon_view));
+    // _weapon_anim_entity = World::get_anim_entity_by_name("Weapon_View");
   }
 }
 
@@ -58,27 +58,30 @@ void Player::update_weapon(float delta_time) {
   default:;
   };
 
-  Animator *weapon_animator = _weapon_anim_entity->get_animator();
+  // Animator *weapon_animator = _weapon_anim_entity->get_animator();
 
-  if (_weapon_action == WeaponAction::DRAW && weapon_animator->IsDone()) {
-    Animator *idle_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
-    _weapon_anim_entity->set_animator(idle_animator);
-    _weapon_action = WeaponAction::IDLE;
-  }
-
-  if (_weapon_action == WeaponAction::FIRE && weapon_animator->IsDone()) {
-    Animator *idle_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
-    _weapon_anim_entity->set_animator(idle_animator);
-    _weapon_action = WeaponAction::IDLE;
-  }
-
-  if (_weapon_action == WeaponAction::INSPECT && weapon_animator->IsDone()) {
-    Animator *idle_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
-    _weapon_anim_entity->set_animator(idle_animator);
-    _weapon_action = WeaponAction::IDLE;
-  }
-
-  _weapon_anim_entity->set_model_transform(weapon_view_transform());
+  // if (_weapon_action == WeaponAction::DRAW && weapon_animator->IsDone()) {
+  //   Animator *idle_animator =
+  //   AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
+  //   _weapon_anim_entity->set_animator(idle_animator);
+  //   _weapon_action = WeaponAction::IDLE;
+  // }
+  //
+  // if (_weapon_action == WeaponAction::FIRE && weapon_animator->IsDone()) {
+  //   Animator *idle_animator =
+  //   AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
+  //   _weapon_anim_entity->set_animator(idle_animator);
+  //   _weapon_action = WeaponAction::IDLE;
+  // }
+  //
+  // if (_weapon_action == WeaponAction::INSPECT && weapon_animator->IsDone()) {
+  //   Animator *idle_animator =
+  //   AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
+  //   _weapon_anim_entity->set_animator(idle_animator);
+  //   _weapon_action = WeaponAction::IDLE;
+  // }
+  //
+  // _weapon_anim_entity->set_model_transform(weapon_view_transform());
 }
 
 void Player::next_weapon() {
@@ -110,12 +113,13 @@ void Player::switch_weapon(const std::string &name) {
     }
   }
 
-  Model    *weapon_model    = AssetManager::get_model_by_name(weapon_info->model_name);
-  Animator *weapon_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.draw);
-  _weapon_anim_entity->set_model(weapon_model);
-  _weapon_anim_entity->set_animator(weapon_animator);
+  Model *weapon_model = AssetManager::get_model_by_name(weapon_info->model_name);
+  // Animator *weapon_animator =
+  // AssetManager::get_animator_by_name(weapon_info->animation_names.draw);
+  // _weapon_anim_entity->set_model(weapon_model);
+  // _weapon_anim_entity->set_animator(weapon_animator);
 
-  weapon_animator->PlayAnimation();
+  // weapon_animator->PlayAnimation();
   _weapon_action = WeaponAction::DRAW;
 }
 
@@ -167,14 +171,16 @@ WeaponInfo *Player::get_current_weapon_info() {
   return WeaponManager::get_weapon_info_by_name(_weapon_states[_current_weapon_index].name);
 }
 
-glm::mat4 weapon_view_transform() {
-  glm::mat4 weapon_transform = glm::mat4(1.0f);
-  weapon_transform           = glm::translate(weapon_transform, Game::get_player()->get_pos());
-  weapon_transform           = glm::translate(weapon_transform, glm::vec3(0.0f, -0.3f, 0.0f));
-  weapon_transform = glm::translate(weapon_transform, Game::get_camera()->get_front() * 0.5f);
-  glm::quat rot = glm::quatLookAt(-Game::get_camera()->get_front(), Game::get_camera()->get_up());
-  weapon_transform *= glm::toMat4(rot);
-  weapon_transform = glm::scale(weapon_transform, glm::vec3(0.5f));
+glm::mat4 Player::weapon_view_transform() {
+  glm::vec3 base_pos = get_pos() + glm::vec3(0.0f, -0.3f, 0.0f);
+  base_pos += Game::get_camera()->get_front() * 0.5f;
 
-  return weapon_transform;
+  glm::quat view_rot =
+      glm::quatLookAt(-Game::get_camera()->get_front(), Game::get_camera()->get_up());
+
+  glm::mat4 transform = glm::translate(glm::mat4(1.0f), base_pos);
+  transform *= glm::toMat4(view_rot);
+  transform = glm::scale(transform, glm::vec3(0.5f));
+
+  return transform;
 }

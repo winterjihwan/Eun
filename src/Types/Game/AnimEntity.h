@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CreateInfo.h"
 #include "Model.h"
 #include "Types/Animation/Animator.h"
 #include <Jolt/Jolt.h>
@@ -8,7 +9,7 @@
 struct AnimEntity {
   AnimEntity() = default;
 
-  void init(const std::string &name, Model *model, Animator *animator, glm::mat4 &model_transform);
+  void init(AnimEntityCreateInfo &&anim_entity_create_info);
   void update(float delta_time);
   void submit_render_item();
 

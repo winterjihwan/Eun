@@ -2,7 +2,7 @@
 
 #include "Model.h"
 #include "Texture.h"
-#include "Types/Animation/Animator.h"
+#include "Types/Animation/Animation.h"
 #include "Types/Texture/ExrTexture.h"
 #include "Util/Util.h"
 #include <Jolt/Jolt.h>
@@ -13,17 +13,13 @@ namespace AssetManager {
 void init();
 void shutdown();
 
-std::vector<Animator> &get_animators();
-Animator              *get_animator_by_name(const std::string &name);
-
-std::vector<Mesh> &get_meshes();
-Mesh              *get_mesh_by_name(const std::string &name);
-
+Animation          *get_animation_by_name(const std::string &name);
+std::vector<Mesh>  &get_meshes();
+Mesh               *get_mesh_by_name(const std::string &name);
 std::vector<Model> &get_models();
 Model              *get_model_by_name(const std::string &name);
-
-Texture    *get_texture_by_name(const std::string &name);
-ExrTexture *get_exr_texture_by_name(const std::string &name);
+Texture            *get_texture_by_name(const std::string &name);
+ExrTexture         *get_exr_texture_by_name(const std::string &name);
 
 bool loading_complete();
 void update_loading();

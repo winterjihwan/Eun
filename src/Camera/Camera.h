@@ -41,6 +41,7 @@ struct Camera {
   glm::vec3 get_front();
   glm::vec3 get_right();
   glm::vec3 get_up();
+  float     get_yaw();
   float     get_zoom();
 
 private:
@@ -56,7 +57,7 @@ private:
   float _mouse_sensitivity = SENSITIVITY;
   float _zoom              = ZOOM;
 
-  ViewMode  _view_mode = ViewMode::First;
+  ViewMode  _view_mode = ViewMode::FIRST;
   glm::mat4 _view;
 
   void update_camera_vectors();

@@ -11,18 +11,17 @@
 
 class Animator {
 public:
-  Animator(Animation *animation, const std::string &name) {
-    m_Name = name;
+  Animator() = default;
+
+  Animator(Animation *animation) {
+    m_Name = animation->_name;
 
     m_CurrentTime      = 0.0f;
     m_CurrentAnimation = animation;
     m_ClipStart        = 0.0f;
     m_ClipEnd          = animation->GetDuration();
 
-    m_FinalBoneMatrices.resize(100);
-
-    for (int i = 0; i < 100; i++)
-      m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
+    m_FinalBoneMatrices.resize(100, glm::mat4(1.0f));
   }
 
   void UpdateAnimation(float dt) {

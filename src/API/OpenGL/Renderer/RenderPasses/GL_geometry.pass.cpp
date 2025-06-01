@@ -51,24 +51,24 @@ void geometry_pass() {
   Model *scene = AssetManager::get_model_by_name("Map");
   scene->draw(shader);
 
-  // HACK
-  // Glock
-  Animator *animator       = AssetManager::get_animator_by_name("Brian_Idle");
-  glm::mat4 hand_transform = animator->GetBoneGlobalTransform("mixamorig12_LeftHand");
-
-  glm::mat4 pete_transform = glm::translate(glm::mat4(1.0f), glm::vec3(13.0f, 0, -5.0f));
-
-  glm::mat4 local_offset = glm::mat4(1.0f);
-  local_offset           = glm::translate(local_offset, glm::vec3(0.0f, 15.0f, 0.1f));
-  local_offset *=
-      glm::eulerAngleXYZ(glm::radians(0.0f), glm::radians(180.0f), glm::radians(270.0f));
-  local_offset = glm::scale(local_offset, glm::vec3(100.0f));
-
-  glm::mat4 model_glock = pete_transform * hand_transform * local_offset;
-  model_glock           = pete_transform * hand_transform * local_offset;
-
-  shader.setMat4("model", model_glock);
-  Model *glock = AssetManager::get_model_by_name("Glock");
-  glock->draw(shader);
+  // // HACK
+  // // Glock
+  // Animator *animator       = AssetManager::get_animator_by_name("Brian_Idle");
+  // glm::mat4 hand_transform = animator->GetBoneGlobalTransform("mixamorig12_LeftHand");
+  //
+  // glm::mat4 pete_transform = glm::translate(glm::mat4(1.0f), glm::vec3(13.0f, 0, -5.0f));
+  //
+  // glm::mat4 local_offset = glm::mat4(1.0f);
+  // local_offset           = glm::translate(local_offset, glm::vec3(0.0f, 15.0f, 0.1f));
+  // local_offset *=
+  //     glm::eulerAngleXYZ(glm::radians(0.0f), glm::radians(180.0f), glm::radians(270.0f));
+  // local_offset = glm::scale(local_offset, glm::vec3(100.0f));
+  //
+  // glm::mat4 model_glock = pete_transform * hand_transform * local_offset;
+  // model_glock           = pete_transform * hand_transform * local_offset;
+  //
+  // shader.setMat4("model", model_glock);
+  // Model *glock = AssetManager::get_model_by_name("Glock");
+  // glock->draw(shader);
 }
 } // namespace OpenGLRenderer

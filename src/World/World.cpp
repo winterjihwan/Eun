@@ -13,12 +13,18 @@ std::vector<Npc>             _npcs;
 std::vector<BloodVolumetric> _blood_volumetrics;
 
 void init() {
+  _anim_entities.reserve(10);
+  _bullets.reserve(32);
+  _decals.reserve(32);
+  _npcs.reserve(4);
+  _blood_volumetrics.reserve(32);
+
   // Npc
   {
     NpcCreateInfo npc_create_info;
     npc_create_info.name           = "Brian";
     npc_create_info.model          = AssetManager::get_model_by_name("Brian");
-    npc_create_info.animators.idle = AssetManager::get_animator_by_name("Brian_Idle");
+    npc_create_info.animators.idle = Animator(AssetManager::get_animation_by_name("Breathe_Idle"));
     // npc_create_info.animators.walk  = AssetManager::get_animator_by_name("Brian_Walk");
     // npc_create_info.animators.death = AssetManager::get_animator_by_name("Brian_Death");
     npc_create_info.model_transform = glm::translate(glm::mat4(1.0f), glm::vec3(13.0f, 0, -5.0f));
@@ -57,8 +63,9 @@ void submit_render_items() {
   }
 }
 
-void add_anim_entity(AnimEntity &&anim_entity) {
+AnimEntity *add_anim_entity(AnimEntity &&anim_entity) {
   _anim_entities.push_back(std::move(anim_entity));
+  return &_anim_entities.back();
 }
 
 void add_bullet(Bullet &&bullet) {

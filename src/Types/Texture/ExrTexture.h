@@ -21,7 +21,7 @@ private:
   int                      _width  = 0;
   int                      _height = 0;
   std::unique_ptr<float[]> _pixel_data;
-  unsigned int             _texture_id;
+  unsigned int             _texture_id = 0;
 
   bool get_exr_layers(std::string &file_name);
   bool load_exr_rgba(float **rgba, int *w, int *h, const char *filename, const char *layername);

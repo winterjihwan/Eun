@@ -24,10 +24,10 @@ void Player::reload_gun() {
   Audio::play_audio(weapon_info->audio_files.reload, 1.0f);
   // TODO: Check if can reload
   _weapon_action = WeaponAction::RELOAD;
-  Animator *weapon_animator =
-      AssetManager::get_animator_by_name(weapon_info->animation_names.reload);
-  _weapon_anim_entity->set_animator(weapon_animator);
-  weapon_animator->PlayAnimation();
+  // Animator *weapon_animator =
+  //     AssetManager::get_animator_by_name(weapon_info->animation_names.reload);
+  // _weapon_anim_entity->set_animator(weapon_animator);
+  // weapon_animator->PlayAnimation();
 }
 
 void Player::fire_gun() {
@@ -35,10 +35,11 @@ void Player::fire_gun() {
 
   Audio::play_audio(weapon_info->audio_files.fire, 1.0f);
 
-  _weapon_action            = WeaponAction::FIRE;
-  Animator *weapon_animator = AssetManager::get_animator_by_name(weapon_info->animation_names.fire);
-  _weapon_anim_entity->set_animator(weapon_animator);
-  weapon_animator->PlayAnimation();
+  _weapon_action = WeaponAction::FIRE;
+  // Animator *weapon_animator =
+  // AssetManager::get_animator_by_name(weapon_info->animation_names.fire);
+  // _weapon_anim_entity->set_animator(weapon_animator);
+  // weapon_animator->PlayAnimation();
 
   // Actual fire logic
 
@@ -49,8 +50,8 @@ void Player::inspect_gun() {
   WeaponInfo *weapon_info = get_current_weapon_info();
 
   _weapon_action = WeaponAction::INSPECT;
-  Animator *weapon_animator =
-      AssetManager::get_animator_by_name(weapon_info->animation_names.inspect);
-  _weapon_anim_entity->set_animator(weapon_animator);
-  weapon_animator->PlayAnimation();
+  // Animator *weapon_animator =
+  //     AssetManager::get_animator_by_name(weapon_info->animation_names.inspect);
+  // _weapon_anim_entity->set_animator(weapon_animator);
+  // weapon_animator->PlayAnimation();
 }

@@ -2,14 +2,11 @@
 #include "Physics/Physics.h"
 #include "Renderer/RenderDataManager.h"
 
-void AnimEntity::init(const std::string &name,
-                      Model             *model,
-                      Animator          *animator,
-                      glm::mat4         &model_transform) {
-  _name             = name;
-  _model            = model;
-  _current_animator = animator;
-  _model_transform  = model_transform;
+void AnimEntity::init(AnimEntityCreateInfo &&anim_entity_create_info) {
+  _name             = anim_entity_create_info.name;
+  _model            = anim_entity_create_info.model;
+  _current_animator = anim_entity_create_info.animator;
+  _model_transform  = anim_entity_create_info.transform;
 }
 
 void AnimEntity::update(float delta_time) {
@@ -44,7 +41,12 @@ void AnimEntity::set_model(Model *model) {
 }
 
 void AnimEntity::set_animator(Animator *animator) {
+  if (_current_animator == animator) {
+    return;
+  }
+
   _current_animator = animator;
+  _current_animator->PlayAnimation();
 }
 
 void AnimEntity::set_model_transform(glm::mat4 model_transform) {

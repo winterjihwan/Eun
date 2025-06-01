@@ -21,11 +21,9 @@ struct DecalCreateInfo {
 };
 
 struct NpcAnimators {
-  Animator *idle;
-  Animator *walk;
-  Animator *death;
-
-  // TODO: Polymorphic animator?
+  Animator idle;
+  Animator walk;
+  Animator death;
 };
 
 struct NpcCreateInfo {
@@ -51,4 +49,20 @@ struct BloodVolumetricCreateInfo {
   glm::vec3 position;
   glm::vec3 rotation;
   glm::vec3 front;
+};
+
+struct AnimEntityCreateInfo {
+  std::string name;
+  Model      *model;
+  Animator   *animator;
+  glm::mat4   transform;
+};
+
+struct PlayerAnimators {
+  Animator idle;
+  Animator walk_forward;
+  Animator walk_backward;
+  Animator walk_left;
+  Animator walk_right;
+  Animator gun;
 };
