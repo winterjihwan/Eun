@@ -16,20 +16,22 @@ void init() {
   _anim_entities.reserve(10);
   _bullets.reserve(32);
   _decals.reserve(32);
-  _npcs.reserve(4);
+  _npcs.reserve(8);
   _blood_volumetrics.reserve(32);
 
   // Npc
   {
     NpcCreateInfo npc_create_info;
-    npc_create_info.name           = "Brian";
-    npc_create_info.model          = AssetManager::get_model_by_name("Brian");
-    npc_create_info.animators.idle = Animator(AssetManager::get_animation_by_name("Breathe_Idle"));
+    npc_create_info.name            = "Npc1";
+    npc_create_info.model           = AssetManager::get_model_by_name("Brian");
+    npc_create_info.animations.idle = AssetManager::get_animation_by_name("Breathe_Idle");
     // npc_create_info.animators.walk  = AssetManager::get_animator_by_name("Brian_Walk");
     // npc_create_info.animators.death = AssetManager::get_animator_by_name("Brian_Death");
     npc_create_info.model_transform = glm::translate(glm::mat4(1.0f), glm::vec3(13.0f, 0, -5.0f));
-    npc_create_info.capsule_radius  = 0.15f;
-    npc_create_info.capsule_height  = 1.5f;
+    // npc_create_info.model_transform =
+    //     glm::scale(npc_create_info.model_transform, glm::vec3(0.01f)); // HACK
+    npc_create_info.capsule_radius = 0.15f;
+    npc_create_info.capsule_height = 1.5f;
     npc_create_info.capsule_position =
         glm::vec3(13.0f,
                   (npc_create_info.capsule_height + 2.0f * npc_create_info.capsule_radius) / 2.0f,
@@ -41,7 +43,7 @@ void init() {
 }
 
 void submit_render_items() {
-  // Npcs
+  // Npc
   for (Npc &npc : _npcs) {
     AnimEntity *anim_entity = npc.get_anim_entity();
     anim_entity->submit_render_item();

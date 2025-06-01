@@ -16,6 +16,7 @@ std::string to_string(const std::string &name, const glm::mat4 &mat);
 // Math
 float     random_float(float min, float max);
 glm::vec3 random_dir_in_hemisphere(const glm::vec3 &normal);
+glm::mat4 lerp(const glm::mat4 &a, const glm::mat4 &b, float factor);
 
 // Geometry
 std::vector<Vertex>   generate_sphere_vertices(float radius, int segments);

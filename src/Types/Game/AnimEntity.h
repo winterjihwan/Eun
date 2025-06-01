@@ -13,10 +13,9 @@ struct AnimEntity {
   void update(float delta_time);
   void submit_render_item();
 
-  void add_anim_entity(AnimEntity &&anim_entity);
+  void play_animation(Animation *animation, float blend_time = 0.3f);
 
   void set_model(Model *model);
-  void set_animator(Animator *animator);
   void set_model_transform(glm::mat4 model_transform);
   void set_collider(JPH::BodyID *collider);
 
@@ -28,7 +27,7 @@ struct AnimEntity {
 private:
   std::string  _name;
   Model       *_model;
-  Animator    *_current_animator = 0;
+  Animator    *_animator = 0;
   glm::mat4    _model_transform;
   JPH::BodyID *_collider = 0;
 

@@ -30,7 +30,7 @@
     - [x] Walk
     - [ ] Knife?
     - [ ] Gun
-    - [ ] Blend
+- [x] Animation Blend
 - [ ] G-buffer
 - [ ] Deferred Rendering
 - [x] Z fighting  

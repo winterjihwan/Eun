@@ -28,7 +28,7 @@ void Player::init_weapon() {
   // Anim Entity
   {
     AnimEntity weapon_view;
-    Model     *pistol_model = AssetManager::get_model_by_name("Pistol");
+    // Model     *pistol_model = AssetManager::get_model_by_name("Pistol");
     // Animator  *pistol_idle_animation = AssetManager::get_animator_by_name("Pistol_Idle");
     glm::mat4 weapon_transform = weapon_view_transform();
 

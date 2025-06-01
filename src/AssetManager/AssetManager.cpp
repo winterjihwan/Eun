@@ -49,16 +49,31 @@ void init() {
   {
     Model &brian = _models.emplace_back("Brian");
 
-    std::future<void>     future   = brian.load_async("res/objects/Brian/brian.dae");
+    std::future<void>     future   = brian.load_async("res/objects/Brian/Brian.dae");
     std::function<void()> callback = [&brian]() {
-      // Animations
-      _animations.emplace_back(Animation("Breathe_Idle", "res/animations/Breath_Idle.dae", &brian));
+      // Base
+      _animations.emplace_back(
+          Animation("Breathe_Idle", "res/animations/Breathe_Idle.dae", &brian));
       _animations.emplace_back(
           Animation("Walk_Forward", "res/animations/Walk_Forward.dae", &brian));
       _animations.emplace_back(
           Animation("Walk_Backward", "res/animations/Walk_Backward.dae", &brian));
       _animations.emplace_back(Animation("Walk_Left", "res/animations/Walk_Left.dae", &brian));
       _animations.emplace_back(Animation("Walk_Right", "res/animations/Walk_Right.dae", &brian));
+
+      // Gun
+      _animations.emplace_back(Animation("Pistol_Idle", "res/animations/Pistol_Idle.dae", &brian));
+      _animations.emplace_back(
+          Animation("Pistol_Shoot", "res/animations/Pistol_Shoot.dae", &brian));
+      _animations.emplace_back(Animation("Pistol_Jump", "res/animations/Pistol_Jump.dae", &brian));
+      _animations.emplace_back(
+          Animation("Pistol_Walk_Forward", "res/animations/Pistol_Walk_Forward.dae", &brian));
+      _animations.emplace_back(
+          Animation("Pistol_Walk_Backward", "res/animations/Pistol_Walk_Backward.dae", &brian));
+      _animations.emplace_back(
+          Animation("Pistol_Walk_Left", "res/animations/Pistol_Walk_Right.dae", &brian));
+      _animations.emplace_back(
+          Animation("Pistol_Walk_Right", "res/animations/Pistol_Walk_Right.dae", &brian));
     };
     _deferred_tasks.push_back({std::move(future), callback});
   }
@@ -78,7 +93,7 @@ void init() {
     std::future<void>     future   = pete.load_async("res/objects/Pete/Pete.dae");
     std::function<void()> callback = [&pete]() {
       // Animations
-      _animations.emplace_back(Animation("Gun_Idle", "res/animations/Gun_Idle.dae", &pete));
+      _animations.emplace_back(Animation("Gun_Idle", "res/animations/Pistol_Idle.dae", &pete));
     };
     _deferred_tasks.push_back({std::move(future), callback});
   }
@@ -185,68 +200,6 @@ void init() {
       std::future<void> future      = exr_texture.load_async(path);
       _deferred_tasks.push_back({std::move(future), 0});
     }
-  }
-
-  // Pistol
-  {
-    Model &pistol = _models.emplace_back("Pistol");
-
-    std::future<void>     future   = pistol.load_async("res/objects/Pistol/scene.gltf");
-    std::function<void()> callback = [&pistol]() {
-      _animations.emplace_back(Animation("Pistol", "res/objects/Pistol/scene.gltf", &pistol));
-
-      // Animator *draw_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Draw");
-      // draw_animator->SetClip(0.0f, 1.14f);
-      // draw_animator->SetIsLoop(false);
-      //
-      // Animator *idle_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Idle");
-      // idle_animator->SetClip(10.9f, 11.2f);
-      // idle_animator->SetIsLoop(false);
-      //
-      // Animator *fire_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Fire");
-      // fire_animator->SetClip(7.5f, 8.0f);
-      // fire_animator->SetIsLoop(false);
-      //
-      // Animator *reload_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Reload");
-      // reload_animator->SetClip(8.2f, 10.8f);
-      // reload_animator->SetIsLoop(false);
-      //
-      // Animator *inspect_animator = &_animators.emplace_back(&pistol_animation, "Pistol_Inspect");
-      // inspect_animator->SetClip(1.5f, 7.0f);
-      // inspect_animator->SetIsLoop(false);
-    };
-    _deferred_tasks.push_back({std::move(future), callback});
-  }
-
-  // HK_416
-  {
-    Model &hk_416 = _models.emplace_back("HK_416");
-
-    std::future<void>     future   = hk_416.load_async("res/objects/HK_416/scene.gltf");
-    std::function<void()> callback = [&hk_416]() {
-      _animations.emplace_back(Animation("HK_416", "res/objects/HK_416/scene.gltf", &hk_416));
-
-      // Animator *draw_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Draw");
-      // draw_animator->SetClip(0.0f, 2.2f);
-      // draw_animator->SetIsLoop(false);
-      //
-      // Animator *idle_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Idle");
-      // idle_animator->SetClip(8.0f, 8.2f);
-      // idle_animator->SetIsLoop(false);
-      //
-      // Animator *inspect_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Inspect");
-      // inspect_animator->SetClip(2.2f, 8.0f);
-      // inspect_animator->SetIsLoop(false);
-      //
-      // Animator *fire_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Fire");
-      // fire_animator->SetClip(21.96f, 22.36f);
-      // fire_animator->SetIsLoop(false);
-      //
-      // Animator *reload_animator = &_animators.emplace_back(&hk_416_animation, "HK_416_Reload");
-      // reload_animator->SetClip(8.25f, 14.5f);
-      // reload_animator->SetIsLoop(false);
-    };
-    _deferred_tasks.push_back({std::move(future), callback});
   }
 }
 

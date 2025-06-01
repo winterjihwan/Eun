@@ -1,3 +1,4 @@
+#include "Mesh.h"
 #include "Renderer/RenderDataManager.h"
 #include "Types/Game/AnimEntity.h"
 
@@ -19,7 +20,8 @@ void anim_pass() {
     glm::mat4 &model_transform = anim_entity->get_model_transform();
 
     _shaders["Anim"].use();
-    std::vector<glm::mat4> transforms = animator->GetFinalBoneMatrices();
+    std::vector<glm::mat4> transforms = animator->get_final_bone_matrices();
+
     for (int i = 0; i < transforms.size(); ++i) {
       _shaders["Anim"].setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
     }

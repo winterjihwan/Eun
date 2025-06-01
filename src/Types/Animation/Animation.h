@@ -18,10 +18,14 @@ public:
     _path = animationPath;
     Assimp::Importer _importer;
     const aiScene   *scene = _importer.ReadFile(animationPath, aiProcess_Triangulate);
-    assert(scene && scene->mRootNode);
-    auto animation   = scene->mAnimations[0];
-    m_Duration       = animation->mDuration;
-    m_TicksPerSecond = animation->mTicksPerSecond;
+    if (!scene) {
+      std::cout << "Animation::Animation() failed, no scene with animation path " << animationPath
+                << std::endl;
+      assert(0);
+    }
+    aiAnimation *animation = scene->mAnimations[0];
+    m_Duration             = animation->mDuration;
+    m_TicksPerSecond       = animation->mTicksPerSecond;
 
     ReadHierarchyData(m_RootNode, scene->mRootNode);
     ReadMissingBones(animation, *model);

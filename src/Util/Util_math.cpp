@@ -13,4 +13,12 @@ glm::vec3 random_dir_in_hemisphere(const glm::vec3 &normal) {
   return dot(rand, normal) > 0 ? rand : -rand;
 }
 
+glm::mat4 lerp(const glm::mat4 &a, const glm::mat4 &b, float factor) {
+  glm::mat4 result(0.0f);
+  for (int i = 0; i < 4; ++i)
+    for (int j = 0; j < 4; ++j)
+      result[i][j] = glm::mix(a[i][j], b[i][j], factor);
+  return result;
+}
+
 } // namespace Util

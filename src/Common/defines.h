@@ -8,7 +8,7 @@ constexpr float EUN_PI = 3.141592653589793f;
 // Game
 constexpr unsigned int VIEWPORT_WIDTH  = 1280;
 constexpr unsigned int VIEWPORT_HEIGHT = 800;
-constexpr float        NEAR            = 0.2f;
+constexpr float        NEAR            = 0.3f;
 constexpr float        FAR             = 100.0f;
 
 // Player

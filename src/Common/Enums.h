@@ -9,12 +9,12 @@ enum class WeaponAction {
 };
 
 enum class DecalType {
-  GLASS,
+  GLASS = 0,
   PLASTER,
   BLOOD,
 };
 
-enum class NpcAnimationState {
+enum class NpcState {
   IDLE = 0,
   WALK,
   DEATH,
@@ -44,7 +44,7 @@ enum class TextureType {
 };
 
 enum class UIAlignment {
-  CENTERED,
+  CENTERED = 0,
   CENTERED_HORIZONTAL,
   CENTERED_VERTICAL,
   TOP_LEFT,
@@ -54,12 +54,12 @@ enum class UIAlignment {
 };
 
 enum class ViewMode {
-  FIRST,
+  FIRST = 0,
   THIRD,
 };
 
 enum class PlayerState {
-  IDLE,
+  IDLE = 0,
   WALKING_FORWARD,
   WALKING_BACKWARD,
   WALKING_LEFT,

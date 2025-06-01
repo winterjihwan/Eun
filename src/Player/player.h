@@ -36,9 +36,10 @@ struct Player {
   WeaponInfo  *get_current_weapon_info();
 
 private:
-  AnimEntity     *_player_anim_entity;
-  PlayerAnimators _player_animators;
-  PlayerState     _player_state = PlayerState::IDLE;
+  AnimEntity      *_player_anim_entity;
+  Animator         _player_animator;
+  PlayerAnimations _player_animations;
+  PlayerState      _player_state = PlayerState::IDLE;
 
   JPH::CharacterVirtual *_character;
   float                  _speed = 5.0f;

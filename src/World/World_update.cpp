@@ -1,7 +1,6 @@
 #include "AssetManager/AssetManager.h"
 #include "CreateInfo.h"
 #include "Enums.h"
-#include "Input/Input.h"
 #include "Keycodes.h"
 #include "Physics/Physics.h"
 #include "Types.h"
@@ -18,22 +17,11 @@ extern std::vector<Npc>             _npcs;
 extern std::vector<BloodVolumetric> _blood_volumetrics;
 
 void update(float delta_time) {
-  // HACK
-  // if (Input::key_pressed(EUN_KEY_5)) {
-  //   Npc *brian = get_npc_by_name("Brian");
-  //   brian->set_animation_state(NpcAnimationState::DEATH);
-  // }
-  // if (Input::key_pressed(EUN_KEY_6)) {
-  //   Npc *brian = get_npc_by_name("Brian");
-  //   brian->set_animation_state(NpcAnimationState::WALK);
-  // }
-
   process_bullets();
 
   // Npcs
   for (Npc &npc : _npcs) {
-    AnimEntity *anim_entity = npc.get_anim_entity();
-    anim_entity->update(delta_time);
+    npc.update(delta_time);
   }
 
   // Anim Entities

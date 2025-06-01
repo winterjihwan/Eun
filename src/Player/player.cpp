@@ -4,27 +4,26 @@
 #include "Defines.h"
 #include "Enums.h"
 #include "Keycodes.h"
-#include "Types/Animation/Animator.h"
 #include "World/World.h"
 #include <glm/glm.hpp>
 
 void Player::init(glm::vec3 position) {
   _position  = position;
   _character = create_character_virtual(
-      glm::vec3(_position.x, _position.y, _position.z), PLAYER_HEIGHT, 0.25f);
+      glm::vec3(_position.x, _position.y, _position.z), PLAYER_HEIGHT, 0.15f);
 
-  // Animators
-  _player_animators.idle          = Animator(AssetManager::get_animation_by_name("Breathe_Idle"));
-  _player_animators.walk_forward  = Animator(AssetManager::get_animation_by_name("Walk_Forward"));
-  _player_animators.walk_backward = Animator(AssetManager::get_animation_by_name("Walk_Backward"));
-  _player_animators.walk_left     = Animator(AssetManager::get_animation_by_name("Walk_Left"));
-  _player_animators.walk_right    = Animator(AssetManager::get_animation_by_name("Walk_Right"));
+  // Animations
+  _player_animations.idle          = AssetManager::get_animation_by_name("Breathe_Idle");
+  _player_animations.walk_forward  = AssetManager::get_animation_by_name("Walk_Forward");
+  _player_animations.walk_backward = AssetManager::get_animation_by_name("Walk_Backward");
+  _player_animations.walk_left     = AssetManager::get_animation_by_name("Walk_Left");
+  _player_animations.walk_right    = AssetManager::get_animation_by_name("Walk_Right");
 
   // Player Anim Entity
   AnimEntityCreateInfo anim_entity_create_info;
   anim_entity_create_info.name      = "Player";
   anim_entity_create_info.model     = AssetManager::get_model_by_name("Brian");
-  anim_entity_create_info.animator  = &_player_animators.idle;
+  anim_entity_create_info.animator  = &_player_animator;
   anim_entity_create_info.transform = glm::translate(glm::mat4(1.0f), _position);
 
   AnimEntity player_entity;
@@ -44,19 +43,19 @@ void Player::update(float delta_time, Camera camera) {
 void Player::update_anim_entity() {
   switch (_player_state) {
   case (PlayerState::IDLE):
-    _player_anim_entity->set_animator(&_player_animators.idle);
+    _player_anim_entity->play_animation(_player_animations.idle);
     break;
   case (PlayerState::WALKING_FORWARD):
-    _player_anim_entity->set_animator(&_player_animators.walk_forward);
+    _player_anim_entity->play_animation(_player_animations.walk_forward);
     break;
   case (PlayerState::WALKING_BACKWARD):
-    _player_anim_entity->set_animator(&_player_animators.walk_backward);
+    _player_anim_entity->play_animation(_player_animations.walk_backward);
     break;
   case (PlayerState::WALKING_LEFT):
-    _player_anim_entity->set_animator(&_player_animators.walk_left);
+    _player_anim_entity->play_animation(_player_animations.walk_left);
     break;
   case (PlayerState::WALKING_RIGHT):
-    _player_anim_entity->set_animator(&_player_animators.walk_right);
+    _player_anim_entity->play_animation(_player_animations.walk_right);
     break;
   };
 

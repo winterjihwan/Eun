@@ -20,26 +20,26 @@ struct DecalCreateInfo {
   Mesh *mesh;
 };
 
-struct NpcAnimators {
-  Animator idle;
-  Animator walk;
-  Animator death;
+struct NpcAnimations {
+  Animation *idle;
+  Animation *walk;
+  Animation *death;
 };
 
 struct NpcCreateInfo {
   NpcCreateInfo() = default;
 
-  std::string  name;
-  Model       *model;
-  NpcAnimators animators;
-  glm::mat4    model_transform = glm::mat4(1.0f);
+  std::string   name;
+  Model        *model;
+  NpcAnimations animations;
+  glm::mat4     model_transform = glm::mat4(1.0f);
 
   // Collider Capsule
   float     capsule_radius;
   float     capsule_height;
   glm::vec3 capsule_position;
 
-  NpcAnimationState animation_state = NpcAnimationState::IDLE;
+  NpcState npc_state = NpcState::IDLE;
 };
 
 struct BloodVolumetricCreateInfo {
@@ -58,11 +58,11 @@ struct AnimEntityCreateInfo {
   glm::mat4   transform;
 };
 
-struct PlayerAnimators {
-  Animator idle;
-  Animator walk_forward;
-  Animator walk_backward;
-  Animator walk_left;
-  Animator walk_right;
-  Animator gun;
+struct PlayerAnimations {
+  Animation *idle;
+  Animation *walk_forward;
+  Animation *walk_backward;
+  Animation *walk_left;
+  Animation *walk_right;
+  Animation *gun;
 };

@@ -2,7 +2,8 @@
 
 #include "Animation.h"
 #include "Bone.h"
-#include <__assert>
+#include "Types/Animation/Animdata.h"
+#include <assert.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <glm/glm.hpp>
@@ -11,85 +12,73 @@
 
 class Animator {
 public:
-  Animator() = default;
+  Animator() {
+    _current_animation  = 0;
+    _previous_animation = 0;
+    _current_time       = 0.0f;
+    _previous_time      = 0.0f;
+    _blend_time         = 0.0f;
+    _blend_duration     = 0.0f;
+    _blending           = false;
 
-  Animator(Animation *animation) {
-    m_Name = animation->_name;
-
-    m_CurrentTime      = 0.0f;
-    m_CurrentAnimation = animation;
-    m_ClipStart        = 0.0f;
-    m_ClipEnd          = animation->GetDuration();
-
-    m_FinalBoneMatrices.resize(100, glm::mat4(1.0f));
+    _final_bone_matrices.resize(100, glm::mat4(1.0f));
   }
 
-  void UpdateAnimation(float dt) {
-    m_DeltaTime = dt;
-    if (m_CurrentAnimation) {
-      float clipLength = m_ClipEnd - m_ClipStart;
+  void play_animation(Animation *new_animation, float blend_duration = 0.3f) {
+    if (new_animation == _current_animation) {
+      return;
+    }
 
-      m_CurrentTime += m_CurrentAnimation->GetTicksPerSecond() * dt;
+    _previous_animation = _current_animation;
+    _current_animation  = new_animation;
 
-      if (m_CurrentTime < m_ClipStart) {
-        m_CurrentTime = m_ClipStart;
+    _previous_time = _current_time;
+    _current_time  = 0.0f;
+
+    _blend_duration = blend_duration;
+    _blend_time     = 0.0f;
+    _blending       = true;
+  }
+
+  void update_animation(float dt) {
+    if (!_current_animation) {
+      return;
+    }
+
+    _current_time += _current_animation->GetTicksPerSecond() * dt;
+    _current_time = fmod(_current_time, _current_animation->GetDuration());
+
+    if (_blending && _previous_animation) {
+      _previous_time += _previous_animation->GetTicksPerSecond() * dt;
+      _previous_time = fmod(_previous_time, _previous_animation->GetDuration());
+
+      _blend_time += dt;
+      float blend_factor = glm::clamp(_blend_time / _blend_duration, 0.0f, 1.0f);
+
+      std::vector<glm::mat4> current_bones =
+          calculate_bone_matrices(_current_animation, _current_time);
+      std::vector<glm::mat4> previous_bones =
+          calculate_bone_matrices(_previous_animation, _previous_time);
+
+      for (size_t i = 0; i < _final_bone_matrices.size(); ++i) {
+        _final_bone_matrices[i] = Util::lerp(previous_bones[i], current_bones[i], blend_factor);
       }
 
-      if (m_CurrentTime > m_ClipEnd) {
-        if (m_Loop) {
-          m_CurrentTime = m_ClipStart + fmod(m_CurrentTime - m_ClipStart, clipLength);
-        } else {
-          m_Done        = true;
-          m_CurrentTime = m_ClipEnd - 1; // HACK
-        }
+      if (blend_factor >= 1.0f) {
+        _blending = false;
       }
-
-      CalculateBoneTransform(&m_CurrentAnimation->GetRootNode(), glm::mat4(1.0f));
+    } else {
+      _final_bone_matrices = calculate_bone_matrices(_current_animation, _current_time);
     }
   }
 
-  void PlayAnimation() {
-    m_CurrentTime = 0.0f;
+  std::vector<glm::mat4> get_final_bone_matrices() {
+    return _final_bone_matrices;
   }
 
-  void CalculateBoneTransform(const AssimpNodeData *node, glm::mat4 parentTransform) {
-    const std::string &nodeName      = node->name;
-    glm::mat4          nodeTransform = node->transformation;
-
-    Bone *Bone = m_CurrentAnimation->FindBone(nodeName);
-
-    if (Bone) {
-      Bone->Update(m_CurrentTime);
-      nodeTransform = Bone->GetLocalTransform();
-    }
-
-    glm::mat4 globalTransformation = parentTransform * nodeTransform;
-
-    m_GlobalTransforms[nodeName] = globalTransformation;
-
-    const auto &boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
-    if (boneInfoMap.find(nodeName) != boneInfoMap.end()) {
-      int       index            = boneInfoMap.at(nodeName).id;
-      glm::mat4 offset           = boneInfoMap.at(nodeName).offset;
-      m_FinalBoneMatrices[index] = globalTransformation * offset;
-    }
-
-    for (int i = 0; i < node->childrenCount; i++)
-      CalculateBoneTransform(&node->children[i], globalTransformation);
-  }
-
-  void SetClip(float clipStart, float clipEnd) {
-    m_ClipStart = clipStart * 1000.0f;
-    m_ClipEnd   = clipEnd * 1000.0f;
-  }
-
-  std::vector<glm::mat4> GetFinalBoneMatrices() {
-    return m_FinalBoneMatrices;
-  }
-
-  glm::mat4 GetBoneGlobalTransform(const std::string &boneName) const {
-    auto it = m_GlobalTransforms.find(boneName);
-    if (it != m_GlobalTransforms.end()) {
+  glm::mat4 get_bone_global_transform(const std::string &boneName) const {
+    auto it = _global_transforms.find(boneName);
+    if (it != _global_transforms.end()) {
       return it->second;
     }
 
@@ -98,33 +87,51 @@ public:
     assert(0);
   }
 
-  std::string &GetName() {
-    return m_Name;
-  }
-
-  void SetIsLoop(bool loop) {
-    m_Loop = loop;
-  }
-
-  bool IsDone() {
-    if (m_Done) {
-      // TODO: Reset in a separate function
-      m_CurrentTime = 0.0f;
-      m_Done        = false;
-      return true;
-    }
-    return false;
+  std::string &get_name() {
+    return _name;
   }
 
 private:
-  std::string                      m_Name;
-  bool                             m_Loop = true;
-  bool                             m_Done = false;
-  std::vector<glm::mat4>           m_FinalBoneMatrices;
-  std::map<std::string, glm::mat4> m_GlobalTransforms;
-  Animation                       *m_CurrentAnimation;
-  float                            m_CurrentTime;
-  float                            m_DeltaTime;
-  float                            m_ClipStart;
-  float                            m_ClipEnd;
+  std::vector<glm::mat4> calculate_bone_matrices(Animation *animation, float time) {
+    std::vector<glm::mat4> transforms(100, glm::mat4(1.0f));
+
+    std::function<void(const AssimpNodeData *, glm::mat4)> fn = [&](const AssimpNodeData *node,
+                                                                    glm::mat4 parent_transform) {
+      glm::mat4 node_transform = node->transformation;
+      Bone     *bone           = animation->FindBone(node->name);
+
+      if (bone) {
+        bone->Update(time);
+        node_transform = bone->GetLocalTransform();
+      }
+
+      glm::mat4 global_transform                    = parent_transform * node_transform;
+      _global_transforms[node->name]                = global_transform;
+      std::map<std::string, BoneInfo> bone_info_map = animation->GetBoneIDMap();
+
+      if (bone_info_map.find(node->name) != bone_info_map.end()) {
+        int       index   = bone_info_map[node->name].id;
+        glm::mat4 offset  = bone_info_map[node->name].offset;
+        transforms[index] = global_transform * offset;
+      }
+
+      for (int i = 0; i < node->childrenCount; i++) {
+        fn(&node->children[i], global_transform);
+      }
+    };
+    fn(&animation->GetRootNode(), glm::mat4(1.0f));
+
+    return transforms;
+  }
+
+  std::string                      _name;
+  std::vector<glm::mat4>           _final_bone_matrices;
+  std::map<std::string, glm::mat4> _global_transforms;
+  Animation                       *_current_animation;
+  float                            _current_time;
+  Animation                       *_previous_animation;
+  float                            _previous_time;
+  float                            _blend_time     = 0.0f;
+  float                            _blend_duration = 0.0f;
+  bool                             _blending       = false;
 };
