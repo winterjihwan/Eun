@@ -2,6 +2,8 @@
 #include <Jolt/Jolt.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/euler_angles.hpp>
 #include <vector>
 
 namespace Util {
@@ -17,6 +19,8 @@ std::string to_string(const std::string &name, const glm::mat4 &mat);
 float     random_float(float min, float max);
 glm::vec3 random_dir_in_hemisphere(const glm::vec3 &normal);
 glm::mat4 lerp(const glm::mat4 &a, const glm::mat4 &b, float factor);
+glm::mat4
+transform(const glm::vec3 &position, const glm::vec3 &rotation_rad, const glm::vec3 &scale);
 
 // Geometry
 std::vector<Vertex>   generate_sphere_vertices(float radius, int segments);

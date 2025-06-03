@@ -40,7 +40,7 @@ void hot_reload(const std::string &path) {
   }
 }
 
-glm::mat4 to_transform(const std::string &name) {
+glm::mat4 get_transform(const std::string &name) {
   auto it = configs.find(name);
   if (it == configs.end())
     return glm::mat4(1.0f);
@@ -52,6 +52,21 @@ glm::mat4 to_transform(const std::string &name) {
   m                          = glm::rotate(m, glm::radians(cfg.rotate_deg.z), glm::vec3(0, 0, 1));
   m                          = glm::scale(m, cfg.scale);
   return m;
+}
+
+glm::vec3 get_translate(const std::string &name) {
+  auto it = configs.find(name);
+  return it != configs.end() ? it->second.translate : glm::vec3(0.0f);
+}
+
+glm::vec3 get_rotation_deg(const std::string &name) {
+  auto it = configs.find(name);
+  return it != configs.end() ? it->second.rotate_deg : glm::vec3(0.0f);
+}
+
+glm::vec3 get_scale(const std::string &name) {
+  auto it = configs.find(name);
+  return it != configs.end() ? it->second.scale : glm::vec3(1.0f);
 }
 
 } // namespace HotReload

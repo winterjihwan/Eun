@@ -69,6 +69,10 @@ void init() {
       _animations.emplace_back("Gun_Walk_Right", "res/animations/Gun_Walk_Right.dae", &brian);
       _animations.emplace_back("Gun_Jump", "res/animations/Gun_Jump.dae", &brian);
       _animations.emplace_back("Gun_Whip", "res/animations/Gun_Whip.dae", &brian);
+
+      // Knife
+      _animations.emplace_back("Knife_Idle", "res/animations/Knife_Idle.dae", &brian);
+      _animations.emplace_back("Knife_Stab", "res/animations/Knife_Stab.dae", &brian);
     };
     _deferred_tasks.push_back({std::move(future), callback});
   }
@@ -78,6 +82,14 @@ void init() {
     Model &glock = _models.emplace_back("Glock");
 
     std::future<void> future = glock.load_async("res/objects/Glock/Glock.obj");
+    _deferred_tasks.push_back({std::move(future), 0});
+  }
+
+  // Knife
+  {
+    Model &knife = _models.emplace_back("Knife");
+
+    std::future<void> future = knife.load_async("res/objects/Knife/scene.gltf");
     _deferred_tasks.push_back({std::move(future), 0});
   }
 

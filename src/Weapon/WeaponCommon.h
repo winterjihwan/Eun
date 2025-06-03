@@ -1,9 +1,11 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include <string>
 
 enum class WeaponType {
-  MELEE = 0,
+  HAND = 0,
+  KNIFE,
   HANDGUN,
   SHOTGUN,
   AUTOMATIC,
@@ -11,16 +13,22 @@ enum class WeaponType {
 };
 
 struct AnimationNames {
-  std::string draw;
   std::string idle;
+  std::string draw;
+
+  // Gun
   std::string fire;
   std::string reload;
+
+  // Knife
+  std::string stab;
 };
 
 struct AudioFiles {
   std::string draw;
   std::string fire;
   std::string reload;
+  std::string stab;
 };
 
 struct WeaponInfo {
@@ -30,6 +38,11 @@ struct WeaponInfo {
   AnimationNames animation_names;
   WeaponType     type;
   float          damage;
+
+  // Local Offset
+  glm::vec3 offset_pos;
+  glm::vec3 offset_rot;
+  glm::vec3 offset_scale;
 };
 
 struct WeaponState {

@@ -44,6 +44,7 @@ public:
     if (!_current_animation) {
       return;
     }
+    _right_hand_name = _current_animation->_right_hand_name;
 
     _current_time += _current_animation->GetTicksPerSecond() * dt;
     _current_time = fmod(_current_time, _current_animation->GetDuration());
@@ -91,6 +92,11 @@ public:
     return _name;
   }
 
+  // HACK
+  glm::mat4 get_right_hand_bone_global_transform() {
+    return get_bone_global_transform(_right_hand_name);
+  }
+
 private:
   std::vector<glm::mat4> calculate_bone_matrices(Animation *animation, float time) {
     std::vector<glm::mat4> transforms(100, glm::mat4(1.0f));
@@ -134,4 +140,7 @@ private:
   float                            _blend_time     = 0.0f;
   float                            _blend_duration = 0.0f;
   bool                             _blending       = false;
+
+  // HACK
+  std::string _right_hand_name;
 };

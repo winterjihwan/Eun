@@ -58,6 +58,12 @@ struct AnimEntityCreateInfo {
   glm::mat4   transform;
 };
 
+struct EntityCreateInfo {
+  std::string name;
+  Model      *model;
+  glm::mat4   transform;
+};
+
 struct PlayerAnimations {
   // Base
   Animation *idle;
@@ -66,6 +72,10 @@ struct PlayerAnimations {
   Animation *walk_left;
   Animation *walk_right;
   Animation *jump;
+
+  // Knife
+  Animation *knife_idle;
+  Animation *knife_stab;
 
   // Gun
   Animation *gun_idle;

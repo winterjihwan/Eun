@@ -3,9 +3,9 @@
 enum class WeaponAction {
   IDLE = 0,
   DRAW,
+  STAB,
   FIRE,
   RELOAD,
-  INSPECT,
 };
 
 enum class DecalType {

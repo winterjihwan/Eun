@@ -10,6 +10,7 @@ class Animation {
 public:
   std::string _path;
   std::string _name;
+  std::string _right_hand_name;
 
   Animation() = default;
 
@@ -29,6 +30,7 @@ public:
 
     ReadHierarchyData(m_RootNode, scene->mRootNode);
     ReadMissingBones(animation, *model);
+    FindRightHandBoneName();
   }
 
   ~Animation() {
@@ -77,6 +79,22 @@ private:
     }
 
     m_BoneInfoMap = boneInfoMap;
+  }
+
+  void FindRightHandBoneName() {
+    for (const Bone &bone : m_Bones) {
+      std::string name  = bone.GetBoneName();
+      std::string lower = name;
+      std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+
+      if (lower.find("right") != std::string::npos && lower.find("hand") != std::string::npos) {
+        _right_hand_name = name;
+        return;
+      }
+    }
+
+    std::cout << "Animation::FindLeftHandBoneName(): failed to find right hand bone" << std::endl;
+    assert(0);
   }
 
   void ReadHierarchyData(AssimpNodeData &dest, const aiNode *src) {

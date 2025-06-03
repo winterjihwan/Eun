@@ -8,7 +8,9 @@ std::vector<WeaponInfo> _weapons;
 void init() {
   _weapons.clear();
 
-  // Weapons
+  /* Weapons */
+
+  // Glock
   WeaponInfo &glock            = _weapons.emplace_back();
   glock.name                   = "Glock";
   glock.model_name             = "Glock";
@@ -20,7 +22,23 @@ void init() {
   glock.audio_files.fire       = "Glock_Fire.wav";
   glock.audio_files.reload     = "Glock_Reload.wav";
   // pistol.audio_files.draw        = ;
-  glock.damage = 5;
+  glock.damage       = 5;
+  glock.offset_pos   = glm::vec3(0.0f, 15.0f, 0.1f);
+  glock.offset_rot   = glm::radians(glm::vec3(0.0f, 180.0f, 270.0f));
+  glock.offset_scale = glm::vec3(100.0f);
+
+  // Weapon
+  WeaponInfo &knife          = _weapons.emplace_back();
+  knife.name                 = "Knife";
+  knife.model_name           = "Knife";
+  knife.type                 = WeaponType::KNIFE;
+  knife.animation_names.idle = "Knife_Idle";
+  knife.animation_names.stab = "Knife_Stab";
+  knife.audio_files.stab     = "Glock_Fire.wav";
+  knife.damage               = 25;
+  knife.offset_pos           = glm::vec3(0.0f, 0.0f, 0.0f);
+  knife.offset_rot           = glm::radians(glm::vec3(0.0f, 0.0f, 0.0f));
+  knife.offset_scale         = glm::vec3(100.0f);
 }
 
 int get_weapon_count() {

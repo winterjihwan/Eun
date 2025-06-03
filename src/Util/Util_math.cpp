@@ -21,4 +21,13 @@ glm::mat4 lerp(const glm::mat4 &a, const glm::mat4 &b, float factor) {
   return result;
 }
 
+glm::mat4
+transform(const glm::vec3 &position, const glm::vec3 &rotation_rad, const glm::vec3 &scale) {
+  glm::mat4 transform = glm::mat4(1.0f);
+  transform           = glm::translate(transform, position);
+  transform *= glm::eulerAngleXYZ(rotation_rad.x, rotation_rad.y, rotation_rad.z);
+  transform = glm::scale(transform, scale);
+  return transform;
+}
+
 } // namespace Util

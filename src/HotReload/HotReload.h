@@ -20,6 +20,9 @@ namespace HotReload {
 void init();
 void hot_reload(const std::string &path = "hot_reload.json");
 
-glm::mat4 to_transform(const std::string &name);
+glm::mat4 get_transform(const std::string &name);
+glm::vec3 get_translate(const std::string &name);
+glm::vec3 get_rotation_deg(const std::string &name);
+glm::vec3 get_scale(const std::string &name);
 
 } // namespace HotReload

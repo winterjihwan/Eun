@@ -5,8 +5,11 @@
 #include "Input/Input.h"
 #include "Keycodes.h"
 #include "Player.h"
+#include "Weapon/WeaponCommon.h"
 #include "Weapon/WeaponManager.h"
 #include "World/World.h"
+#include <glm/glm.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 // TODO: Ammo system
 
@@ -23,7 +26,7 @@ void Player::init_weapon() {
 
   // Default weapons
   // TODO: Equip immediately
-  give_weapon("Glock");
+  give_weapon("Knife");
 }
 
 void Player::update_weapon(float delta_time) {
@@ -31,7 +34,7 @@ void Player::update_weapon(float delta_time) {
     next_weapon();
   }
 
-  if (!_equipped) {
+  if (_current_weapon_type == WeaponType::HAND) {
     return;
   }
 
@@ -42,38 +45,36 @@ void Player::update_weapon(float delta_time) {
     return;
   }
 
+  // Logic
   switch (weapon_info->type) {
+  case WeaponType::KNIFE:
+    update_weapon_knife(delta_time);
+    break;
   case WeaponType::HANDGUN:
-  case WeaponType::AUTOMATIC:
     update_weapon_gun(delta_time);
     break;
   default:;
   };
 
-  // Animator *weapon_animator = _weapon_anim_entity->get_animator();
-
-  // if (_weapon_action == WeaponAction::DRAW && weapon_animator->IsDone()) {
-  //   Animator *idle_animator =
-  //   AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
-  //   _weapon_anim_entity->set_animator(idle_animator);
-  //   _weapon_action = WeaponAction::IDLE;
-  // }
-  //
-  // if (_weapon_action == WeaponAction::FIRE && weapon_animator->IsDone()) {
-  //   Animator *idle_animator =
-  //   AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
-  //   _weapon_anim_entity->set_animator(idle_animator);
-  //   _weapon_action = WeaponAction::IDLE;
-  // }
-  //
-  // if (_weapon_action == WeaponAction::INSPECT && weapon_animator->IsDone()) {
-  //   Animator *idle_animator =
-  //   AssetManager::get_animator_by_name(weapon_info->animation_names.idle);
-  //   _weapon_anim_entity->set_animator(idle_animator);
-  //   _weapon_action = WeaponAction::IDLE;
-  // }
-  //
-  // _weapon_anim_entity->set_model_transform(weapon_view_transform());
+  // Animation
+  switch (_weapon_action) {
+  case WeaponAction::DRAW:
+    if (_current_weapon_type == WeaponType::HANDGUN) {
+      _player_animator.play_animation(_player_animations.gun_draw);
+    }
+    break;
+  case WeaponAction::STAB:
+    // TODO: When stab animation ends, then reset _weapon_action to idle
+    // Maybe that's force animation play?
+    // _player_animator.play_animation(_player_animations.knife_stab);
+    break;
+  case WeaponAction::FIRE:
+    // TODO: Same goes for here
+    _player_animator.play_animation(_player_animations.gun_fire);
+    break;
+  default:
+    break;
+  }
 }
 
 void Player::next_weapon() {
@@ -109,30 +110,35 @@ void Player::switch_weapon(const std::string &name) {
     }
   }
 
-  equip_weapon(weapon_info->model_name);
-
-  _weapon_action = WeaponAction::DRAW;
-  _equipped      = true;
-  _player_animator.play_animation(_player_animations.gun_draw);
+  _current_weapon_type = weapon_info->type;
+  _weapon_action       = WeaponAction::DRAW;
+  equip_weapon(weapon_info);
 }
 
-void Player::equip_weapon(const std::string &name) {
-  Model *glock = AssetManager::get_model_by_name(name);
-  // glm::mat4 hand_transform = _animator->GetBoneGlobalTransform("mixamorig12_LeftHand");
+void Player::equip_weapon(WeaponInfo *weapon_info) {
+  Model *glock = AssetManager::get_model_by_name(weapon_info->name);
 
-  // glm::mat4 pete_transform = glm::translate(glm::mat4(1.0f), glm::vec3(13.0f, 0, -5.0f));
-  //
-  // glm::mat4 local_offset = glm::mat4(1.0f);
-  // local_offset           = glm::translate(local_offset, glm::vec3(0.0f, 15.0f, 0.1f));
-  // local_offset *=
-  //     glm::eulerAngleXYZ(glm::radians(0.0f), glm::radians(180.0f), glm::radians(270.0f));
-  // local_offset = glm::scale(local_offset, glm::vec3(100.0f));
-  //
-  // glm::mat4 model_glock = pete_transform * hand_transform * local_offset;
-  // model_glock           = pete_transform * hand_transform * local_offset;
-  //
-  // shader.setMat4("model", model_glock);
-  // glock->draw(shader);
+  glm::vec3 offset_pos   = weapon_info->offset_pos;
+  glm::vec3 offset_rot   = weapon_info->offset_rot;
+  glm::vec3 offset_scale = weapon_info->offset_scale;
+
+  EntityCreateInfo entity_create_info;
+  entity_create_info.name      = weapon_info->name;
+  entity_create_info.model     = glock;
+  entity_create_info.transform = glm::mat4(1.0f);
+
+  std::function<void(Entity &, float)> on_update = [=](Entity &self, float) {
+    glm::mat4 offset           = Util::transform(offset_pos, offset_rot, offset_scale);
+    glm::mat4 player_transform = player_view_transform();
+    glm::mat4 hand_transform   = _player_animator.get_right_hand_bone_global_transform();
+    self.get_transform()       = player_transform * hand_transform * offset;
+  };
+
+  Entity entity;
+  entity.init(std::move(entity_create_info));
+  entity.set_on_update(on_update);
+
+  World::add_entity(std::move(entity));
 }
 
 void Player::give_weapon(const std::string &name) {
@@ -181,18 +187,4 @@ WeaponState *Player::get_current_weapon_state() {
 
 WeaponInfo *Player::get_current_weapon_info() {
   return WeaponManager::get_weapon_info_by_name(_weapon_states[_current_weapon_index].name);
-}
-
-glm::mat4 Player::weapon_view_transform() {
-  glm::vec3 base_pos = get_pos() + glm::vec3(0.0f, -0.3f, 0.0f);
-  base_pos += Game::get_camera()->get_front() * 0.5f;
-
-  glm::quat view_rot =
-      glm::quatLookAt(-Game::get_camera()->get_front(), Game::get_camera()->get_up());
-
-  glm::mat4 transform = glm::translate(glm::mat4(1.0f), base_pos);
-  transform *= glm::toMat4(view_rot);
-  transform = glm::scale(transform, glm::vec3(0.5f));
-
-  return transform;
 }

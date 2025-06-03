@@ -32,7 +32,6 @@
     - [ ] Knife?
     - [ ] Gun
 - [x] Animation Blend
-- [ ] Hybrid ECS
 - [ ] G-buffer
 - [ ] Deferred Rendering
 - [x] Z fighting  

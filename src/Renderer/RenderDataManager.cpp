@@ -2,12 +2,14 @@
 
 namespace RenderDataManager {
 std::vector<AnimEntity *>      _anim_entities;
+std::vector<Entity *>          _entities;
 std::vector<Decal *>           _decals;
 std::vector<BloodVolumetric *> _blood_volumetrics;
 
 void begin_frame() {
   // DID YOU FORGET ME
   _anim_entities.clear();
+  _entities.clear();
   _decals.clear();
   _blood_volumetrics.clear();
 }
@@ -20,6 +22,10 @@ void submit_anim_entity(AnimEntity *anim_entity) {
   _anim_entities.push_back(anim_entity);
 }
 
+void submit_entity(Entity *entity) {
+  _entities.push_back(entity);
+}
+
 void submit_decal(Decal *decal) {
   _decals.push_back(decal);
 }
@@ -30,6 +36,10 @@ void submit_blood_volumetric(BloodVolumetric *blood_volumetric) {
 
 const std::vector<AnimEntity *> &get_anim_entities() {
   return _anim_entities;
+}
+
+const std::vector<Entity *> &get_entities() {
+  return _entities;
 }
 
 const std::vector<Decal *> &get_decals() {

@@ -11,6 +11,7 @@
 
 namespace World {
 extern std::vector<AnimEntity>      _anim_entities;
+extern std::vector<Entity>          _entities;
 extern std::vector<Bullet>          _bullets;
 extern std::vector<Decal>           _decals;
 extern std::vector<Npc>             _npcs;
@@ -27,6 +28,11 @@ void update(float delta_time) {
   // Anim Entities
   for (AnimEntity &anim_entity : _anim_entities) {
     anim_entity.update(delta_time);
+  }
+
+  // Entities
+  for (Entity &entity : _entities) {
+    entity.update(delta_time);
   }
 
   // Blood Volumetrics

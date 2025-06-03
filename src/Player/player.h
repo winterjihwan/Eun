@@ -48,7 +48,7 @@ private:
   void update_flashlight();
 
   // Weapon
-  bool                     _equipped             = false;
+  WeaponType               _current_weapon_type  = WeaponType::HAND;
   int                      _current_weapon_index = 0;
   std::vector<WeaponState> _weapon_states;
   WeaponAction             _weapon_action = WeaponAction::IDLE;
@@ -56,14 +56,14 @@ private:
   void init_weapon();
   void update_weapon(float delta_time);
   void update_weapon_gun(float delta_time);
-  void equip_weapon(const std::string &name);
+  void update_weapon_knife(float delta_time);
+  void equip_weapon(WeaponInfo *weapon_info);
   void switch_weapon(const std::string &name);
   void next_weapon();
+  void stab();
   void reload_gun();
   void fire_gun();
   void inspect_gun();
   void give_weapon(const std::string &name);
   void spawn_bullet(float variance);
-
-  glm::mat4 weapon_view_transform();
 };

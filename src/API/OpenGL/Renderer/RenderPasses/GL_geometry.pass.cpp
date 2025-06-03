@@ -1,5 +1,6 @@
 #include "AssetManager/AssetManager.h"
 #include "Core/Game.h"
+#include "Renderer/RenderDataManager.h"
 #include <glm/gtx/euler_angles.hpp>
 
 namespace OpenGLRenderer {
@@ -50,5 +51,16 @@ void geometry_pass() {
   shader.setMat4("model", model_scene);
   Model *scene = AssetManager::get_model_by_name("Map");
   scene->draw(shader);
+
+  std::vector<Entity *> entities = RenderDataManager::get_entities();
+  for (Entity *entity : entities) {
+    Model    *model     = entity->get_model();
+    glm::mat4 transform = entity->get_transform();
+
+    // std::cout << Util::to_string(model->name, transform) << std::endl;
+
+    shader.setMat4("model", transform);
+    model->draw(shader);
+  }
 }
 } // namespace OpenGLRenderer

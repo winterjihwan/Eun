@@ -74,3 +74,12 @@ if (_texture_id != 0) {
 }
 ```
 _texture_id needed to be zero initialized, or some dump value might be placed   
+
+8. 2025.06.04
+Was planning to do ECS  
+but I decided to do it in my next game engine  
+I found it not really that useful for this game + needs tons of digging up  
+which I am not hesistant BUT I don't have infinite resources  
+Hence I chose general struct of Entity + on update callbacks  
+Most of my so called 'Entities' differ in behavior, and not in data  
+So this might work better  

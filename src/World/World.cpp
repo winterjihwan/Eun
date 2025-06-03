@@ -7,6 +7,7 @@
 
 namespace World {
 std::vector<AnimEntity>      _anim_entities;
+std::vector<Entity>          _entities;
 std::vector<Bullet>          _bullets;
 std::vector<Decal>           _decals;
 std::vector<Npc>             _npcs;
@@ -14,6 +15,7 @@ std::vector<BloodVolumetric> _blood_volumetrics;
 
 void init() {
   _anim_entities.reserve(10);
+  _entities.reserve(64);
   _bullets.reserve(32);
   _decals.reserve(32);
   _npcs.reserve(8);
@@ -28,10 +30,8 @@ void init() {
     // npc_create_info.animators.walk  = AssetManager::get_animator_by_name("Brian_Walk");
     // npc_create_info.animators.death = AssetManager::get_animator_by_name("Brian_Death");
     npc_create_info.model_transform = glm::translate(glm::mat4(1.0f), glm::vec3(13.0f, 0, -5.0f));
-    // npc_create_info.model_transform =
-    //     glm::scale(npc_create_info.model_transform, glm::vec3(0.01f)); // HACK
-    npc_create_info.capsule_radius = 0.15f;
-    npc_create_info.capsule_height = 1.5f;
+    npc_create_info.capsule_radius  = 0.15f;
+    npc_create_info.capsule_height  = 1.5f;
     npc_create_info.capsule_position =
         glm::vec3(13.0f,
                   (npc_create_info.capsule_height + 2.0f * npc_create_info.capsule_radius) / 2.0f,
@@ -54,6 +54,11 @@ void submit_render_items() {
     anim_entity.submit_render_item();
   }
 
+  // Entities
+  for (Entity &entity : _entities) {
+    entity.submit_render_item();
+  }
+
   // Blood Volumetrics
   for (BloodVolumetric &blood_volumetric : _blood_volumetrics) {
     blood_volumetric.submit_render_item();
@@ -68,6 +73,11 @@ void submit_render_items() {
 AnimEntity *add_anim_entity(AnimEntity &&anim_entity) {
   _anim_entities.push_back(std::move(anim_entity));
   return &_anim_entities.back();
+}
+
+Entity *add_entity(Entity &&entity) {
+  _entities.push_back(std::move(entity));
+  return &_entities.back();
 }
 
 void add_bullet(Bullet &&bullet) {
