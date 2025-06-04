@@ -65,4 +65,5 @@ enum class PlayerState {
   WALKING_LEFT,
   WALKING_RIGHT,
   JUMPING,
+  STAB,
 };

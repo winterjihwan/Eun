@@ -15,6 +15,5 @@ void Player::stab() {
   Audio::play_audio(weapon_info->audio_files.stab, 1.0f);
   _weapon_action = WeaponAction::STAB;
 
-  // HACK really temporary
-  spawn_bullet(0.02f);
+  perform_stab();
 }

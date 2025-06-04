@@ -108,6 +108,10 @@ AnimEntity *get_anim_entity_by_name(const std::string &name) {
   assert(0);
 }
 
+std::vector<Npc> &get_npcs() {
+  return _npcs;
+}
+
 Npc *get_npc_by_name(const std::string &name) {
   for (Npc &npc : _npcs) {
     if (name == npc.get_name()) {

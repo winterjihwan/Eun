@@ -25,13 +25,18 @@
 - [x] Blood Decal
 - [x] Blood Volumetric
 - [ ] Better Character Virtual Controller
-- [ ] Better Chracter Animations
+- [x] Better Chracter Animations
     - [x] Idle
     - [x] Walk
     - [x] Jump
-    - [ ] Knife?
-    - [ ] Gun
+    - [x] Knife
+    - [x] Gun
 - [x] Animation Blend
+- [ ] Map Editor
+- [ ] Dialogue System
+- [ ] Item Interaction
+- [ ] Item Hints
+- [ ] Interactable entities
 - [ ] G-buffer
 - [ ] Deferred Rendering
 - [x] Z fighting  
@@ -53,6 +58,8 @@
 - [ ] Npc Intelligence
 - [ ] Custom Map
 - [ ] Map Editor
+- [ ] Tresure hunting or 숨바꼭질 kind of game
+    - [ ] Creatures walk buy making noise..
 
 ## When I buy Windows ...
 - [ ] Compute Skinning Pass <- Defer this to when I buy Windows, macOS only supports OpenGL 4.1. Perhaps just general compute pass

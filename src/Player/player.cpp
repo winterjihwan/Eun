@@ -47,13 +47,13 @@ void Player::init(glm::vec3 position) {
 
 void Player::update(float delta_time, Camera camera) {
   update_movement(delta_time, camera);
+  update_weapon(delta_time);
   update_flashlight();
   update_anim_entity();
-  update_weapon(delta_time);
 }
 
 void Player::update_anim_entity() {
-  Animation *animation;
+  Animation *animation = 0;
 
   switch (_player_state) {
   case PlayerState::IDLE:
@@ -87,8 +87,14 @@ void Player::update_anim_entity() {
     break;
 
   case PlayerState::JUMPING:
-    animation = (_current_weapon_type == WeaponType::HANDGUN) ? _player_animations.gun_jump
-                                                              : _player_animations.jump;
+    // TODO: Enable jumping animation
+    // animation = (_current_weapon_type == WeaponType::HANDGUN) ? _player_animations.gun_jump
+    //                                                           : _player_animations.jump;
+    break;
+
+  case PlayerState::STAB:
+    animation = _player_animations.knife_stab;
+
     break;
   }
 

@@ -61,6 +61,7 @@ private:
   void switch_weapon(const std::string &name);
   void next_weapon();
   void stab();
+  void perform_stab();
   void reload_gun();
   void fire_gun();
   void inspect_gun();

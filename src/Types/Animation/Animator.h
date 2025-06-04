@@ -38,6 +38,7 @@ public:
     _blend_duration = blend_duration;
     _blend_time     = 0.0f;
     _blending       = true;
+    _completed      = false;
   }
 
   void update_animation(float dt) {
@@ -46,9 +47,18 @@ public:
     }
     _right_hand_name = _current_animation->_right_hand_name;
 
+    float prev_time = _current_time;
     _current_time += _current_animation->GetTicksPerSecond() * dt;
+
+    // Update Completed
+    if (!_completed && prev_time < _current_animation->GetDuration() &&
+        _current_time >= _current_animation->GetDuration()) {
+      _completed = true;
+    }
+
     _current_time = fmod(_current_time, _current_animation->GetDuration());
 
+    // Blend at Start
     if (_blending && _previous_animation) {
       _previous_time += _previous_animation->GetTicksPerSecond() * dt;
       _previous_time = fmod(_previous_time, _previous_animation->GetDuration());
@@ -90,6 +100,10 @@ public:
 
   std::string &get_name() {
     return _name;
+  }
+
+  bool is_complete() {
+    return !_blending && _completed;
   }
 
   // HACK
@@ -140,6 +154,7 @@ private:
   float                            _blend_time     = 0.0f;
   float                            _blend_duration = 0.0f;
   bool                             _blending       = false;
+  bool                             _completed      = false;
 
   // HACK
   std::string _right_hand_name;

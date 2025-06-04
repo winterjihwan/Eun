@@ -71,3 +71,7 @@ AnimEntity *Npc::get_anim_entity() {
 const std::string &Npc::get_name() {
   return _name;
 }
+
+glm::vec3 Npc::get_position() {
+  return _npc_entity.get_model_transform()[3];
+}

@@ -14,6 +14,7 @@ struct Npc {
   AnimEntity *get_anim_entity();
 
   const std::string &get_name();
+  glm::vec3          get_position();
 
 private:
   std::string   _name = "Npc";

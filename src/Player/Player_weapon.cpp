@@ -4,6 +4,7 @@
 #include "Enums.h"
 #include "Input/Input.h"
 #include "Keycodes.h"
+#include "Physics/Physics.h"
 #include "Player.h"
 #include "Weapon/WeaponCommon.h"
 #include "Weapon/WeaponManager.h"
@@ -59,18 +60,18 @@ void Player::update_weapon(float delta_time) {
   // Animation
   switch (_weapon_action) {
   case WeaponAction::DRAW:
-    if (_current_weapon_type == WeaponType::HANDGUN) {
-      _player_animator.play_animation(_player_animations.gun_draw);
-    }
+    // if (_current_weapon_type == WeaponType::HANDGUN) {
+    //   _player_animator.play_animation(_player_animations.gun_draw);
+    // }
     break;
   case WeaponAction::STAB:
-    // TODO: When stab animation ends, then reset _weapon_action to idle
-    // Maybe that's force animation play?
-    // _player_animator.play_animation(_player_animations.knife_stab);
+    _player_state = PlayerState::STAB;
+    if (_player_animator.is_complete()) {
+      _weapon_action = WeaponAction::IDLE;
+    }
     break;
   case WeaponAction::FIRE:
-    // TODO: Same goes for here
-    _player_animator.play_animation(_player_animations.gun_fire);
+    // _player_animator.play_animation(_player_animations.gun_fire);
     break;
   default:
     break;
@@ -166,6 +167,68 @@ void Player::spawn_bullet(float variance) {
   createInfo.weapon_index = WeaponManager::get_weapon_index_from_weapon_name(weapon_info->name);
 
   World::add_bullet(Bullet(createInfo));
+}
+
+void Player::perform_stab() {
+  float range           = 2.0f;
+  float angle_threshold = 0.8f;
+
+  glm::vec3 origin  = _position;
+  glm::vec3 forward = Game::get_camera()->get_front();
+
+  for (Npc &npc : World::get_npcs()) {
+    glm::vec3 to_enemy  = npc.get_position() - origin;
+    float     distance  = glm::length(to_enemy);
+    float     angle_cos = glm::dot(glm::normalize(to_enemy), glm::normalize(forward));
+
+    if (distance <= range && angle_cos >= angle_threshold) {
+      glm::vec3 hit_pos    = npc.get_position();
+      glm::vec3 hit_normal = glm::vec3(0.0f, 1.0f, 0.0f);
+
+      static unsigned int blood_volumetric_index = 1;
+      if (++blood_volumetric_index > 6)
+        blood_volumetric_index = 1;
+
+      BloodVolumetricCreateInfo blood_volumetric_create_info;
+      blood_volumetric_create_info.position          = hit_pos;
+      blood_volumetric_create_info.rotation          = glm::vec3(0.0f);
+      blood_volumetric_create_info.front             = forward;
+      blood_volumetric_create_info.exr_texture_index = blood_volumetric_index;
+      blood_volumetric_create_info.model =
+          AssetManager::get_model_by_name(std::format("Blood_{}", blood_volumetric_index));
+
+      World::add_blood_volumetric(BloodVolumetric(blood_volumetric_create_info));
+
+      JPH::Vec3 blood_origin = Util::to_jolt_vec3(hit_pos + 0.02f * hit_normal);
+      JPH::Vec3 blood_dir    = JPH::Vec3(0.0f, -1.0f, 0.0f);
+
+      auto decal_hit = Physics::raycast(blood_origin, blood_dir, 10.0f);
+      if (!decal_hit || !decal_hit->user_data) {
+        break;
+      }
+      if (decal_hit->user_data->object_type != ObjectType::MAP) {
+        break;
+      }
+
+      static unsigned int _blood_stain_index = 1;
+      if (++_blood_stain_index > 4) {
+        _blood_stain_index = 1;
+      }
+
+      glm::vec3 offset =
+          glm::vec3(Util::random_float(-0.3f, 0.3f), 0.0f, Util::random_float(-0.3f, 0.3f));
+
+      DecalCreateInfo blood_info;
+      blood_info.hit_position = Util::from_jolt_vec3(decal_hit->hit_pos) + offset;
+      blood_info.hit_normal   = Util::from_jolt_vec3(decal_hit->hit_normal);
+      blood_info.type         = DecalType::BLOOD;
+      blood_info.mesh =
+          AssetManager::get_mesh_by_name(std::format("Blood_Stain_{}", _blood_stain_index));
+
+      World::add_decal(Decal(blood_info));
+      break;
+    }
+  }
 }
 
 WeaponState *Player::get_weapon_state_by_name(const std::string &name) {

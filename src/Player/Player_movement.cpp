@@ -50,8 +50,8 @@ void Player::update_movement(float delta_time, Camera camera) {
   Vec3 cur_vel = _character->GetLinearVelocity();
   Vec3 new_vel = move + Vec3(0, cur_vel.GetY(), 0);
 
-  // Jump
   if (_character->GetGroundState() == CharacterBase::EGroundState::OnGround) {
+    // TODO: Enable Jump
     if (Input::key_pressed(EUN_KEY_SPACE)) {
       new_vel.SetY(4.9f);
     }
