@@ -1,10 +1,20 @@
 #include "Entity.h"
+#include "Physics/Physics.h"
 #include "Renderer/RenderDataManager.h"
+#include <variant>
 
-void Entity::init(EntityCreateInfo &&entity_create_info) {
-  _name      = entity_create_info.name;
-  _model     = entity_create_info.model;
-  _transform = entity_create_info.transform;
+Entity::Entity(EntityCreateInfo &&info) {
+  _name       = info.name;
+  _renderable = info.renderable;
+  _transform  = info.transform;
+
+  // TODO: Take physics creation as config
+  if (std::holds_alternative<Mesh *>(_renderable)) {
+    Mesh *mesh = std::get<Mesh *>(_renderable);
+    Physics::register_static_mesh(mesh->vertices, mesh->indices, info.transform);
+  } else {
+    // TODO: Physics creation for <Model *>
+  }
 }
 
 void Entity::update(float delta_time) {
@@ -29,10 +39,10 @@ const std::string &Entity::get_name() {
   return _name;
 }
 
-Model *Entity::get_model() {
-  return _model;
-}
-
 glm::mat4 &Entity::get_transform() {
   return _transform;
+}
+
+std::variant<Model *, Mesh *> Entity::get_renderable() {
+  return _renderable;
 }

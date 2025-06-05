@@ -13,7 +13,7 @@ constexpr float        FAR             = 100.0f;
 
 // Player
 const float     PLAYER_HEIGHT    = 1.65f;
-const glm::vec3 PLAYER_SPAWN_POS = glm::vec3(13.0f, PLAYER_HEIGHT, 0.0f);
+const glm::vec3 PLAYER_SPAWN_POS = glm::vec3(0.0f, PLAYER_HEIGHT, 0.0f);
 const float     GRAVITY          = -15.75f;
 
 // Camera

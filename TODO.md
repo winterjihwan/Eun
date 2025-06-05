@@ -2,7 +2,7 @@
 
 - [x] Hand Animation  
 - [x] Character Controller
-- [ ] Animation Layer, State  
+- [ ] Better Animation System
 - [x] Animation 'Play' upon consecutive event trigger
 - [ ] Shadows
 - [x] Audio  
@@ -32,7 +32,9 @@
     - [x] Knife
     - [x] Gun
 - [x] Animation Blend
-- [ ] Timer
+- [ ] Framebuffer Lighting
+- [x] Timer
+- [ ] Custom Map
 - [ ] Map Editor
 - [ ] Dialogue System
 - [ ] Item Interaction
@@ -58,8 +60,6 @@
 - [ ] Precise Audio Handle  
 - [ ] Sanity Checks ~20% coverage
 - [ ] Npc Intelligence
-- [ ] Custom Map
-- [ ] Map Editor
 - [ ] Tresure hunting or 숨바꼭질 kind of game
     - [ ] Creatures walk buy making noise..
 

@@ -21,6 +21,21 @@ void init() {
   _npcs.reserve(8);
   _blood_volumetrics.reserve(32);
 
+  // Custom Map
+  {
+    Mesh *mesh = AssetManager::get_mesh_by_name("Plane");
+
+    glm::mat4 pos = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, 0.0f));
+    pos           = glm::rotate(pos, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    EntityCreateInfo info;
+    info.name       = mesh->name;
+    info.renderable = AssetManager::get_mesh_by_name("Plane");
+    info.transform  = pos;
+
+    add_entity(Entity(std::move(info)));
+  }
+
   // Npc
   {
     NpcCreateInfo npc_create_info;
@@ -29,13 +44,14 @@ void init() {
     npc_create_info.animations.idle = AssetManager::get_animation_by_name("Idle");
     // npc_create_info.animators.walk  = AssetManager::get_animator_by_name("Brian_Walk");
     // npc_create_info.animators.death = AssetManager::get_animator_by_name("Brian_Death");
-    npc_create_info.model_transform = glm::translate(glm::mat4(1.0f), glm::vec3(13.0f, 0, -5.0f));
-    npc_create_info.capsule_radius  = 0.15f;
-    npc_create_info.capsule_height  = 1.5f;
-    npc_create_info.capsule_position =
-        glm::vec3(13.0f,
-                  (npc_create_info.capsule_height + 2.0f * npc_create_info.capsule_radius) / 2.0f,
-                  -5.0f);
+    npc_create_info.model_transform =
+        glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, -5.0f));
+    npc_create_info.capsule_radius   = 0.15f;
+    npc_create_info.capsule_height   = 1.5f;
+    npc_create_info.capsule_position = glm::vec3(
+        0.0f,
+        (npc_create_info.capsule_height + 2.0f * npc_create_info.capsule_radius) / 2.0f - 3.0f,
+        -5.0f);
 
     Npc &npc = _npcs.emplace_back();
     npc.init(std::move(npc_create_info));

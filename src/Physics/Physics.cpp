@@ -161,8 +161,9 @@ void register_static_mesh(const std::vector<Vertex>       &vertices,
   shape_settings.SetEmbedded();
   ShapeRefC shape = shape_settings.Create().Get();
 
-  RVec3 pos(transform[3].x, transform[3].y, transform[3].z);
-  Quat  rot = Quat::sIdentity();
+  RVec3     pos(transform[3].x, transform[3].y, transform[3].z);
+  glm::quat rotation = glm::quat_cast(transform);
+  Quat      rot      = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
   BodyCreationSettings settings(shape, pos, rot, EMotionType::Static, Layers::NON_MOVING);
   Body                *body = _physics_system.GetBodyInterface().CreateBody(settings);

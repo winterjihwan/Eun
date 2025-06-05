@@ -59,9 +59,9 @@ struct AnimEntityCreateInfo {
 };
 
 struct EntityCreateInfo {
-  std::string name;
-  Model      *model;
-  glm::mat4   transform;
+  std::string                   name;
+  std::variant<Model *, Mesh *> renderable;
+  glm::mat4                     transform;
 };
 
 struct PlayerAnimations {

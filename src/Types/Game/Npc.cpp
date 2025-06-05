@@ -33,7 +33,8 @@ void Npc::init(NpcCreateInfo &&npc_create_info) {
   CapsuleShapeSettings shape_settings(capsule_height / 2, capsule_radius);
   ShapeRefC            shape = shape_settings.Create().Get();
 
-  BodyCreationSettings settings(shape, pos, rot, EMotionType::Static, Layers::NON_MOVING);
+  // TODO: Make motion type dynamic please
+  BodyCreationSettings settings(shape, pos, rot, EMotionType::Static, Layers::MOVING);
   BodyInterface       &bi   = Physics::get_physics_system().GetBodyInterface();
   Body                *body = bi.CreateBody(settings);
 
@@ -41,8 +42,7 @@ void Npc::init(NpcCreateInfo &&npc_create_info) {
   user_data.physics_type = PhysicsType::RIGID_DYNAMIC;
   user_data.object_type  = ObjectType::NPC;
   body->SetUserData(reinterpret_cast<uint64>(new PhysicsUserData(user_data)));
-  // TODO: Activate upon self created map
-  bi.AddBody(body->GetID(), EActivation::DontActivate);
+  bi.AddBody(body->GetID(), EActivation::Activate);
 
   _collider = body->GetID();
   _npc_entity.set_collider(&_collider);

@@ -1,7 +1,6 @@
 #include "AssetManager.h"
 
 #include "Core/Game.h"
-#include "Physics/Physics.h"
 #include "Types/Animation/Animation.h"
 #include "Types/Texture/ExrTexture.h"
 #include "UI/UIBackend.h"
@@ -29,20 +28,19 @@ bool                      _loading_complete = false;
 void init() {
   // Reserve
   _models.reserve(16);
+  _meshes.reserve(16);
   _animations.reserve(16);
   _textures.reserve(64);
   _exr_textures.reserve(36);
+  _deferred_tasks.reserve(16);
 
-  // Map
+  // Plane
   {
-    Model                &map      = _models.emplace_back("Map");
-    std::future<void>     future   = map.load_async("res/objects/Map_v1/Map_v1.obj");
-    std::function<void()> callback = [&map]() {
-      for (const Mesh &mesh : map.meshes) {
-        Physics::register_static_mesh(mesh.vertices, mesh.indices, glm::mat4(1.0f));
-      }
-    };
-    _deferred_tasks.push_back({std::move(future), callback});
+    std::vector<Vertex>   quad_v = Util::generate_quad_vertices(30.0f, 30.0f);
+    std::vector<uint32_t> quad_i = Util::generate_quad_indices();
+    std::vector<Texture>  quad_t;
+
+    _meshes.emplace_back(quad_v, quad_i, quad_t, "Plane");
   }
 
   // Brian
