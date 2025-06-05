@@ -26,7 +26,7 @@ void init() {
     NpcCreateInfo npc_create_info;
     npc_create_info.name            = "Npc1";
     npc_create_info.model           = AssetManager::get_model_by_name("Brian");
-    npc_create_info.animations.idle = AssetManager::get_animation_by_name("Breathe_Idle");
+    npc_create_info.animations.idle = AssetManager::get_animation_by_name("Idle");
     // npc_create_info.animators.walk  = AssetManager::get_animator_by_name("Brian_Walk");
     // npc_create_info.animators.death = AssetManager::get_animator_by_name("Brian_Death");
     npc_create_info.model_transform = glm::translate(glm::mat4(1.0f), glm::vec3(13.0f, 0, -5.0f));

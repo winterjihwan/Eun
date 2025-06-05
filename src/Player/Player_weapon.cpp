@@ -113,33 +113,11 @@ void Player::switch_weapon(const std::string &name) {
 
   _current_weapon_type = weapon_info->type;
   _weapon_action       = WeaponAction::DRAW;
-  equip_weapon(weapon_info);
-}
 
-void Player::equip_weapon(WeaponInfo *weapon_info) {
-  Model *glock = AssetManager::get_model_by_name(weapon_info->name);
-
-  glm::vec3 offset_pos   = weapon_info->offset_pos;
-  glm::vec3 offset_rot   = weapon_info->offset_rot;
-  glm::vec3 offset_scale = weapon_info->offset_scale;
-
-  EntityCreateInfo entity_create_info;
-  entity_create_info.name      = weapon_info->name;
-  entity_create_info.model     = glock;
-  entity_create_info.transform = glm::mat4(1.0f);
-
-  std::function<void(Entity &, float)> on_update = [=](Entity &self, float) {
-    glm::mat4 offset           = Util::transform(offset_pos, offset_rot, offset_scale);
-    glm::mat4 player_transform = player_view_transform();
-    glm::mat4 hand_transform   = _player_animator.get_right_hand_bone_global_transform();
-    self.get_transform()       = player_transform * hand_transform * offset;
-  };
-
-  Entity entity;
-  entity.init(std::move(entity_create_info));
-  entity.set_on_update(on_update);
-
-  World::add_entity(std::move(entity));
+  if (weapon_info->type == WeaponType::KNIFE) {
+    Model *brian_knife = AssetManager::get_model_by_name("Brian_Knife");
+    _player_anim_entity->set_model(brian_knife);
+  }
 }
 
 void Player::give_weapon(const std::string &name) {
@@ -169,65 +147,56 @@ void Player::spawn_bullet(float variance) {
   World::add_bullet(Bullet(createInfo));
 }
 
+// TODO: Decal position
+// Delay for stab sound
+// Faster stab
+// More stabs?
 void Player::perform_stab() {
-  float range           = 2.0f;
-  float angle_threshold = 0.8f;
+  Camera *camera = Game::get_camera();
 
-  glm::vec3 origin  = _position;
-  glm::vec3 forward = Game::get_camera()->get_front();
+  float     stab_dist = 2.0f;
+  JPH::Vec3 origin    = Util::to_jolt_vec3(_position);
+  JPH::Vec3 direction = Util::to_jolt_vec3(camera->get_front());
 
-  for (Npc &npc : World::get_npcs()) {
-    glm::vec3 to_enemy  = npc.get_position() - origin;
-    float     distance  = glm::length(to_enemy);
-    float     angle_cos = glm::dot(glm::normalize(to_enemy), glm::normalize(forward));
+  std::optional<RayHitInfo> hit = Physics::raycast(origin, direction, stab_dist);
+  if (!hit.has_value() || !hit->user_data) {
+    return;
+  }
 
-    if (distance <= range && angle_cos >= angle_threshold) {
-      glm::vec3 hit_pos    = npc.get_position();
-      glm::vec3 hit_normal = glm::vec3(0.0f, 1.0f, 0.0f);
+  PhysicsUserData *data = hit->user_data;
 
-      static unsigned int blood_volumetric_index = 1;
-      if (++blood_volumetric_index > 6)
-        blood_volumetric_index = 1;
+  if (data->physics_type == PhysicsType::RIGID_DYNAMIC && data->object_type == ObjectType::NPC) {
+    // Blood Volumetric
+    BloodVolumetricCreateInfo info;
+    info.position          = Util::from_jolt_vec3(hit->hit_pos);
+    info.rotation          = glm::vec3(0.0f);
+    info.front             = camera->get_front();
+    info.exr_texture_index = 1;
+    info.model             = AssetManager::get_model_by_name("Blood_1");
 
-      BloodVolumetricCreateInfo blood_volumetric_create_info;
-      blood_volumetric_create_info.position          = hit_pos;
-      blood_volumetric_create_info.rotation          = glm::vec3(0.0f);
-      blood_volumetric_create_info.front             = forward;
-      blood_volumetric_create_info.exr_texture_index = blood_volumetric_index;
-      blood_volumetric_create_info.model =
-          AssetManager::get_model_by_name(std::format("Blood_{}", blood_volumetric_index));
+    World::add_blood_volumetric(BloodVolumetric(info));
 
-      World::add_blood_volumetric(BloodVolumetric(blood_volumetric_create_info));
+    // Blood Decal
+    glm::vec3 offset =
+        glm::vec3(Util::random_float(-0.3f, 0.3f), 0.0f, Util::random_float(-0.3f, 0.3f));
 
-      JPH::Vec3 blood_origin = Util::to_jolt_vec3(hit_pos + 0.02f * hit_normal);
-      JPH::Vec3 blood_dir    = JPH::Vec3(0.0f, -1.0f, 0.0f);
+    DecalCreateInfo blood_info;
+    blood_info.hit_position = Util::from_jolt_vec3(hit->hit_pos) + offset;
+    blood_info.hit_normal   = Util::from_jolt_vec3(hit->hit_normal);
+    blood_info.type         = DecalType::BLOOD;
+    blood_info.mesh         = AssetManager::get_mesh_by_name("Blood_Stain_1");
 
-      auto decal_hit = Physics::raycast(blood_origin, blood_dir, 10.0f);
-      if (!decal_hit || !decal_hit->user_data) {
-        break;
-      }
-      if (decal_hit->user_data->object_type != ObjectType::MAP) {
-        break;
-      }
+    World::add_decal(Decal(blood_info));
+  }
 
-      static unsigned int _blood_stain_index = 1;
-      if (++_blood_stain_index > 4) {
-        _blood_stain_index = 1;
-      }
+  if (data->physics_type == PhysicsType::RIGID_STATIC) {
+    DecalCreateInfo decal_info;
+    decal_info.hit_position = Util::from_jolt_vec3(hit->hit_pos);
+    decal_info.hit_normal   = Util::from_jolt_vec3(hit->hit_normal);
+    decal_info.type         = DecalType::PLASTER;
+    decal_info.mesh         = AssetManager::get_mesh_by_name("Knife_Scratch");
 
-      glm::vec3 offset =
-          glm::vec3(Util::random_float(-0.3f, 0.3f), 0.0f, Util::random_float(-0.3f, 0.3f));
-
-      DecalCreateInfo blood_info;
-      blood_info.hit_position = Util::from_jolt_vec3(decal_hit->hit_pos) + offset;
-      blood_info.hit_normal   = Util::from_jolt_vec3(decal_hit->hit_normal);
-      blood_info.type         = DecalType::BLOOD;
-      blood_info.mesh =
-          AssetManager::get_mesh_by_name(std::format("Blood_Stain_{}", _blood_stain_index));
-
-      World::add_decal(Decal(blood_info));
-      break;
-    }
+    World::add_decal(Decal(decal_info));
   }
 }
 

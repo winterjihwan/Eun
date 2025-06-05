@@ -87,7 +87,8 @@ private:
       std::string lower = name;
       std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
 
-      if (lower.find("right") != std::string::npos && lower.find("hand") != std::string::npos) {
+      if (lower.find("right") != std::string::npos && lower.find("hand") != std::string::npos &&
+          lower.find("middle") != std::string::npos) {
         _right_hand_name = name;
         return;
       }

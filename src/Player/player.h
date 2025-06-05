@@ -57,7 +57,6 @@ private:
   void update_weapon(float delta_time);
   void update_weapon_gun(float delta_time);
   void update_weapon_knife(float delta_time);
-  void equip_weapon(WeaponInfo *weapon_info);
   void switch_weapon(const std::string &name);
   void next_weapon();
   void stab();

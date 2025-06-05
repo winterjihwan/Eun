@@ -48,41 +48,17 @@ void init() {
   // Brian
   {
     Model &brian = _models.emplace_back("Brian");
+    brian.load("res/objects/Brian/Brian.gltf");
 
-    std::future<void>     future   = brian.load_async("res/objects/Brian/Brian.dae");
-    std::function<void()> callback = [&brian]() {
-      // Base
-      _animations.emplace_back("Breathe_Idle", "res/animations/Breathe_Idle.dae", &brian);
-      _animations.emplace_back("Walk_Forward", "res/animations/Walk_Forward.dae", &brian);
-      _animations.emplace_back("Walk_Backward", "res/animations/Walk_Backward.dae", &brian);
-      _animations.emplace_back("Walk_Left", "res/animations/Walk_Left.dae", &brian);
-      _animations.emplace_back("Walk_Right", "res/animations/Walk_Right.dae", &brian);
-      _animations.emplace_back("Jump", "res/animations/Jump.dae", &brian);
-
-      // Gun
-      _animations.emplace_back("Gun_Idle", "res/animations/Gun_Idle.dae", &brian);
-      _animations.emplace_back("Gun_Fire", "res/animations/Gun_Fire.dae", &brian);
-      _animations.emplace_back("Gun_Draw", "res/animations/Gun_Draw.dae", &brian);
-      _animations.emplace_back("Gun_Walk_Forward", "res/animations/Gun_Walk_Forward.dae", &brian);
-      _animations.emplace_back("Gun_Walk_Backward", "res/animations/Gun_Walk_Backward.dae", &brian);
-      _animations.emplace_back("Gun_Walk_Left", "res/animations/Gun_Walk_Right.dae", &brian);
-      _animations.emplace_back("Gun_Walk_Right", "res/animations/Gun_Walk_Right.dae", &brian);
-      _animations.emplace_back("Gun_Jump", "res/animations/Gun_Jump.dae", &brian);
-      _animations.emplace_back("Gun_Whip", "res/animations/Gun_Whip.dae", &brian);
-
-      // Knife
-      _animations.emplace_back("Knife_Idle", "res/animations/Knife_Idle.dae", &brian);
-      _animations.emplace_back("Knife_Stab", "res/animations/Knife_Stab.dae", &brian);
+    Model                &brian_knife = _models.emplace_back("Brian_Knife");
+    std::future<void>     future   = brian_knife.load_async("res/objects/Brian/Brian_Knife.gltf");
+    std::function<void()> callback = [&brian_knife]() {
+      _animations.emplace_back("Idle", "res/animations/Brian_Idle_Knife.gltf", &brian_knife);
+      _animations.emplace_back("Idle_Knife", "res/animations/Brian_Idle_Knife.gltf", &brian_knife);
+      _animations.emplace_back("Walk", "res/animations/Brian_Walk.gltf", &brian_knife);
+      _animations.emplace_back("Stab", "res/animations/Brian_Stab.gltf", &brian_knife);
     };
     _deferred_tasks.push_back({std::move(future), callback});
-  }
-
-  // Glock
-  {
-    Model &glock = _models.emplace_back("Glock");
-
-    std::future<void> future = glock.load_async("res/objects/Glock/Glock.obj");
-    _deferred_tasks.push_back({std::move(future), 0});
   }
 
   // Knife
@@ -91,18 +67,6 @@ void init() {
 
     std::future<void> future = knife.load_async("res/objects/Knife/scene.gltf");
     _deferred_tasks.push_back({std::move(future), 0});
-  }
-
-  // Pete
-  {
-    Model &pete = _models.emplace_back("Pete");
-
-    std::future<void>     future   = pete.load_async("res/objects/Pete/Pete.dae");
-    std::function<void()> callback = [&pete]() {
-      // Animations
-      _animations.emplace_back("Gun_Idle", "res/animations/Gun_Idle.dae", &pete);
-    };
-    _deferred_tasks.push_back({std::move(future), callback});
   }
 
   // Decal

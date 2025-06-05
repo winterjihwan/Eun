@@ -32,8 +32,8 @@ void init() {
   knife.name                 = "Knife";
   knife.model_name           = "Knife";
   knife.type                 = WeaponType::KNIFE;
-  knife.animation_names.idle = "Knife_Idle";
-  knife.animation_names.stab = "Knife_Stab";
+  knife.animation_names.idle = "Idle_Knife";
+  knife.animation_names.stab = "Stab";
   knife.audio_files.stab     = "Glock_Fire.wav";
   knife.damage               = 25;
   knife.offset_pos           = glm::vec3(0.0f, 0.0f, 0.0f);

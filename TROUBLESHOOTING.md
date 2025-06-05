@@ -83,3 +83,14 @@ which I am not hesistant BUT I don't have infinite resources
 Hence I chose general struct of Entity + on update callbacks  
 Most of my so called 'Entities' differ in behavior, and not in data  
 So this might work better  
+
+9. 2025.06.05
+Had troubles re exporting models and animations from blender  
+Spend 10 hours, and I got a solution (not complete tho)  
+1. import  
+2. Select Armature then scale -> 1.0  
+3. Select all then Apply all transforms  
+4. Select Armature Apply Visual Transform  
+5. Pose mode -> click A to select all bones -> Apply visual transform to pose  
+6. Select all then dae export  
+7. Global Orientation Apply. Forward axis: -Z, Up. Axis: Y  

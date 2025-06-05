@@ -67,23 +67,9 @@ struct EntityCreateInfo {
 struct PlayerAnimations {
   // Base
   Animation *idle;
-  Animation *walk_forward;
-  Animation *walk_backward;
-  Animation *walk_left;
-  Animation *walk_right;
-  Animation *jump;
+  Animation *walk;
 
   // Knife
-  Animation *knife_idle;
-  Animation *knife_stab;
-
-  // Gun
-  Animation *gun_idle;
-  Animation *gun_fire;
-  Animation *gun_draw;
-  Animation *gun_walk_forward;
-  Animation *gun_walk_backward;
-  Animation *gun_walk_left;
-  Animation *gun_walk_right;
-  Animation *gun_jump;
+  Animation *idle_knife;
+  Animation *stab;
 };
