@@ -32,6 +32,7 @@
     - [x] Knife
     - [x] Gun
 - [x] Animation Blend
+- [ ] Timer
 - [ ] Map Editor
 - [ ] Dialogue System
 - [ ] Item Interaction
@@ -48,6 +49,7 @@
 - [x] Simple Hot reloading  
 - [ ] Hot reloading with DLL
 - [x] Third Person View
+- [ ] Perspective to Audio
 - [ ] Attach weapons to bones
 - [ ] Knife or Sledge Hammer
 - [ ] Arena Allocator

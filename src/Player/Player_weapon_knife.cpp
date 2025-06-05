@@ -1,4 +1,4 @@
-#include "Audio/Audio.h"
+#include "Core/Timer.h"
 #include "Input/Input.h"
 #include "Keycodes.h"
 #include "Player.h"
@@ -10,10 +10,8 @@ void Player::update_weapon_knife(float delta_time) {
 }
 
 void Player::stab() {
-  WeaponInfo *weapon_info = get_current_weapon_info();
 
-  Audio::play_audio(weapon_info->audio_files.stab, 1.0f);
+  float stab_delay = 0.4f;
+  TimerManager::add_timer(stab_delay, [this]() { perform_stab(); });
   _weapon_action = WeaponAction::STAB;
-
-  perform_stab();
 }

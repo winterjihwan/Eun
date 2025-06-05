@@ -10,6 +10,7 @@ enum class WeaponAction {
 
 enum class DecalType {
   GLASS = 0,
+  SCRATCH,
   PLASTER,
   BLOOD,
 };

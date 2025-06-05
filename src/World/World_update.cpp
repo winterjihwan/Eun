@@ -64,17 +64,17 @@ void process_bullets() {
 
     // Bullet hole decal
     if (data->physics_type == PhysicsType::RIGID_STATIC) {
-      DecalCreateInfo decal_create_info;
-      decal_create_info.hit_position = Util::from_jolt_vec3(hit->hit_pos);
-      decal_create_info.hit_normal   = Util::from_jolt_vec3(hit->hit_normal);
-      decal_create_info.type         = DecalType::PLASTER;
-      decal_create_info.mesh         = AssetManager::get_mesh_by_name("Bullet_Hole");
+      DecalCreateInfo info;
+      info.hit_position = Util::from_jolt_vec3(hit->hit_pos);
+      info.hit_normal   = Util::from_jolt_vec3(hit->hit_normal);
+      info.type         = DecalType::PLASTER;
+      info.mesh         = AssetManager::get_mesh_by_name("Bullet_Hole");
 
       if (data->object_type == ObjectType::MAP) {
-        decal_create_info.type = DecalType::PLASTER;
+        info.type = DecalType::PLASTER;
       }
 
-      add_decal(Decal(decal_create_info));
+      add_decal(Decal(info));
     }
 
     // Blood
@@ -85,15 +85,14 @@ void process_bullets() {
         blood_volumetric_index = 1;
 
       // Blood Volumetric
-      BloodVolumetricCreateInfo blood_volumetric_create_info;
-      blood_volumetric_create_info.position          = Util::from_jolt_vec3(hit->hit_pos);
-      blood_volumetric_create_info.rotation          = glm::vec3(0.0f);
-      blood_volumetric_create_info.front             = bullet.get_direction();
-      blood_volumetric_create_info.exr_texture_index = blood_volumetric_index;
-      blood_volumetric_create_info.model =
-          AssetManager::get_model_by_name(std::format("Blood_{}", blood_volumetric_index));
+      BloodVolumetricCreateInfo info;
+      info.position          = Util::from_jolt_vec3(hit->hit_pos);
+      info.rotation          = glm::vec3(0.0f);
+      info.front             = bullet.get_direction();
+      info.exr_texture_index = blood_volumetric_index;
+      info.model = AssetManager::get_model_by_name(std::format("Blood_{}", blood_volumetric_index));
 
-      add_blood_volumetric(BloodVolumetric(blood_volumetric_create_info));
+      add_blood_volumetric(BloodVolumetric(info));
 
       // Blood Decal Raycast
       JPH::Vec3 blood_origin      = hit->hit_pos + 0.02f * hit->hit_normal;

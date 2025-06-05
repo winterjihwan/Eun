@@ -4,6 +4,7 @@
 #include "Backend/GLFW.h"
 #include "Core/Debug.h"
 #include "Core/Game.h"
+#include "Core/Timer.h"
 #include "HotReload/HotReload.h"
 #include "Input/Input.h"
 #include "Physics/Physics.h"
@@ -24,6 +25,7 @@ bool init() {
   Physics::init();
   AssetManager::init();
   UIBackend::init();
+  TimerManager::init();
   Audio::init();
   Input::init(get_window_pointer());
   WeaponManager::init();
@@ -47,9 +49,8 @@ void update_game() {
 
   Game::update();
   Physics::update(delta_time);
-
   World::submit_render_items();
-
+  TimerManager::update(delta_time);
   Debug::update();
   UIBackend::update();
   RenderDataManager::update();

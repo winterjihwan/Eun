@@ -81,6 +81,16 @@ void init() {
       _meshes.emplace_back(quad_v, quad_i, quad_t, "Bullet_Hole");
     }
 
+    // Bullet Hole
+    {
+      std::vector<Vertex>   quad_v = Util::generate_quad_vertices(0.2f, 0.2f);
+      std::vector<uint32_t> quad_i = Util::generate_quad_indices();
+      std::vector<Texture>  quad_t;
+      quad_t.emplace_back("Bullet_Hole", "res/textures/Knife_Scratch.png", TextureType::DIFFUSE);
+
+      _meshes.emplace_back(quad_v, quad_i, quad_t, "Knife_Scratch");
+    }
+
     // Blood decal
     {
       std::vector<Vertex>   quad_v = Util::generate_quad_vertices(1.0f, 1.0f);

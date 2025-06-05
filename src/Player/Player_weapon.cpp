@@ -1,4 +1,5 @@
 #include "AssetManager/AssetManager.h"
+#include "Audio/Audio.h"
 #include "Core/Game.h"
 #include "CreateInfo.h"
 #include "Enums.h"
@@ -147,56 +148,81 @@ void Player::spawn_bullet(float variance) {
   World::add_bullet(Bullet(createInfo));
 }
 
-// TODO: Decal position
-// Delay for stab sound
-// Faster stab
-// More stabs?
 void Player::perform_stab() {
   Camera *camera = Game::get_camera();
 
-  float     stab_dist = 2.0f;
   JPH::Vec3 origin    = Util::to_jolt_vec3(_position);
   JPH::Vec3 direction = Util::to_jolt_vec3(camera->get_front());
+  float     stab_dist = 2.0f;
 
   std::optional<RayHitInfo> hit = Physics::raycast(origin, direction, stab_dist);
-  if (!hit.has_value() || !hit->user_data) {
+  if (!hit.has_value()) {
     return;
   }
 
   PhysicsUserData *data = hit->user_data;
+  if (!data) {
+    return;
+  }
 
+  // Knife Scratch Decal
+  if (data->physics_type == PhysicsType::RIGID_STATIC) {
+    DecalCreateInfo info;
+    info.hit_position = Util::from_jolt_vec3(hit->hit_pos);
+    info.hit_normal   = Util::from_jolt_vec3(hit->hit_normal);
+    info.type         = DecalType::SCRATCH;
+    info.mesh         = AssetManager::get_mesh_by_name("Knife_Scratch");
+
+    World::add_decal(Decal(info));
+  }
+
+  // Blood
   if (data->physics_type == PhysicsType::RIGID_DYNAMIC && data->object_type == ObjectType::NPC) {
+    Audio::play_audio("Knife_Stab.wav", 1.0f);
+
+    static unsigned int blood_volumetric_index = 1;
+    if (++blood_volumetric_index > 6)
+      blood_volumetric_index = 1;
+
     // Blood Volumetric
     BloodVolumetricCreateInfo info;
     info.position          = Util::from_jolt_vec3(hit->hit_pos);
     info.rotation          = glm::vec3(0.0f);
     info.front             = camera->get_front();
-    info.exr_texture_index = 1;
-    info.model             = AssetManager::get_model_by_name("Blood_1");
+    info.exr_texture_index = blood_volumetric_index;
+    info.model = AssetManager::get_model_by_name(std::format("Blood_{}", blood_volumetric_index));
 
     World::add_blood_volumetric(BloodVolumetric(info));
 
-    // Blood Decal
+    // Blood Decal Raycast
+    JPH::Vec3 blood_origin      = hit->hit_pos + 0.02f * hit->hit_normal;
+    JPH::Vec3 blood_dir         = JPH::Vec3(0.0f, -1.0f, 0.0f);
+    float     blood_splash_dist = 10.0f;
+
+    auto decal_hit = Physics::raycast(blood_origin, blood_dir, blood_splash_dist);
+    if (!decal_hit || !decal_hit->user_data) {
+      return;
+    }
+
+    if (decal_hit->user_data->object_type != ObjectType::MAP) {
+      return;
+    }
+
+    static unsigned int _blood_stain_index = 1;
+    if (++_blood_stain_index > 4)
+      _blood_stain_index = 1;
+
     glm::vec3 offset =
         glm::vec3(Util::random_float(-0.3f, 0.3f), 0.0f, Util::random_float(-0.3f, 0.3f));
 
     DecalCreateInfo blood_info;
-    blood_info.hit_position = Util::from_jolt_vec3(hit->hit_pos) + offset;
-    blood_info.hit_normal   = Util::from_jolt_vec3(hit->hit_normal);
+    blood_info.hit_position = Util::from_jolt_vec3(decal_hit->hit_pos) + offset;
+    blood_info.hit_normal   = Util::from_jolt_vec3(decal_hit->hit_normal);
     blood_info.type         = DecalType::BLOOD;
-    blood_info.mesh         = AssetManager::get_mesh_by_name("Blood_Stain_1");
+    blood_info.mesh =
+        AssetManager::get_mesh_by_name(std::format("Blood_Stain_{}", _blood_stain_index));
 
     World::add_decal(Decal(blood_info));
-  }
-
-  if (data->physics_type == PhysicsType::RIGID_STATIC) {
-    DecalCreateInfo decal_info;
-    decal_info.hit_position = Util::from_jolt_vec3(hit->hit_pos);
-    decal_info.hit_normal   = Util::from_jolt_vec3(hit->hit_normal);
-    decal_info.type         = DecalType::PLASTER;
-    decal_info.mesh         = AssetManager::get_mesh_by_name("Knife_Scratch");
-
-    World::add_decal(Decal(decal_info));
   }
 }
 
