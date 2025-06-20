@@ -24,7 +24,6 @@ void blood_volumetric_pass() {
   glBindVertexArray(vao);
 
   for (BloodVolumetric *blood_volumetric : blood_volumetrics) {
-    Mesh     &mesh            = blood_volumetric->get_model()->meshes[0];
     GLuint    texPos          = blood_volumetric->get_exr_texture_pos()->get_handle();
     GLuint    texNorm         = blood_volumetric->get_exr_texture_norm()->get_handle();
     glm::mat4 model_transform = blood_volumetric->get_model_transform();
@@ -38,7 +37,7 @@ void blood_volumetric_pass() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texNorm);
 
-    mesh.draw(shader);
+    blood_volumetric->get_model()->render();
   }
 
   glDepthMask(GL_TRUE);

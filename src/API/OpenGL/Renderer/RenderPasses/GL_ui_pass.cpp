@@ -1,6 +1,6 @@
 #include "API/OpenGL/Renderer/GL_renderer.h"
 #include "Defines.h"
-#include "Shader.h"
+#include "Types/Renderer/Shader.h"
 #include "UI/Mesh2D.h"
 #include "UI/UIBackend.h"
 #include <glad/glad.h>

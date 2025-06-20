@@ -19,7 +19,6 @@ struct Npc {
 private:
   std::string   _name = "Npc";
   Model        *_model;
-  Animator      _npc_animator;
   NpcAnimations _npc_animations;
   NpcState      _npc_state       = NpcState::IDLE;
   glm::mat4     _model_transform = glm::mat4(1.0f);

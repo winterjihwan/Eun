@@ -57,6 +57,10 @@ void ExrTexture::upload_to_gpu() {
 }
 
 unsigned int &ExrTexture::get_handle() {
+  if (!_texture_id) {
+    std::cerr << "ExrTexture::get_handle() have you uploaded to GPU?" << std::endl;
+  }
+
   return _texture_id;
 }
 

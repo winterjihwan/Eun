@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CreateInfo.h"
-#include "Model.h"
 #include "Types.h"
 #include "Types/Texture/ExrTexture.h"
 #include <glm/glm.hpp>

@@ -22,7 +22,6 @@ void        add_decal(Decal &&decal);
 void        add_blood_volumetric(BloodVolumetric &&blood_volumetric);
 
 std::vector<Bullet> &get_bullets();
-AnimEntity          *get_anim_entity_by_name(const std::string &name);
 
 std::vector<Npc> &get_npcs();
 Npc              *get_npc_by_name(const std::string &name);

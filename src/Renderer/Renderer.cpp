@@ -1,6 +1,5 @@
 #include "Renderer.h"
 #include "API/OpenGL/Renderer/GL_renderer.h"
-#include "Shader.h"
 #include "UI/UIBackend.h"
 
 namespace Renderer {

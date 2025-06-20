@@ -1,5 +1,5 @@
 #pragma once
-#include "Defines.h"
+
 #include "Enums.h"
 #include "Keycodes.h"
 #include <Jolt/Jolt.h>
@@ -49,12 +49,8 @@ struct PhysicsUserData {
 
 struct Vertex {
   glm::vec3 position;
+  glm::vec2 tex_coords;
   glm::vec3 normal;
-  glm::vec2 texcoords;
-  glm::vec3 tangent;
-  glm::vec3 bitangent;
-  int       bone_ids[MAX_BONE_INFLUENCE];
-  float     weights[MAX_BONE_INFLUENCE];
 };
 
 struct RayHitInfo {

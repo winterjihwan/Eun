@@ -18,10 +18,9 @@ void Npc::init(NpcCreateInfo &&npc_create_info) {
   AnimEntityCreateInfo npc_entity_create_info;
   npc_entity_create_info.name      = _name;
   npc_entity_create_info.model     = _model;
-  npc_entity_create_info.animator  = &_npc_animator;
   npc_entity_create_info.transform = _model_transform;
 
-  _npc_entity.init(std::move(npc_entity_create_info));
+  // _npc_entity.init(std::move(npc_entity_create_info));
 
   // Physics
   float     capsule_radius   = npc_create_info.capsule_radius;
@@ -45,7 +44,7 @@ void Npc::init(NpcCreateInfo &&npc_create_info) {
   bi.AddBody(body->GetID(), EActivation::Activate);
 
   _collider = body->GetID();
-  _npc_entity.set_collider(&_collider);
+  // _npc_entity.set_collider(&_collider);
 }
 
 void Npc::update(float delta_time) {
@@ -73,5 +72,5 @@ const std::string &Npc::get_name() {
 }
 
 glm::vec3 Npc::get_position() {
-  return _npc_entity.get_model_transform()[3];
+  return _npc_entity.get_model_matrix()[3];
 }

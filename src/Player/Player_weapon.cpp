@@ -67,9 +67,10 @@ void Player::update_weapon(float delta_time) {
     break;
   case WeaponAction::STAB:
     _player_state = PlayerState::STAB;
-    if (_player_animator.is_complete()) {
-      _weapon_action = WeaponAction::IDLE;
-    }
+    // TODO
+    // if (_player_animator.is_complete()) {
+    //   _weapon_action = WeaponAction::IDLE;
+    // }
     break;
   case WeaponAction::FIRE:
     // _player_animator.play_animation(_player_animations.gun_fire);
@@ -116,8 +117,8 @@ void Player::switch_weapon(const std::string &name) {
   _weapon_action       = WeaponAction::DRAW;
 
   if (weapon_info->type == WeaponType::KNIFE) {
-    Model *brian_knife = AssetManager::get_model_by_name("Brian_Knife");
-    _player_anim_entity->set_model(brian_knife);
+    // Model *brian_knife = AssetManager::get_model_by_name("Brian_Knife");
+    // _player_anim_entity->set_model(brian_knife);
   }
 }
 
@@ -168,8 +169,8 @@ void Player::perform_stab() {
   // Knife Scratch Decal
   if (data->physics_type == PhysicsType::RIGID_STATIC) {
     DecalCreateInfo info;
-    info.hit_position = Util::from_jolt_vec3(hit->hit_pos);
-    info.hit_normal   = Util::from_jolt_vec3(hit->hit_normal);
+    info.hit_position = Util::to_vec3(hit->hit_pos);
+    info.hit_normal   = Util::to_vec3(hit->hit_normal);
     info.type         = DecalType::SCRATCH;
     info.mesh         = AssetManager::get_mesh_by_name("Knife_Scratch");
 
@@ -186,7 +187,7 @@ void Player::perform_stab() {
 
     // Blood Volumetric
     BloodVolumetricCreateInfo info;
-    info.position          = Util::from_jolt_vec3(hit->hit_pos);
+    info.position          = Util::to_vec3(hit->hit_pos);
     info.rotation          = glm::vec3(0.0f);
     info.front             = camera->get_front();
     info.exr_texture_index = blood_volumetric_index;
@@ -216,8 +217,8 @@ void Player::perform_stab() {
         glm::vec3(Util::random_float(-0.3f, 0.3f), 0.0f, Util::random_float(-0.3f, 0.3f));
 
     DecalCreateInfo blood_info;
-    blood_info.hit_position = Util::from_jolt_vec3(decal_hit->hit_pos) + offset;
-    blood_info.hit_normal   = Util::from_jolt_vec3(decal_hit->hit_normal);
+    blood_info.hit_position = Util::to_vec3(decal_hit->hit_pos) + offset;
+    blood_info.hit_normal   = Util::to_vec3(decal_hit->hit_normal);
     blood_info.type         = DecalType::BLOOD;
     blood_info.mesh =
         AssetManager::get_mesh_by_name(std::format("Blood_Stain_{}", _blood_stain_index));

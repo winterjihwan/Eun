@@ -1,35 +1,36 @@
 #pragma once
 
-#include "CreateInfo.h"
-#include "Model.h"
-#include "Types/Animation/Animator.h"
-#include <Jolt/Jolt.h>
-#include <Jolt/Physics/Body/BodyID.h>
+#include "Types/Animation/AnimLayer.h"
+#include "Types/Renderer/SkinnedModel.h"
+#include <glm/glm.hpp>
+#include <vector>
 
 struct AnimEntity {
-  AnimEntity() = default;
-
-  void init(AnimEntityCreateInfo &&anim_entity_create_info);
-  void update(float delta_time);
-  void submit_render_item();
-
-  void play_animation(Animation *animation, float blend_time = 0.3f);
-
-  void set_model(Model *model);
-  void set_model_transform(glm::mat4 model_transform);
-  void set_collider(JPH::BodyID *collider);
-
-  const std::string &get_name();
-  Model             *get_model();
-  Animator          *get_animator();
-  glm::mat4         &get_model_transform();
+  void                    update(float delta_time);
+  void                    render();
+  void                    submit_render_item();
+  void                    play_animation(const std::string &name, float speed = 1.0f);
+  void                    play_animation(const std::vector<std::string> &names, float speed = 1.0f);
+  void                    loop_animation(const std::string &name, float speed);
+  void                    set_skinned_model(const std::string &name);
+  bool                    all_anim_states_complete();
+  std::vector<glm::mat4> &get_global_blended_bone_transforms();
+  bool                    animation_by_name_is_complete(const std::string &name);
+  void                    translate(const glm::vec3 &delta);
+  void                    set_position(const glm::vec3 &pos);
+  void                    set_rotation(const glm::vec3 &rot);
+  void                    set_scale(const glm::vec3 &scale);
+  glm::mat4               get_model_matrix();
 
 private:
-  std::string  _name;
-  Model       *_model;
-  Animator    *_animator = 0;
-  glm::mat4    _model_transform;
-  JPH::BodyID *_collider = 0;
-
-  // TODO: Render Item
+  SkinnedModel          *_skinned_model;
+  AnimLayer              _anim_layer;
+  AnimLayer              _prev_anim_layer;
+  float                  _blend_duration = 0.0f;
+  bool                   _blending       = false;
+  float                  _blend_time     = 0.0f;
+  std::vector<glm::mat4> _global_blended_bone_transforms;
+  glm::vec3              _position = glm::vec3(0.0f);
+  glm::vec3              _rotation = glm::vec3(0.0f);
+  glm::vec3              _scale    = glm::vec3(1.0f);
 };

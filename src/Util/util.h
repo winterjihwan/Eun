@@ -3,13 +3,18 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
+#include <assimp/matrix4x4.h>
+#include <assimp/quaternion.h>
 #include <glm/gtx/euler_angles.hpp>
 #include <vector>
 
 namespace Util {
 // Types
 JPH::Vec3 to_jolt_vec3(const glm::vec3 &v);
-glm::vec3 from_jolt_vec3(const JPH::Vec3 &v);
+glm::vec3 to_vec3(const JPH::Vec3 &v);
+
+// File
+std::string get_dir_from_filename(const std::string &filename);
 
 // To String
 std::string to_string(TextureType type);
@@ -32,5 +37,10 @@ std::vector<uint32_t> generate_capsule_indices(unsigned int segments);
 
 std::vector<Vertex>   generate_quad_vertices(float width, float height);
 std::vector<uint32_t> generate_quad_indices();
+
+// Assimp
+glm::mat4 to_mat4(const aiMatrix4x4 &from);
+glm::vec3 to_vec3(const aiVector3D &vec);
+glm::quat to_quat(const aiQuaternion &orientation);
 
 } // namespace Util

@@ -1,34 +1,15 @@
 #include "Player.h"
-#include "AssetManager/AssetManager.h"
 #include "Core/Game.h"
 #include "Defines.h"
 #include "Enums.h"
 #include "Keycodes.h"
 #include "Weapon/WeaponCommon.h"
-#include "World/World.h"
 #include <glm/glm.hpp>
 
 void Player::init(glm::vec3 position) {
   _position  = position;
   _character = create_character_virtual(
       glm::vec3(_position.x, _position.y, _position.z), PLAYER_HEIGHT, 0.15f);
-
-  // Animations
-  _player_animations.idle       = AssetManager::get_animation_by_name("Idle");
-  _player_animations.walk       = AssetManager::get_animation_by_name("Walk");
-  _player_animations.idle_knife = AssetManager::get_animation_by_name("Idle_Knife");
-  _player_animations.stab       = AssetManager::get_animation_by_name("Stab");
-
-  // Player Anim Entity
-  AnimEntityCreateInfo anim_entity_create_info;
-  anim_entity_create_info.name      = "Player";
-  anim_entity_create_info.model     = AssetManager::get_model_by_name("Brian");
-  anim_entity_create_info.animator  = &_player_animator;
-  anim_entity_create_info.transform = glm::translate(glm::mat4(1.0f), _position);
-
-  AnimEntity player_entity;
-  player_entity.init(std::move(anim_entity_create_info));
-  _player_anim_entity = World::add_anim_entity(std::move(player_entity));
 
   init_weapon();
 }
@@ -85,12 +66,6 @@ void Player::update_anim_entity() {
 
     break;
   }
-
-  if (animation) {
-    _player_anim_entity->play_animation(animation);
-  }
-
-  _player_anim_entity->set_model_transform(player_view_transform());
 }
 
 glm::vec3 Player::get_pos() {

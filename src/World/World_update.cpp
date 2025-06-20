@@ -65,8 +65,8 @@ void process_bullets() {
     // Bullet hole decal
     if (data->physics_type == PhysicsType::RIGID_STATIC) {
       DecalCreateInfo info;
-      info.hit_position = Util::from_jolt_vec3(hit->hit_pos);
-      info.hit_normal   = Util::from_jolt_vec3(hit->hit_normal);
+      info.hit_position = Util::to_vec3(hit->hit_pos);
+      info.hit_normal   = Util::to_vec3(hit->hit_normal);
       info.type         = DecalType::PLASTER;
       info.mesh         = AssetManager::get_mesh_by_name("Bullet_Hole");
 
@@ -86,7 +86,7 @@ void process_bullets() {
 
       // Blood Volumetric
       BloodVolumetricCreateInfo info;
-      info.position          = Util::from_jolt_vec3(hit->hit_pos);
+      info.position          = Util::to_vec3(hit->hit_pos);
       info.rotation          = glm::vec3(0.0f);
       info.front             = bullet.get_direction();
       info.exr_texture_index = blood_volumetric_index;
@@ -116,8 +116,8 @@ void process_bullets() {
           glm::vec3(Util::random_float(-0.3f, 0.3f), 0.0f, Util::random_float(-0.3f, 0.3f));
 
       DecalCreateInfo blood_info;
-      blood_info.hit_position = Util::from_jolt_vec3(decal_hit->hit_pos) + offset;
-      blood_info.hit_normal   = Util::from_jolt_vec3(decal_hit->hit_normal);
+      blood_info.hit_position = Util::to_vec3(decal_hit->hit_pos) + offset;
+      blood_info.hit_normal   = Util::to_vec3(decal_hit->hit_normal);
       blood_info.type         = DecalType::BLOOD;
       blood_info.mesh =
           AssetManager::get_mesh_by_name(std::format("Blood_Stain_{}", _blood_stain_index));

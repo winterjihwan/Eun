@@ -37,25 +37,25 @@ void init() {
   }
 
   // Npc
-  {
-    NpcCreateInfo npc_create_info;
-    npc_create_info.name            = "Npc1";
-    npc_create_info.model           = AssetManager::get_model_by_name("Brian");
-    npc_create_info.animations.idle = AssetManager::get_animation_by_name("Idle");
-    // npc_create_info.animators.walk  = AssetManager::get_animator_by_name("Brian_Walk");
-    // npc_create_info.animators.death = AssetManager::get_animator_by_name("Brian_Death");
-    npc_create_info.model_transform =
-        glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, -5.0f));
-    npc_create_info.capsule_radius   = 0.15f;
-    npc_create_info.capsule_height   = 1.5f;
-    npc_create_info.capsule_position = glm::vec3(
-        0.0f,
-        (npc_create_info.capsule_height + 2.0f * npc_create_info.capsule_radius) / 2.0f - 3.0f,
-        -5.0f);
-
-    Npc &npc = _npcs.emplace_back();
-    npc.init(std::move(npc_create_info));
-  }
+  // {
+  //   NpcCreateInfo npc_create_info;
+  //   npc_create_info.name            = "Npc1";
+  //   npc_create_info.model           = AssetManager::get_skinned_model_by_name("Brian");
+  //   npc_create_info.animations.idle = "Idle";
+  //   // npc_create_info.animators.walk  = AssetManager::get_animator_by_name("Brian_Walk");
+  //   // npc_create_info.animators.death = AssetManager::get_animator_by_name("Brian_Death");
+  //   npc_create_info.model_transform =
+  //       glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, -5.0f));
+  //   npc_create_info.capsule_radius   = 0.15f;
+  //   npc_create_info.capsule_height   = 1.5f;
+  //   npc_create_info.capsule_position = glm::vec3(
+  //       0.0f,
+  //       (npc_create_info.capsule_height + 2.0f * npc_create_info.capsule_radius) / 2.0f - 3.0f,
+  //       -5.0f);
+  //
+  //   Npc &npc = _npcs.emplace_back();
+  //   npc.init(std::move(npc_create_info));
+  // }
 }
 
 void submit_render_items() {
@@ -110,18 +110,6 @@ void add_blood_volumetric(BloodVolumetric &&blood_volumetric) {
 
 std::vector<Bullet> &get_bullets() {
   return _bullets;
-}
-
-AnimEntity *get_anim_entity_by_name(const std::string &name) {
-  for (AnimEntity &anim_entity : _anim_entities) {
-    if (name == anim_entity.get_name()) {
-      return &anim_entity;
-    }
-  }
-
-  std::cout << "World::get_anim_entity_by_name() failed, no anim entity with name: " << name
-            << std::endl;
-  assert(0);
 }
 
 std::vector<Npc> &get_npcs() {

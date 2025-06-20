@@ -12,20 +12,13 @@ std::vector<Vertex> generate_sphere_vertices(float radius, int segments) {
   for (int i = 0; i <= segments; ++i) {              // Latitude loop
     float phi = i * phiStep;                         // Latitude angle
     for (int j = 0; j <= segments; ++j) {            // Longitude loop
-      float theta = j * thetaStep;                   // Longitude angle
-      // Calculate position on the sphere
+      float     theta    = j * thetaStep;            // Longitude angle
       glm::vec3 position = glm::vec3(
           radius * sin(phi) * cos(theta), radius * cos(phi), radius * sin(phi) * sin(theta));
-      // Calculate normal (direction from sphere center)
       glm::vec3 normal = glm::normalize(position);
-      // Calculate tangent (partial derivative with respect to theta)
-      glm::vec3 tangent = glm::normalize(
-          glm::vec3(-radius * sin(phi) * sin(theta), 0.0f, radius * sin(phi) * cos(theta)));
-      // Add vertex to the vector
-      Vertex &vertex  = vertices.emplace_back();
-      vertex.position = position;
-      vertex.normal   = normal;
-      vertex.tangent  = tangent;
+      Vertex   &vertex = vertices.emplace_back();
+      vertex.position  = position;
+      vertex.normal    = normal;
     }
   }
   return vertices;
@@ -185,12 +178,12 @@ std::vector<Vertex> generate_quad_vertices(float width, float height) {
   float hw = width * 0.5f;
   float hh = height * 0.5f;
 
-  glm::vec3 normal = glm::vec3(0, 0, 1);
+  glm::vec3 normal = {0.0f, 0.0f, 1.0f};
 
-  vertices.push_back(Vertex{{-hw, -hh, 0.0f}, normal, {0.0f, 0.0f}});
-  vertices.push_back(Vertex{{hw, -hh, 0.0f}, normal, {1.0f, 0.0f}});
-  vertices.push_back(Vertex{{hw, hh, 0.0f}, normal, {1.0f, 1.0f}});
-  vertices.push_back(Vertex{{-hw, hh, 0.0f}, normal, {0.0f, 1.0f}});
+  vertices.push_back(Vertex{{-hw, -hh, 0.0f}, {0.0f, 0.0f}, normal});
+  vertices.push_back(Vertex{{hw, -hh, 0.0f}, {1.0f, 0.0f}, normal});
+  vertices.push_back(Vertex{{hw, hh, 0.0f}, {1.0f, 1.0f}, normal});
+  vertices.push_back(Vertex{{-hw, hh, 0.0f}, {0.0f, 1.0f}, normal});
 
   return vertices;
 }

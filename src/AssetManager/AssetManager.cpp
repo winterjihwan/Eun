@@ -2,7 +2,6 @@
 
 #include "Core/Game.h"
 #include "Types/Animation/Animation.h"
-#include "Types/Texture/ExrTexture.h"
 #include "UI/UIBackend.h"
 #include "World/World.h"
 #include <future>
@@ -17,9 +16,10 @@ struct DeferredTask {
 
 namespace AssetManager {
 std::vector<Model>        _models;
+std::vector<SkinnedModel> _skinned_models;
 std::vector<Mesh>         _meshes;
 std::vector<Animation>    _animations;
-std::vector<Texture>      _textures; // TODO: Remove Texture from Mesh
+std::vector<Texture>      _textures;
 std::vector<ExrTexture>   _exr_textures;
 std::vector<DeferredTask> _deferred_tasks;
 bool                      _loading_complete = false;
@@ -28,6 +28,7 @@ bool                      _loading_complete = false;
 void init() {
   // Reserve
   _models.reserve(16);
+  _skinned_models.reserve(16);
   _meshes.reserve(16);
   _animations.reserve(16);
   _textures.reserve(64);
@@ -38,33 +39,44 @@ void init() {
   {
     std::vector<Vertex>   quad_v = Util::generate_quad_vertices(30.0f, 30.0f);
     std::vector<uint32_t> quad_i = Util::generate_quad_indices();
-    std::vector<Texture>  quad_t;
 
-    _meshes.emplace_back(quad_v, quad_i, quad_t, "Plane");
+    _meshes.emplace_back(quad_v, quad_i, nullptr, "Plane");
   }
 
-  // Brian
+  // Weapon View
   {
-    Model &brian = _models.emplace_back("Brian");
-    brian.load("res/objects/Brian/Brian.gltf");
-
-    Model                &brian_knife = _models.emplace_back("Brian_Knife");
-    std::future<void>     future   = brian_knife.load_async("res/objects/Brian/Brian_Knife.gltf");
-    std::function<void()> callback = [&brian_knife]() {
-      _animations.emplace_back("Idle", "res/animations/Brian_Idle_Knife.gltf", &brian_knife);
-      _animations.emplace_back("Idle_Knife", "res/animations/Brian_Idle_Knife.gltf", &brian_knife);
-      _animations.emplace_back("Walk", "res/animations/Brian_Walk.gltf", &brian_knife);
-      _animations.emplace_back("Stab", "res/animations/Brian_Stab.gltf", &brian_knife);
-    };
-    _deferred_tasks.push_back({std::move(future), callback});
+    _skinned_models.emplace_back("Knife_View", "res/objects/Knife/Knife.fbx");
+    _skinned_models.emplace_back("Glock_View", "res/objects/Glock/Glock.fbx");
   }
 
-  // Knife
+  // Knife Animations
   {
-    Model &knife = _models.emplace_back("Knife");
+    Animation &knife_swing_0 = _animations.emplace_back();
+    knife_swing_0.init("Knife_Swing0", "res/animations/Knife/Knife_Swing0.fbx");
 
-    std::future<void> future = knife.load_async("res/objects/Knife/scene.gltf");
-    _deferred_tasks.push_back({std::move(future), 0});
+    Animation &knife_swing_1 = _animations.emplace_back();
+    knife_swing_1.init("Knife_Swing1", "res/animations/Knife/Knife_Swing1.fbx");
+
+    Animation &knife_swing_2 = _animations.emplace_back();
+    knife_swing_2.init("Knife_Swing2", "res/animations/Knife//Knife_Swing2.fbx");
+
+    Animation &knife_idle = _animations.emplace_back();
+    knife_idle.init("Knife_Idle", "res/animations/Knife/Knife_Idle.fbx");
+
+    Animation &knife_draw = _animations.emplace_back();
+    knife_draw.init("Knife_Draw", "res/animations/Knife/Knife_Draw.fbx");
+  }
+
+  // Glock Animations
+  {
+    Animation &glock_draw = _animations.emplace_back();
+    glock_draw.init("Glock_Draw", "res/animations/Glock/Glock_Draw.fbx");
+
+    Animation &glock_idle = _animations.emplace_back();
+    glock_idle.init("Glock_Idle", "res/animations/Glock/Glock_Idle.fbx");
+
+    Animation &glock_fire_0 = _animations.emplace_back();
+    glock_fire_0.init("Glock_Fire0", "res/animations/Glock/Glock_Fire0.fbx");
   }
 
   // Decal
@@ -73,45 +85,39 @@ void init() {
     {
       std::vector<Vertex>   quad_v = Util::generate_quad_vertices(0.3f, 0.3f);
       std::vector<uint32_t> quad_i = Util::generate_quad_indices();
-      std::vector<Texture>  quad_t;
-      quad_t.emplace_back("Bullet_Hole", "res/textures/Bullet_Hole.png", TextureType::DIFFUSE);
-
-      _meshes.emplace_back(quad_v, quad_i, quad_t, "Bullet_Hole");
+      Texture              *bullet_hole =
+          &_textures.emplace_back(GL_TEXTURE_2D, "res/textures/Bullet_Hole.png", "Bullet_Hole");
+      _meshes.emplace_back(quad_v, quad_i, bullet_hole, "Bullet_Hole");
     }
 
     // Bullet Hole
     {
       std::vector<Vertex>   quad_v = Util::generate_quad_vertices(0.2f, 0.2f);
       std::vector<uint32_t> quad_i = Util::generate_quad_indices();
-      std::vector<Texture>  quad_t;
-      quad_t.emplace_back("Bullet_Hole", "res/textures/Knife_Scratch.png", TextureType::DIFFUSE);
-
-      _meshes.emplace_back(quad_v, quad_i, quad_t, "Knife_Scratch");
+      Texture              *knife_scratch =
+          &_textures.emplace_back(GL_TEXTURE_2D, "res/textures/Knife_Scratch.png", "Knife_Scratch");
+      _meshes.emplace_back(quad_v, quad_i, knife_scratch, "Knife_Scratch");
     }
 
     // Blood decal
     {
-      std::vector<Vertex>   quad_v = Util::generate_quad_vertices(1.0f, 1.0f);
-      std::vector<uint32_t> quad_i = Util::generate_quad_indices();
-      std::vector<Texture>  quad_t_1;
-      quad_t_1.emplace_back(
-          "Blood_Stain_1", "res/textures/Blood/blood_decal_1.png", TextureType::DIFFUSE);
-      _meshes.emplace_back(quad_v, quad_i, quad_t_1, "Blood_Stain_1");
+      std::vector<Vertex>   quad_v        = Util::generate_quad_vertices(1.0f, 1.0f);
+      std::vector<uint32_t> quad_i        = Util::generate_quad_indices();
+      Texture              *blood_stain_1 = &_textures.emplace_back(
+          GL_TEXTURE_2D, "res/textures/Blood/blood_decal_1.png", "Blood_Stain_1");
+      _meshes.emplace_back(quad_v, quad_i, blood_stain_1, "Blood_Stain_1");
 
-      std::vector<Texture> quad_t_2;
-      quad_t_2.emplace_back(
-          "Blood_Stain_2", "res/textures/Blood/blood_decal_2.png", TextureType::DIFFUSE);
-      _meshes.emplace_back(quad_v, quad_i, quad_t_2, "Blood_Stain_2");
+      Texture *blood_stain_2 = &_textures.emplace_back(
+          GL_TEXTURE_2D, "res/textures/Blood/blood_decal_2.png", "Blood_Stain_2");
+      _meshes.emplace_back(quad_v, quad_i, blood_stain_2, "Blood_Stain_2");
 
-      std::vector<Texture> quad_t_3;
-      quad_t_3.emplace_back(
-          "Blood_Stain_3", "res/textures/Blood/blood_decal_3.png", TextureType::DIFFUSE);
-      _meshes.emplace_back(quad_v, quad_i, quad_t_3, "Blood_Stain_3");
+      Texture *blood_stain_3 = &_textures.emplace_back(
+          GL_TEXTURE_2D, "res/textures/Blood/blood_decal_3.png", "Blood_Stain_3");
+      _meshes.emplace_back(quad_v, quad_i, blood_stain_3, "Blood_Stain_3");
 
-      std::vector<Texture> quad_t_4;
-      quad_t_4.emplace_back(
-          "Blood_Stain_4", "res/textures/Blood/blood_decal_4.png", TextureType::DIFFUSE);
-      _meshes.emplace_back(quad_v, quad_i, quad_t_4, "Blood_Stain_4");
+      Texture *blood_stain_4 = &_textures.emplace_back(
+          GL_TEXTURE_2D, "res/textures/Blood/blood_decal_4.png", "Blood_Stain_4");
+      _meshes.emplace_back(quad_v, quad_i, blood_stain_4, "Blood_Stain_4");
     }
   }
 
@@ -135,10 +141,7 @@ void init() {
     };
 
     for (size_t i = 0; i < blood_model_names.size(); ++i) {
-      Model &model = _models.emplace_back(blood_model_names[i]);
-
-      std::future<void> future = model.load_async(blood_model_paths[i]);
-      _deferred_tasks.push_back({std::move(future), 0});
+      _models.emplace_back(blood_model_names[i], blood_model_paths[i]);
     }
 
     std::vector<std::string> exr_paths = {
@@ -208,16 +211,20 @@ void update_loading() {
     }
 
     // GPU Upload
-    for (Model &model : _models) {
-      model.upload_to_gpu();
+    for (Texture &texture : _textures) {
+      texture.load();
     }
 
     for (Mesh &mesh : _meshes) {
       mesh.upload_to_gpu();
     }
 
-    for (Texture &texture : _textures) {
-      texture.upload_to_gpu();
+    for (Model &model : _models) {
+      model.load();
+    }
+
+    for (SkinnedModel &skinned_model : _skinned_models) {
+      skinned_model.load();
     }
 
     for (ExrTexture &texture : _exr_textures) {
@@ -232,15 +239,94 @@ void update_loading() {
 void shutdown() {
 }
 
+Model *get_model_by_name(const std::string &name) {
+  for (Model &model : _models) {
+    if (name == model.get_name()) {
+      return &model;
+    }
+  }
+
+  std::cout << "AssetManager::get_model_by_name() failed, no model with name: " << name
+            << std::endl;
+  assert(0);
+}
+
+Model *get_model_by_index(int index) {
+  if (index >= 0 && index < _models.size()) {
+    return &_models[index];
+  } else {
+    std::cout << "AssetManager::get_model_by_index() failed, no model with name: " << index
+              << std::endl;
+    assert(0);
+  }
+}
+
+SkinnedModel *get_skinned_model_by_name(const std::string &name) {
+  for (SkinnedModel &skinned_model : _skinned_models) {
+    if (name == skinned_model.get_name()) {
+      return &skinned_model;
+    }
+  }
+
+  std::cout << "AssetManager::get_skinned_model_by_name() failed, no skinned model with name: "
+            << name << std::endl;
+  assert(0);
+}
+
+SkinnedModel *get_skinned_model_by_index(int index) {
+  if (index >= 0 && index < _skinned_models.size()) {
+    return &_skinned_models[index];
+  } else {
+    std::cout << "AssetManager::get_skinned_model_by_index() failed, no skinned model with name: "
+              << index << std::endl;
+    assert(0);
+  }
+}
+
+int get_skinned_model_index_by_name(const std::string &name) {
+  for (int i = 0; i < _skinned_models.size(); i++) {
+    if (_skinned_models[i].get_name() == name) {
+      return i;
+    }
+  }
+
+  std::cout
+      << "AssetManager::get_skinned_model_index_by_name() failed, no skinned model with name: "
+      << name << std::endl;
+  assert(0);
+}
+
 Animation *get_animation_by_name(const std::string &name) {
   for (Animation &animation : _animations) {
-    if (name == animation._name) {
+    if (animation.get_name() == name) {
       return &animation;
     }
   }
 
   std::cout << "AssetManager::get_animation_by_name() failed, no animation with name: " << name
             << std::endl;
+  assert(0);
+}
+
+Animation *get_animation_by_index(int index) {
+  if (index >= 0 && index < _animations.size()) {
+    return &_animations[index];
+  } else {
+    std::cout << "AssetManager::get_animation_model_by_index() failed, no animation with name: "
+              << index << std::endl;
+    assert(0);
+  }
+}
+
+int get_animation_index_by_name(const std::string &name) {
+  for (int i = 0; i < _animations.size(); i++) {
+    if (_animations[i].get_name() == name) {
+      return i;
+    }
+  }
+
+  std::cout << "AssetManager::get_animation_index_by_name() failed, no animation with name: "
+            << name << std::endl;
   assert(0);
 }
 
@@ -263,21 +349,9 @@ std::vector<Model> &get_models() {
   return _models;
 }
 
-Model *get_model_by_name(const std::string &name) {
-  for (auto &model : _models) {
-    if (name == model.name) {
-      return &model;
-    }
-  }
-
-  std::cout << "AssetManager::get_model_by_name() failed, no model with name: " << name
-            << std::endl;
-  assert(0);
-}
-
 Texture *get_texture_by_name(const std::string &name) {
-  for (auto &texture : _textures) {
-    if (name == texture.name) {
+  for (Texture &texture : _textures) {
+    if (name == texture.get_name()) {
       return &texture;
     }
   }
@@ -288,7 +362,7 @@ Texture *get_texture_by_name(const std::string &name) {
 }
 
 ExrTexture *get_exr_texture_by_name(const std::string &name) {
-  for (auto &texture : _exr_textures) {
+  for (ExrTexture &texture : _exr_textures) {
     if (name == texture.get_name()) {
       return &texture;
     }

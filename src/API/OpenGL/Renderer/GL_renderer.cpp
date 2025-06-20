@@ -3,6 +3,7 @@
 #include "Core/Game.h"
 #include "Defines.h"
 #include "Types/Game/AnimEntity.h"
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
 unsigned int load_cubemap(std::vector<std::string> faces);

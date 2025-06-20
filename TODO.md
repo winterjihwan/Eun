@@ -31,8 +31,9 @@
     - [x] Jump
     - [x] Knife
     - [x] Gun
-- [x] Animation Blend
-- [ ] Framebuffer Lighting
+- [x] Animation Blend In Transition
+- [ ] Multiple Animations Blending
+- [ ] Instancing using specific Draw call
 - [x] Timer
 - [ ] Custom Map
 - [ ] Map Editor
@@ -41,6 +42,7 @@
 - [ ] Item Hints
 - [ ] Interactable entities
 - [ ] G-buffer
+- [ ] Framebuffer Lighting
 - [ ] Deferred Rendering
 - [x] Z fighting  
 - [x] Async Loading
@@ -52,16 +54,16 @@
 - [ ] Hot reloading with DLL
 - [x] Third Person View
 - [ ] Perspective to Audio
-- [ ] Attach weapons to bones
-- [ ] Knife or Sledge Hammer
+- [x] Attach weapons to Animations
+- [x] Knife or Sledge Hammer
 - [ ] Arena Allocator
 - [ ] Array-ify instead of std::vector  
-- [ ] Remove dependency OpenGLRenderer <-> Player  
 - [ ] Precise Audio Handle  
 - [ ] Sanity Checks ~20% coverage
 - [ ] Npc Intelligence
 - [ ] Tresure hunting or 숨바꼭질 kind of game
     - [ ] Creatures walk buy making noise..
+- [ ] Light Volume
 
 ## When I buy Windows ...
 - [ ] Compute Skinning Pass <- Defer this to when I buy Windows, macOS only supports OpenGL 4.1. Perhaps just general compute pass

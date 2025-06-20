@@ -27,8 +27,7 @@ struct Player {
   WeaponInfo  *get_current_weapon_info();
 
 private:
-  AnimEntity      *_player_anim_entity;
-  Animator         _player_animator;
+  AnimLayer        _anim_layer;
   PlayerAnimations _player_animations;
   PlayerState      _player_state = PlayerState::IDLE;
 
