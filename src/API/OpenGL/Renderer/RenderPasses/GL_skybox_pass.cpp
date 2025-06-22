@@ -24,7 +24,7 @@ void skybox_pass() {
 
   glBindVertexArray(_sky_vao);
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, _cubemap_views["NightSky"].get_handle());
+  glBindTexture(GL_TEXTURE_CUBE_MAP, _cubemap_views["Sky"].get_handle());
   glDrawArrays(GL_TRIANGLES, 0, 36);
   glBindVertexArray(0);
   glDepthFunc(GL_LESS);
