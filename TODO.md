@@ -35,6 +35,8 @@
 - [ ] Instancing using specific Draw call
 - [x] Timer
 - [x] New Animation System
+- [ ] FPS UI
+- [x] New Skybox + Floor
 - [ ] Crosshair
 - [ ] FPS Governor
 - [ ] Custom Map

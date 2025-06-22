@@ -39,7 +39,8 @@ void init() {
   {
     std::vector<Vertex>   quad_v = Util::generate_quad_vertices(30.0f, 30.0f);
     std::vector<uint32_t> quad_i = Util::generate_quad_indices();
-    Texture *marble = &_textures.emplace_back(GL_TEXTURE_2D, "res/textures/marble.jpg", "Marble");
+    Texture              *marble =
+        &_textures.emplace_back(GL_TEXTURE_2D, "res/textures/Laminate_Floor.jpg", "Laminate_Floor");
 
     _meshes.emplace_back(quad_v, quad_i, marble, "Plane");
   }

@@ -18,12 +18,12 @@ void OpenGLCubemapView::create_cubemap() {
 
   // HACK
   std::vector<std::string> faces{
-      "res/textures/NightSky/NightSky_Right.png",
-      "res/textures/NightSky/NightSky_Left.png",
-      "res/textures/NightSky/NightSky_Top.png",
-      "res/textures/NightSky/NightSky_Bottom.png",
-      "res/textures/NightSky/NightSky_Front.png",
-      "res/textures/NightSky/NightSky_Back.png",
+      "res/textures/SkyWater/right.jpg",
+      "res/textures/SkyWater/left.jpg",
+      "res/textures/SkyWater/top.jpg",
+      "res/textures/SkyWater/bottom.jpg",
+      "res/textures/SkyWater/front.jpg",
+      "res/textures/SkyWater/back.jpg",
   };
 
   int width, height, nrChannels;
@@ -32,11 +32,11 @@ void OpenGLCubemapView::create_cubemap() {
     if (data) {
       glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
                    0,
-                   GL_RGBA,
+                   GL_RGB,
                    width,
                    height,
                    0,
-                   GL_RGBA,
+                   GL_RGB,
                    GL_UNSIGNED_BYTE,
                    data);
       stbi_image_free(data);

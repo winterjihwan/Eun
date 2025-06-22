@@ -34,12 +34,16 @@ void init() {
   knife.type                 = WeaponType::KNIFE;
   knife.animation_names.idle = "Knife_Idle";
   knife.animation_names.draw = "Knife_Draw";
-  knife.animation_names.stab = "Knife_Swing0";
-  knife.audio_files.stab     = "Glock_Fire.wav";
-  knife.damage               = 25;
-  knife.offset_pos           = glm::vec3(0.0f, 0.0f, 0.0f);
-  knife.offset_rot           = glm::radians(glm::vec3(0.0f, 0.0f, 0.0f));
-  knife.offset_scale         = glm::vec3(100.0f);
+  knife.animation_names.stab = std::vector<std::string>{
+      "Knife_Swing0",
+      "Knife_Swing1",
+      "Knife_Swing2",
+  };
+  knife.audio_files.stab = "Glock_Fire.wav";
+  knife.damage           = 25;
+  knife.offset_pos       = glm::vec3(0.0f, 0.0f, 0.0f);
+  knife.offset_rot       = glm::radians(glm::vec3(0.0f, 0.0f, 0.0f));
+  knife.offset_scale     = glm::vec3(100.0f);
 }
 
 int get_weapon_count() {

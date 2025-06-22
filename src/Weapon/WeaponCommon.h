@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include <vector>
 
 enum class WeaponType {
   HAND = 0,
@@ -19,7 +20,7 @@ struct AnimationNames {
   std::string reload;
 
   // Knife
-  std::string stab;
+  std::vector<std::string> stab;
 };
 
 struct AudioFiles {

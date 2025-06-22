@@ -29,9 +29,6 @@ bool Texture::load() {
     // exit(0);
   }
 
-  std::cout << "Width " << _image_width << ", Height " << _image_height << ", bpp " << _image_bpp
-            << std::endl;
-
   load_internal(stbi_data);
   return true;
 }
