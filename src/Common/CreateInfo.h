@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Enums.h"
-#include "Types/Animation/Animation.h"
 #include "Types/Renderer/Mesh.h"
-#include "Types/Renderer/SkinnedModel.h"
+#include "Types/Renderer/Model.h"
 #include <glm/glm.hpp>
 
 struct BulletCreateInfo {
@@ -23,17 +22,18 @@ struct DecalCreateInfo {
 
 struct NpcAnimations {
   std::string idle;
-  std::string walk;
-  std::string death;
+  // std::string death;
 };
 
 struct NpcCreateInfo {
   NpcCreateInfo() = default;
 
   std::string   name;
-  SkinnedModel *model;
+  std::string   skinned_model;
   NpcAnimations animations;
-  glm::mat4     model_transform = glm::mat4(1.0f);
+  glm::vec3     position = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3     rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3     scale    = glm::vec3(1.0f, 1.0f, 1.0f);
 
   // Collider Capsule
   float     capsule_radius;
@@ -52,24 +52,8 @@ struct BloodVolumetricCreateInfo {
   glm::vec3 front;
 };
 
-struct AnimEntityCreateInfo {
-  std::string name;
-  Model      *model;
-  glm::mat4   transform;
-};
-
 struct EntityCreateInfo {
   std::string                   name;
   std::variant<Model *, Mesh *> renderable;
   glm::mat4                     transform;
-};
-
-struct PlayerAnimations {
-  // Base
-  Animation *idle;
-  Animation *walk;
-
-  // Knife
-  Animation *idle_knife;
-  Animation *stab;
 };

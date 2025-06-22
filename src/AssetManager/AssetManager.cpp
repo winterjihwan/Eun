@@ -39,14 +39,22 @@ void init() {
   {
     std::vector<Vertex>   quad_v = Util::generate_quad_vertices(30.0f, 30.0f);
     std::vector<uint32_t> quad_i = Util::generate_quad_indices();
+    Texture *marble = &_textures.emplace_back(GL_TEXTURE_2D, "res/textures/marble.jpg", "Marble");
 
-    _meshes.emplace_back(quad_v, quad_i, nullptr, "Plane");
+    _meshes.emplace_back(quad_v, quad_i, marble, "Plane");
   }
 
   // Weapon View
   {
     _skinned_models.emplace_back("Knife_View", "res/objects/Knife/Knife.fbx");
     _skinned_models.emplace_back("Glock_View", "res/objects/Glock/Glock.fbx");
+  }
+
+  // Mannequin
+  {
+    _skinned_models.emplace_back("Mannequin", "res/objects/Mannequin/Mannequin_Idle.fbx");
+    Animation &mannequin_idle = _animations.emplace_back();
+    mannequin_idle.init("Mannequin_Idle", "res/objects/Mannequin/Mannequin_Idle.fbx");
   }
 
   // Knife Animations
@@ -77,6 +85,15 @@ void init() {
 
     Animation &glock_fire_0 = _animations.emplace_back();
     glock_fire_0.init("Glock_Fire0", "res/animations/Glock/Glock_Fire0.fbx");
+
+    Animation &glock_fire_1 = _animations.emplace_back();
+    glock_fire_1.init("Glock_Fire1", "res/animations/Glock/Glock_Fire1.fbx");
+
+    Animation &glock_fire_2 = _animations.emplace_back();
+    glock_fire_2.init("Glock_Fire2", "res/animations/Glock/Glock_Fire2.fbx");
+
+    Animation &glock_reload = _animations.emplace_back();
+    glock_reload.init("Glock_Reload", "res/animations/Glock/Glock_Reload.fbx");
   }
 
   // Decal

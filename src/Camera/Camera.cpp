@@ -34,6 +34,7 @@ void Camera::update(const glm::vec3 &watch) {
   }
 
   if (_view_mode == ViewMode::FIRST) {
+    first_person_view(watch);
     _view = glm::lookAt(watch, watch + _front, _up);
   } else {
     third_person_view(watch);

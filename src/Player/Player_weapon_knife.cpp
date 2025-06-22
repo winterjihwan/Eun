@@ -10,8 +10,12 @@ void Player::update_weapon_knife(float delta_time) {
 }
 
 void Player::stab() {
-
-  float stab_delay = 0.4f;
-  TimerManager::add_timer(stab_delay, [this]() { perform_stab(); });
+  // Animation
+  WeaponInfo *weapon_info = get_current_weapon_info();
+  _weapon_view.play_animation(weapon_info->animation_names.stab);
   _weapon_action = WeaponAction::STAB;
+
+  // Extra
+  float stab_delay = 0.0f;
+  TimerManager::add_timer(stab_delay, [this]() { perform_stab(); });
 }

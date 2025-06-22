@@ -1,5 +1,6 @@
 #include "API/OpenGL/Renderer/GL_cubemapView.h"
 #include "Core/Game.h"
+#include "Types/Renderer/Shader.h"
 
 namespace OpenGLRenderer {
 extern std::unordered_map<std::string, Shader>            _shaders;

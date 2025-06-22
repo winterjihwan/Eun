@@ -3,6 +3,7 @@
 #include "Core/Game.h"
 #include "Defines.h"
 #include "Types/Game/AnimEntity.h"
+#include "Types/Renderer/Shader.h"
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 

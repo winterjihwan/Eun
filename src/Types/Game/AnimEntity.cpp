@@ -2,6 +2,7 @@
 #include "AssetManager/AssetManager.h"
 #include "Renderer/RenderDataManager.h"
 #include "Util/Util.h"
+#include <glm/gtx/quaternion.hpp>
 
 void AnimEntity::update(float delta_time) {
   if (!_skinned_model) {
@@ -79,6 +80,10 @@ void AnimEntity::set_skinned_model(const std::string &name) {
   _anim_layer.set_skinned_model(name);
 }
 
+void AnimEntity::set_name(const std::string &name) {
+  _name = name;
+}
+
 void AnimEntity::translate(const glm::vec3 &delta) {
   _position += delta;
 }
@@ -95,13 +100,22 @@ void AnimEntity::set_scale(const glm::vec3 &scale) {
   _scale = scale;
 }
 
+void AnimEntity::set_quat(const glm::quat &quat) {
+  _quat = quat;
+}
+
+const std::string &AnimEntity::get_name() {
+  return _name;
+}
+
 glm::mat4 AnimEntity::get_model_matrix() {
   glm::mat4 model = glm::mat4(1.0f);
   model           = glm::translate(model, _position);
   model           = glm::rotate(model, glm::radians(_rotation.x), glm::vec3(1, 0, 0));
   model           = glm::rotate(model, glm::radians(_rotation.y), glm::vec3(0, 1, 0));
   model           = glm::rotate(model, glm::radians(_rotation.z), glm::vec3(0, 0, 1));
-  model           = glm::scale(model, _scale);
+  model *= glm::toMat4(_quat);
+  model = glm::scale(model, _scale);
   return model;
 }
 

@@ -6,9 +6,7 @@
 enum class WeaponType {
   HAND = 0,
   KNIFE,
-  HANDGUN,
-  SHOTGUN,
-  AUTOMATIC,
+  GLOCK,
   UNDEFINED,
 };
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Camera/Camera.h"
-#include "CreateInfo.h"
 #include "Enums.h"
 #include "Types/Game/AnimEntity.h"
 #include "Weapon/WeaponCommon.h"
@@ -27,9 +26,7 @@ struct Player {
   WeaponInfo  *get_current_weapon_info();
 
 private:
-  AnimLayer        _anim_layer;
-  PlayerAnimations _player_animations;
-  PlayerState      _player_state = PlayerState::IDLE;
+  PlayerState _player_state = PlayerState::IDLE;
 
   JPH::CharacterVirtual *_character;
   float                  _speed = 5.0f;
@@ -46,7 +43,11 @@ private:
 
   void update_flashlight();
 
+  // Weapon View
+  void update_weapon_view(float delta_time);
+
   // Weapon
+  AnimEntity               _weapon_view;
   WeaponType               _current_weapon_type  = WeaponType::HAND;
   int                      _current_weapon_index = 0;
   std::vector<WeaponState> _weapon_states;

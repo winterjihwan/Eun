@@ -18,6 +18,7 @@ void anim_pass() {
   for (AnimEntity *anim_entity : anim_entities) {
     std::vector<glm::mat4> transforms = anim_entity->get_global_blended_bone_transforms();
 
+    // Bones
     for (uint i = 0; i < transforms.size(); i++) {
       if (i >= MAX_BONES) {
         std::cout << "INCREASE MAX_BONES" << std::endl;
@@ -27,7 +28,8 @@ void anim_pass() {
       shader.setMat4(name.c_str(), transforms[i]);
     }
 
-    shader.setMat4("model", anim_entity->get_model_matrix());
+    glm::mat4 model = anim_entity->get_model_matrix();
+    shader.setMat4("model", model);
     anim_entity->render();
   }
 }

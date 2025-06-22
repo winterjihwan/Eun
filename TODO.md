@@ -2,7 +2,6 @@
 
 - [x] Hand Animation  
 - [x] Character Controller
-- [ ] Better Animation System
 - [x] Animation 'Play' upon consecutive event trigger
 - [ ] Shadows
 - [x] Audio  
@@ -35,6 +34,9 @@
 - [ ] Multiple Animations Blending
 - [ ] Instancing using specific Draw call
 - [x] Timer
+- [x] New Animation System
+- [ ] Crosshair
+- [ ] FPS Governor
 - [ ] Custom Map
 - [ ] Map Editor
 - [ ] Dialogue System

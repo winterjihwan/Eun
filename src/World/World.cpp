@@ -37,25 +37,23 @@ void init() {
   }
 
   // Npc
-  // {
-  //   NpcCreateInfo npc_create_info;
-  //   npc_create_info.name            = "Npc1";
-  //   npc_create_info.model           = AssetManager::get_skinned_model_by_name("Brian");
-  //   npc_create_info.animations.idle = "Idle";
-  //   // npc_create_info.animators.walk  = AssetManager::get_animator_by_name("Brian_Walk");
-  //   // npc_create_info.animators.death = AssetManager::get_animator_by_name("Brian_Death");
-  //   npc_create_info.model_transform =
-  //       glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, -5.0f));
-  //   npc_create_info.capsule_radius   = 0.15f;
-  //   npc_create_info.capsule_height   = 1.5f;
-  //   npc_create_info.capsule_position = glm::vec3(
-  //       0.0f,
-  //       (npc_create_info.capsule_height + 2.0f * npc_create_info.capsule_radius) / 2.0f - 3.0f,
-  //       -5.0f);
-  //
-  //   Npc &npc = _npcs.emplace_back();
-  //   npc.init(std::move(npc_create_info));
-  // }
+  {
+    NpcCreateInfo npc_create_info;
+    npc_create_info.name             = "Npc1";
+    npc_create_info.skinned_model    = "Mannequin";
+    npc_create_info.animations.idle  = "Mannequin_Idle";
+    npc_create_info.position         = glm::vec3(0.0f, -3.0f, -5.0f);
+    npc_create_info.scale            = glm::vec3(.01f, .01f, .01f);
+    npc_create_info.capsule_radius   = 0.15f;
+    npc_create_info.capsule_height   = 1.5f;
+    npc_create_info.capsule_position = glm::vec3(
+        0.0f,
+        (npc_create_info.capsule_height + 2.0f * npc_create_info.capsule_radius) / 2.0f - 3.0f,
+        -5.0f); // TODO: Capsule position based on position
+
+    Npc &npc = _npcs.emplace_back();
+    npc.init(std::move(npc_create_info));
+  }
 }
 
 void submit_render_items() {

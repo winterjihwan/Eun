@@ -26,9 +26,9 @@ void Player::init_weapon() {
     state.has          = false;
   }
 
-  // Default weapons
-  // TODO: Equip immediately
+  // Owned Weapons
   give_weapon("Knife");
+  _weapon_action = WeaponAction::IDLE;
 }
 
 void Player::update_weapon(float delta_time) {
@@ -41,8 +41,6 @@ void Player::update_weapon(float delta_time) {
   }
 
   WeaponInfo *weapon_info = get_current_weapon_info();
-  // WeaponState *weapon_state = get_current_weapon_state();
-
   if (!weapon_info) {
     return;
   }
@@ -52,31 +50,16 @@ void Player::update_weapon(float delta_time) {
   case WeaponType::KNIFE:
     update_weapon_knife(delta_time);
     break;
-  case WeaponType::HANDGUN:
+  case WeaponType::GLOCK:
     update_weapon_gun(delta_time);
     break;
   default:;
   };
 
   // Animation
-  switch (_weapon_action) {
-  case WeaponAction::DRAW:
-    // if (_current_weapon_type == WeaponType::HANDGUN) {
-    //   _player_animator.play_animation(_player_animations.gun_draw);
-    // }
-    break;
-  case WeaponAction::STAB:
-    _player_state = PlayerState::STAB;
-    // TODO
-    // if (_player_animator.is_complete()) {
-    //   _weapon_action = WeaponAction::IDLE;
-    // }
-    break;
-  case WeaponAction::FIRE:
-    // _player_animator.play_animation(_player_animations.gun_fire);
-    break;
-  default:
-    break;
+  if (_weapon_view.all_anim_states_complete()) {
+    _weapon_action = WeaponAction::IDLE;
+    _weapon_view.loop_animation(weapon_info->animation_names.idle);
   }
 }
 
@@ -115,10 +98,14 @@ void Player::switch_weapon(const std::string &name) {
 
   _current_weapon_type = weapon_info->type;
   _weapon_action       = WeaponAction::DRAW;
+  _weapon_view.play_animation(weapon_info->animation_names.draw);
 
   if (weapon_info->type == WeaponType::KNIFE) {
-    // Model *brian_knife = AssetManager::get_model_by_name("Brian_Knife");
-    // _player_anim_entity->set_model(brian_knife);
+    _weapon_view.set_skinned_model("Knife_View");
+    // _weapon_view.set_rotation(glm::vec3(0.0f, 0.0f, 0.0f));
+  } else if (weapon_info->type == WeaponType::GLOCK) {
+    _weapon_view.set_skinned_model("Glock_View");
+    // _weapon_view.set_rotation(glm::vec3(0.0f, -160.0f, 0.0f));
   }
 }
 
@@ -150,6 +137,7 @@ void Player::spawn_bullet(float variance) {
 }
 
 void Player::perform_stab() {
+  // Decals
   Camera *camera = Game::get_camera();
 
   JPH::Vec3 origin    = Util::to_jolt_vec3(_position);

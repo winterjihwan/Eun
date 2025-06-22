@@ -17,8 +17,7 @@ enum class DecalType {
 
 enum class NpcState {
   IDLE = 0,
-  WALK,
-  DEATH,
+  // DEATH,
 };
 
 enum class PhysicsType {

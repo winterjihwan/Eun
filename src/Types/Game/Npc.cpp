@@ -9,18 +9,15 @@
 
 // TODO: Npc Create Info
 void Npc::init(NpcCreateInfo &&npc_create_info) {
-  _name            = npc_create_info.name;
-  _model           = npc_create_info.model;
-  _npc_animations  = npc_create_info.animations;
-  _model_transform = npc_create_info.model_transform;
-  _npc_state       = npc_create_info.npc_state;
+  _name           = npc_create_info.name;
+  _npc_animations = npc_create_info.animations;
+  _npc_state      = npc_create_info.npc_state;
 
-  AnimEntityCreateInfo npc_entity_create_info;
-  npc_entity_create_info.name      = _name;
-  npc_entity_create_info.model     = _model;
-  npc_entity_create_info.transform = _model_transform;
-
-  // _npc_entity.init(std::move(npc_entity_create_info));
+  _npc_entity.set_name(npc_create_info.name);
+  _npc_entity.set_skinned_model(npc_create_info.skinned_model);
+  _npc_entity.set_position(npc_create_info.position);
+  _npc_entity.set_rotation(npc_create_info.rotation);
+  _npc_entity.set_scale(npc_create_info.scale);
 
   // Physics
   float     capsule_radius   = npc_create_info.capsule_radius;
@@ -44,23 +41,29 @@ void Npc::init(NpcCreateInfo &&npc_create_info) {
   bi.AddBody(body->GetID(), EActivation::Activate);
 
   _collider = body->GetID();
-  // _npc_entity.set_collider(&_collider);
 }
 
 void Npc::update(float delta_time) {
-  switch (_npc_state) {
-  case NpcState::IDLE:
-    _npc_entity.play_animation(_npc_animations.idle);
-    break;
-  case NpcState::WALK:
-    _npc_entity.play_animation(_npc_animations.walk);
-    break;
-  case NpcState::DEATH:
-    _npc_entity.play_animation(_npc_animations.death);
-    break;
+  // Animation
+  if (_npc_state == NpcState::IDLE) {
+    _npc_entity.loop_animation(_npc_animations.idle);
   }
 
   _npc_entity.update(delta_time);
+
+  // Collider
+  const Body *body = Physics::get_physics_system().GetBodyLockInterface().TryGetBody(_collider);
+  if (body) {
+    RVec3 pos = body->GetCenterOfMassPosition();
+
+    // HACK: Subtract capsule height by half
+    _model_transform =
+        glm::translate(glm::mat4(1.0f), glm::vec3(pos.GetX(), pos.GetY() - 0.9f, pos.GetZ()));
+  } else {
+    std::cout << "AnimEntity::update(), No body found for body_id: " << _collider.GetIndex()
+              << std::endl;
+    assert(0);
+  }
 }
 
 AnimEntity *Npc::get_anim_entity() {
