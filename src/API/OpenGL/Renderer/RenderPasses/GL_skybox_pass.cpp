@@ -19,8 +19,8 @@ void skybox_pass() {
                                Game::get_player()->get_pos() + Game::get_camera()->get_front(),
                                Game::get_camera()->get_up());
   view           = glm::mat4(glm::mat3(view));
-  shader.setMat4("view", view);
-  shader.setMat4("projection", _projection);
+  shader.setMat4("u_view", view);
+  shader.setMat4("u_projection", _projection);
 
   glBindVertexArray(_sky_vao);
   glActiveTexture(GL_TEXTURE0);

@@ -40,8 +40,8 @@ void geometry_pass() {
   shader.setFloat("flashLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
   // Model Shader
-  shader.setMat4("projection", _projection);
-  shader.setMat4("view", _view);
+  shader.setMat4("u_projection", _projection);
+  shader.setMat4("u_view", _view);
 
   // TODO: Move below to World.cpp
   // TODO: Use custom Map
@@ -49,7 +49,7 @@ void geometry_pass() {
   // Map
   glm::mat4 map = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, 0.0f));
   map           = glm::rotate(map, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  shader.setMat4("model", map);
+  shader.setMat4("u_model", map);
   Mesh *plane = AssetManager::get_mesh_by_name("Plane");
   plane->draw(shader);
 

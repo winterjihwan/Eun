@@ -2,7 +2,7 @@
 
 out vec4 FragColor;
 
-in vec3 v_WorldNormal;
+in vec3 WorldNormal;
 
 uniform float u_Time;
 

@@ -8,15 +8,15 @@ uniform mat4 u_model;
 uniform mat4 u_view;
 uniform mat4 u_projection;
 
-out vec3 vFragPos;
-out vec3 vNormal;
-out vec2 vUV;
+out vec3 FragPos;
+out vec3 Normal;
+out vec2 UV;
 
 void main()
 {
-    vFragPos = vec3(u_model * vec4(aPos, 1.0));
-    vNormal = mat3(transpose(inverse(u_model))) * aNormal;
-    vUV = aUV;
+    FragPos = vec3(u_model * vec4(aPos, 1.0));
+    Normal = mat3(transpose(inverse(u_model))) * aNormal;
+    UV = aUV;
 
     gl_Position = u_projection * u_view * u_model * vec4(aPos, 1.0);
 }

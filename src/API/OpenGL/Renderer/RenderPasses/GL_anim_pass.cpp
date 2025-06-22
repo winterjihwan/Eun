@@ -10,8 +10,8 @@ void anim_pass() {
   Shader shader = _shaders["Anim"];
 
   shader.use();
-  shader.setMat4("projection", _projection);
-  shader.setMat4("view", _view);
+  shader.setMat4("u_projection", _projection);
+  shader.setMat4("u_view", _view);
 
   // Anim Entities
   std::vector<AnimEntity *> anim_entities = RenderDataManager::get_anim_entities();
@@ -24,12 +24,12 @@ void anim_pass() {
         std::cout << "INCREASE MAX_BONES" << std::endl;
         exit(1);
       }
-      std::string name = "bones[" + std::to_string(i) + "]";
+      std::string name = "u_bones[" + std::to_string(i) + "]";
       shader.setMat4(name.c_str(), transforms[i]);
     }
 
     glm::mat4 model = anim_entity->get_model_matrix();
-    shader.setMat4("model", model);
+    shader.setMat4("u_model", model);
     anim_entity->render();
   }
 }

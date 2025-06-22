@@ -2,13 +2,13 @@
 
 out vec4 FragColor;
 
-in vec2 vUV;
+in vec2 UV;
 
-uniform sampler2D texture_diffuse1;
+uniform sampler2D sampler;
 
 void main()
 {
-    vec4 baseColor = texture(texture_diffuse1, vUV);
+    vec4 baseColor = texture(sampler, UV);
 
     if (baseColor.a < 0.5) {
         discard;
