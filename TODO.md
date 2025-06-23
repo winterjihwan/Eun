@@ -35,6 +35,7 @@
 - [ ] Instancing using specific Draw call
 - [x] Timer
 - [x] New Animation System
+- [ ] Lighting Rework
 - [ ] FPS UI
 - [x] New Skybox + Floor
 - [ ] Crosshair

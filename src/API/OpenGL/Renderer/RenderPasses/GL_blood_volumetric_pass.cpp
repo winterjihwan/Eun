@@ -9,11 +9,7 @@ extern glm::mat4                                          _view;
 extern glm::mat4                                          _projection;
 
 void blood_volumetric_pass() {
-  Shader            &shader   = _shaders["BloodVolumetric"];
-  OpenGLFrameBuffer &g_buffer = _frame_buffers["G_Buffer"];
-
-  g_buffer.bind();
-  g_buffer.draw_buffers({"Position", "Normal", "AlbedoSpec"});
+  Shader &shader = _shaders["BloodVolumetric"];
 
   std::vector<BloodVolumetric *> blood_volumetrics = RenderDataManager::get_blood_volumetrics();
 
@@ -48,7 +44,5 @@ void blood_volumetric_pass() {
 
   glDisable(GL_CULL_FACE);
   glBindVertexArray(0);
-
-  g_buffer.unbind();
 }
 } // namespace OpenGLRenderer

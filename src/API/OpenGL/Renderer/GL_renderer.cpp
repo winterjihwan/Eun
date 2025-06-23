@@ -68,14 +68,15 @@ void render_game() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
   // Deferred Pass
+  g_buffer.clear_bind();
   geometry_pass();
   anim_pass();
-  blood_volumetric_pass();
-  decal_pass();
   light_pass();
 
   // Forward Pass
   g_buffer.blit_and_bind_to_default_frame_buffer();
+  blood_volumetric_pass();
+  decal_pass();
   skybox_pass();
   ui_pass();
 }

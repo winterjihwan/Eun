@@ -14,5 +14,5 @@ void main()
     gPosition = FragPos;
     gNormal = normalize(Normal);
     gAlbedoSpec.rgb = texture(sampler, UV).rgb;
-    gAlbedoSpec.a = 0.2f;
+    gAlbedoSpec.a = 1.0f;
 }

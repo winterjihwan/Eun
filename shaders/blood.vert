@@ -12,9 +12,7 @@ uniform float u_time;
 uniform sampler2D u_posTex;
 uniform sampler2D u_normTex;
 
-out vec3 FragPos;
-out vec2 UV;
-out vec3 Normal;
+out vec3 WorldNormal;
 
 void main() {
     int numOfFrames = 81;
@@ -28,13 +26,13 @@ void main() {
     vec4 texturePos = textureLod(u_posTex, vec2(uv.x, timeInFrames + uv.y), 0.0);
     vec4 textureNorm = textureLod(u_normTex, vec2(uv.x, timeInFrames + uv.y), 0.0);
 
-    vec3 worldNormal = textureNorm.xzy * 2.0 - 1.0;
-    mat3 normalMatrix = transpose(inverse(mat3(u_model)));
-    Normal = normalize(normalMatrix * worldNormal);
+    WorldNormal = textureNorm.xzy * 2.0 - 1.0;
 
-    vec4 worldPos = u_model * vec4(texturePos.xzy, 1.0f);
-    FragPos = worldPos.xyz;
-    UV = aUV;
+    mat3 t = mat3(cross(u_model[1].xyz, u_model[2].xyz),
+            cross(u_model[2].xyz, u_model[0].xyz),
+            cross(u_model[0].xyz, u_model[1].xyz));
 
-    gl_Position = u_projection * u_view * worldPos;
+    WorldNormal = t * WorldNormal;
+
+    gl_Position = u_projection * u_view * u_model * vec4(texturePos.xzy, 1.0);
 }

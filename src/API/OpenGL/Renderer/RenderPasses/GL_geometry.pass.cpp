@@ -15,7 +15,6 @@ void geometry_pass() {
 
   g_buffer.bind();
   g_buffer.draw_buffers({"Position", "Normal", "AlbedoSpec"});
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // HACK: First g_buffer bind in the frame
 
   shader.use();
 

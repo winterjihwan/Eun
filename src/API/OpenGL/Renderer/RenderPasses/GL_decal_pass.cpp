@@ -9,12 +9,8 @@ extern glm::mat4                                          _view;
 extern glm::mat4                                          _projection;
 
 void decal_pass() {
-  Shader            &shader             = _shaders["Decal"];
-  Shader            &shader_decal_blood = _shaders["DecalBlood"]; // TODO: Neater code
-  OpenGLFrameBuffer &g_buffer           = _frame_buffers["G_Buffer"];
-
-  g_buffer.bind();
-  g_buffer.draw_buffers({"Position", "Normal", "AlbedoSpec"});
+  Shader &shader             = _shaders["Decal"];
+  Shader &shader_decal_blood = _shaders["DecalBlood"]; // TODO: Neater code
 
   shader.use();
   shader.setMat4("u_view", _view);
@@ -49,8 +45,6 @@ void decal_pass() {
   glDepthMask(GL_TRUE);
   glDisable(GL_BLEND);
   glBindVertexArray(0);
-
-  g_buffer.unbind();
 }
 
 } // namespace OpenGLRenderer

@@ -39,6 +39,7 @@ public:
   void   create_depth_attachment();
   void   bind();
   void   unbind();
+  void   clear_bind();
   void   draw_buffers(std::vector<const char *> names);
   void   blit_and_bind_to_default_frame_buffer();
   void   blit_to_default_frame_buffer();

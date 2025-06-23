@@ -60,6 +60,11 @@ void OpenGLFrameBuffer::unbind() {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void OpenGLFrameBuffer::clear_bind() {
+  bind();
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 void OpenGLFrameBuffer::draw_buffers(std::vector<const char *> names) {
   std::vector<GLuint> attachments;
   for (const char *name : names) {
