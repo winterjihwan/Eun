@@ -1,19 +1,25 @@
+#include "API/OpenGL/Renderer/GL_frameBuffer.h"
 #include "Renderer/RenderDataManager.h"
 #include "Types/Game/BloodVolumetric.h"
 
 namespace OpenGLRenderer {
-extern std::unordered_map<std::string, Shader> _shaders;
-extern glm::mat4                               _view;
-extern glm::mat4                               _projection;
+extern std::unordered_map<std::string, Shader>            _shaders;
+extern std::unordered_map<std::string, OpenGLFrameBuffer> _frame_buffers;
+extern glm::mat4                                          _view;
+extern glm::mat4                                          _projection;
 
 void blood_volumetric_pass() {
-  Shader                        &shader            = _shaders["BloodVolumetric"];
+  Shader            &shader   = _shaders["BloodVolumetric"];
+  OpenGLFrameBuffer &g_buffer = _frame_buffers["G_Buffer"];
+
+  g_buffer.bind();
+  g_buffer.draw_buffers({"Position", "Normal", "AlbedoSpec"});
+
   std::vector<BloodVolumetric *> blood_volumetrics = RenderDataManager::get_blood_volumetrics();
 
-  glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
-  glDisable(GL_BLEND);
   glCullFace(GL_BACK);
+  glDisable(GL_BLEND);
 
   shader.use();
   shader.setMat4("u_view", _view);
@@ -40,8 +46,9 @@ void blood_volumetric_pass() {
     blood_volumetric->get_model()->render();
   }
 
-  glDepthMask(GL_TRUE);
   glDisable(GL_CULL_FACE);
   glBindVertexArray(0);
+
+  g_buffer.unbind();
 }
 } // namespace OpenGLRenderer

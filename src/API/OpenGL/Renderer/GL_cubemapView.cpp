@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stb_image/stb_image.h>
 
-OpenGLCubemapView::OpenGLCubemapView() {
+void OpenGLCubemapView::init() {
   create_cubemap();
 }
 
@@ -16,7 +16,6 @@ void OpenGLCubemapView::create_cubemap() {
   glGenTextures(1, &_handle);
   glBindTexture(GL_TEXTURE_CUBE_MAP, _handle);
 
-  // HACK
   std::vector<std::string> faces{
       "res/textures/SkyWater/right.jpg",
       "res/textures/SkyWater/left.jpg",

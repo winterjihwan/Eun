@@ -35,6 +35,14 @@ void init() {
   _exr_textures.reserve(36);
   _deferred_tasks.reserve(16);
 
+  // G_Buffer
+  {
+    std::vector<Vertex>   quad_v = Util::generate_quad_vertices(2.0f, 2.0f);
+    std::vector<uint32_t> quad_i = Util::generate_quad_indices();
+
+    _meshes.emplace_back(quad_v, quad_i, nullptr, "G_Buffer");
+  }
+
   // Plane
   {
     std::vector<Vertex>   quad_v = Util::generate_quad_vertices(30.0f, 30.0f);

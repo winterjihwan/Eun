@@ -9,14 +9,17 @@ uniform mat4 u_view;
 uniform mat4 u_projection;
 
 out vec3 FragPos;
-out vec3 Normal;
 out vec2 UV;
+out vec3 Normal;
 
 void main()
 {
-    FragPos = vec3(u_model * vec4(aPos, 1.0));
-    Normal = mat3(transpose(inverse(u_model))) * aNormal;
+    vec4 worldPos = u_model * vec4(aPos, 1.0);
+    FragPos = worldPos.xyz;
     UV = aUV;
 
-    gl_Position = u_projection * u_view * u_model * vec4(aPos, 1.0);
+    mat3 normalMatrix = transpose(inverse(mat3(u_model)));
+    Normal = normalMatrix * aNormal;
+
+    gl_Position = u_projection * u_view * worldPos;
 }

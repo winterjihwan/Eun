@@ -1,4 +1,5 @@
 #include "GLFW.h"
+#include "Backend/Backend.h"
 #include "Defines.h"
 #include <iostream>
 
@@ -27,15 +28,13 @@ bool init() {
     return false;
   }
 
-  int fbWidth, fbHeight;
-  glfwGetFramebufferSize(_window, &fbWidth, &fbHeight);
-  glViewport(0, 0, fbWidth, fbHeight);
+  Viewport viewport = Backend::get_viewport();
+
+  glfwGetFramebufferSize(_window, viewport.width, viewport.height);
+  glViewport(0, 0, *viewport.width, *viewport.height);
   glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
 
   glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-  // TODO: Separate enables
-  glEnable(GL_DEPTH_TEST);
 
   return true;
 }

@@ -1,14 +1,17 @@
 #version 410 core
 
-out vec4 FragColor;
+layout(location = 0) out vec3 gPosition;
+layout(location = 1) out vec3 gNormal;
+layout(location = 2) out vec4 gAlbedoSpec;
 
-in vec3 WorldNormal;
-
-uniform float u_Time;
+in vec3 FragPos;
+in vec2 TexCoords;
+in vec3 Normal;
 
 void main()
 {
-    vec3 bloodColor = vec3(0.3, 0, 0);
-
-    FragColor = vec4(bloodColor, 1.0);
+    gPosition = FragPos;
+    gNormal = normalize(Normal);
+    gAlbedoSpec.rgb = vec3(1.0, 0.0, 0.0);
+    gAlbedoSpec.a = 0.0;
 }

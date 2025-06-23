@@ -31,7 +31,7 @@
     - [x] Knife
     - [x] Gun
 - [x] Animation Blend In Transition
-- [ ] Multiple Animations Blending
+- [x] Multiple Animations Blending
 - [ ] Instancing using specific Draw call
 - [x] Timer
 - [x] New Animation System
@@ -45,9 +45,9 @@
 - [ ] Item Interaction
 - [ ] Item Hints
 - [ ] Interactable entities
-- [ ] G-buffer
-- [ ] Framebuffer Lighting
-- [ ] Deferred Rendering
+- [x] G-buffer
+- [x] Framebuffer Lighting
+- [x] Deferred Rendering
 - [x] Z fighting  
 - [x] Async Loading
 - [ ] Fog of war  
@@ -65,9 +65,11 @@
 - [ ] Precise Audio Handle  
 - [ ] Sanity Checks ~20% coverage
 - [ ] Npc Intelligence
-- [ ] Tresure hunting or 숨바꼭질 kind of game
-    - [ ] Creatures walk buy making noise..
 - [ ] Light Volume
+- [ ] 강화해서  나무캐기 systems
+    - [ ] Gamble
+    - [ ] Stock, Coin
+    - [ ] Enhance
 
 ## When I buy Windows ...
 - [ ] Compute Skinning Pass <- Defer this to when I buy Windows, macOS only supports OpenGL 4.1. Perhaps just general compute pass

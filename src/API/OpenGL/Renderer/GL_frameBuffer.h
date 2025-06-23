@@ -38,7 +38,11 @@ public:
                            GLenum      mag_filter = GL_NEAREST);
   void   create_depth_attachment();
   void   bind();
+  void   unbind();
   void   draw_buffers(std::vector<const char *> names);
+  void   blit_and_bind_to_default_frame_buffer();
+  void   blit_to_default_frame_buffer();
+  void   sanitize_check();
   GLuint get_handle() const;
   GLuint get_width() const;
   GLuint get_height() const;

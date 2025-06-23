@@ -56,12 +56,36 @@ void OpenGLFrameBuffer::bind() {
   glBindFramebuffer(GL_FRAMEBUFFER, _handle);
 }
 
+void OpenGLFrameBuffer::unbind() {
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void OpenGLFrameBuffer::draw_buffers(std::vector<const char *> names) {
   std::vector<GLuint> attachments;
   for (const char *name : names) {
     attachments.push_back(get_color_attachment_slot_by_name(name));
   }
   glDrawBuffers(attachments.size(), attachments.data());
+}
+
+void OpenGLFrameBuffer::blit_and_bind_to_default_frame_buffer() {
+  bind();
+  blit_to_default_frame_buffer();
+  unbind();
+}
+
+void OpenGLFrameBuffer::blit_to_default_frame_buffer() {
+  glBindFramebuffer(GL_READ_FRAMEBUFFER, _handle);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  glBlitFramebuffer(0, 0, _width, _height, 0, 0, _width, _height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+}
+
+void OpenGLFrameBuffer::sanitize_check() {
+  GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+  if (status != GL_FRAMEBUFFER_COMPLETE) {
+    std::cerr << "OpenGLFrameBuffer::sanitize_check() error: 0x" << std::hex << status << '\n';
+    assert(0);
+  }
 }
 
 GLuint OpenGLFrameBuffer::get_handle() const {
@@ -82,7 +106,7 @@ GLuint OpenGLFrameBuffer::get_color_attachment_handle_by_name(const char *name) 
       return _color_attachments[i].handle;
     }
   }
-  std::cout << "OpenGLFrameBuffer::get_color_attachment_handle_by_name() Fail, no attachment "
+  std::cerr << "OpenGLFrameBuffer::get_color_attachment_handle_by_name() Fail, no attachment "
             << name << " in framebuffer " << _name << '\n';
   return GL_NONE;
 }
@@ -98,7 +122,7 @@ GLuint OpenGLFrameBuffer::get_color_attachment_slot_by_name(const char *name) co
     }
   }
 
-  std::cout << "OpenGLFrameBuffer::get_color_attachment_slot_by_name() Fail, no attachment " << name
+  std::cerr << "OpenGLFrameBuffer::get_color_attachment_slot_by_name() Fail, no attachment " << name
             << " in framebuffer " << _name << '\n';
   assert(0);
 }

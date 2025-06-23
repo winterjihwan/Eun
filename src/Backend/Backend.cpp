@@ -15,6 +15,9 @@
 #include "World/World.h"
 
 namespace Backend {
+int _width;
+int _height;
+
 bool init() {
   if (!GLFW::init()) {
     return false;
@@ -73,6 +76,10 @@ void clean_up() {
 
 void *get_window_pointer() {
   return GLFW::get_window_pointer();
+}
+
+Viewport get_viewport() {
+  return Viewport{&_width, &_height};
 }
 
 bool is_window_open() {

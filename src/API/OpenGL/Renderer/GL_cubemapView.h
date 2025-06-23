@@ -5,9 +5,9 @@
 #include <GLFW/glfw3.h>
 
 struct OpenGLCubemapView {
-  // OpenGLCubemapView() = default;
-  OpenGLCubemapView();
+  OpenGLCubemapView() = default;
 
+  void   init();
   void   create_cubemap();
   GLuint get_handle() const;
 

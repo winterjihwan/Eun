@@ -94,3 +94,7 @@ Spend 10 hours, and I got a solution (not complete tho)
 5. Pose mode -> click A to select all bones -> Apply visual transform to pose  
 6. Select all then dae export  
 7. Global Orientation Apply. Forward axis: -Z, Up. Axis: Y  
+
+10. 2025.06.22
+While Framebufferifying, I had accidentally put viewport to 0 hence the attachments to the framebuffers  
+were actually not being created. That's why framebuffer itself was faulty  

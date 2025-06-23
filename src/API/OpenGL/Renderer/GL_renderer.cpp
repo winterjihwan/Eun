@@ -1,7 +1,10 @@
 #include "API/OpenGL/Renderer/GL_renderer.h"
 #include "API/OpenGL/Renderer/GL_cubemapView.h"
+#include "API/OpenGL/Renderer/GL_frameBuffer.h"
+#include "Backend/Backend.h"
 #include "Core/Game.h"
 #include "Defines.h"
+#include "Types.h"
 #include "Types/Game/AnimEntity.h"
 #include "Types/Renderer/Shader.h"
 #define GLM_ENABLE_EXPERIMENTAL
@@ -11,17 +14,22 @@ unsigned int load_cubemap(std::vector<std::string> faces);
 
 namespace OpenGLRenderer {
 std::unordered_map<std::string, Shader>            _shaders;
+std::unordered_map<std::string, OpenGLFrameBuffer> _frame_buffers;
 std::unordered_map<std::string, OpenGLCubemapView> _cubemap_views;
 std::vector<AnimEntity>                            _anim_entities;
+
+// TODO: Remove Externs
 
 // HACK
 glm::mat4 _projection;
 glm::mat4 _view;
 
-// HACK
-unsigned int _sky_vao;
-
 void init() {
+  Viewport viewport = Backend::get_viewport();
+
+  // HACK
+  glEnable(GL_DEPTH_TEST);
+
   /* Shaders */
   _shaders["Model"]           = Shader("shaders/model.vert", "shaders/model.frag");
   _shaders["Sky"]             = Shader("shaders/sky.vert", "shaders/sky.frag");
@@ -30,60 +38,45 @@ void init() {
   _shaders["Decal"]           = Shader("shaders/decal.vert", "shaders/decal.frag");
   _shaders["DecalBlood"]      = Shader("shaders/decal.vert", "shaders/decal_blood.frag");
   _shaders["UI"]              = Shader("shaders/ui.vert", "shaders/ui.frag");
+  _shaders["Light"]           = Shader("shaders/light.vert", "shaders/light.frag");
 
-  // Skybox
-  float skybox_vertices[] = {-1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
-                             1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f,
+  /* Framebuffers */
+  _frame_buffers["G_Buffer"] = OpenGLFrameBuffer("G_Buffer", *viewport.width, *viewport.height);
+  _frame_buffers["G_Buffer"].bind();
+  _frame_buffers["G_Buffer"].create_attachment("Position", GL_RGBA16F);
+  _frame_buffers["G_Buffer"].create_attachment("Normal", GL_RGBA16F);
+  _frame_buffers["G_Buffer"].create_attachment("AlbedoSpec", GL_RGBA);
+  _frame_buffers["G_Buffer"].create_depth_attachment();
+  // HACK
+  _frame_buffers["G_Buffer"].sanitize_check();
+  _frame_buffers["G_Buffer"].unbind();
 
-                             -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f,
-                             -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,
-
-                             1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,
-                             1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f,
-
-                             -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,  1.0f,
-                             1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,
-
-                             -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,
-                             1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f,
-
-                             -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f,
-                             1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f};
-
-  // Skybox VAO
-  unsigned int skyVBO;
-  glGenVertexArrays(1, &_sky_vao);
-  glGenBuffers(1, &skyVBO);
-  glBindVertexArray(_sky_vao);
-  glBindBuffer(GL_ARRAY_BUFFER, skyVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(skybox_vertices), &skybox_vertices, GL_STATIC_DRAW);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-
-  _cubemap_views["NightSky"] = OpenGLCubemapView();
-  Shader &sky_shader         = _shaders["Sky"];
-
-  sky_shader.use();
-  sky_shader.setInt("skybox", 0);
+  init_light();
+  init_skybox();
 }
 
 void render_game() {
-  Camera *camera = Game::get_camera();
+  OpenGLFrameBuffer &g_buffer = _frame_buffers["G_Buffer"];
+  Camera            *camera   = Game::get_camera();
 
   // Per Frame Transformations
   _projection = glm::perspective(
       glm::radians(camera->get_zoom()), (float)VIEWPORT_WIDTH / (float)VIEWPORT_HEIGHT, NEAR, FAR);
   _view = camera->view_matrix();
 
-  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-  // Render Passes
+  // Deferred Pass
   geometry_pass();
-  skybox_pass();
   anim_pass();
   blood_volumetric_pass();
   decal_pass();
+  light_pass();
+
+  // Forward Pass
+  g_buffer.blit_and_bind_to_default_frame_buffer();
+  skybox_pass();
   ui_pass();
 }
 

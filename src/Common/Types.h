@@ -9,6 +9,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+struct Viewport {
+  int *width;
+  int *height;
+};
+
 struct Transform {
   glm::vec3 position = glm::vec3(0);
   glm::vec3 rotation = glm::vec3(0);

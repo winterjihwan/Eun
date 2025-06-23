@@ -13,7 +13,9 @@ uniform mat4 u_view;
 uniform mat4 u_projection;
 uniform mat4 u_bones[MAX_BONES];
 
+out vec3 FragPos;
 out vec2 UV;
+out vec3 Normal;
 
 void main()
 {
@@ -23,6 +25,13 @@ void main()
     boneTransform += u_bones[aBoneIDs.w] * aWeights.w;
 
     vec4 localPos = boneTransform * vec4(aPos, 1.0);
-    gl_Position = u_projection * u_view * u_model * localPos;
+
+    vec4 worldPos = u_model * localPos;
+    FragPos = worldPos.xyz;
     UV = aUV;
+
+    mat3 normalMatrix = transpose(inverse(mat3(u_model)));
+    Normal = normalMatrix * aNormal;
+
+    gl_Position = u_projection * u_view * worldPos;
 }

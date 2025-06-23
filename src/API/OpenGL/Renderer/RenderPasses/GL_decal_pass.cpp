@@ -1,14 +1,20 @@
+#include "API/OpenGL/Renderer/GL_frameBuffer.h"
 #include "Enums.h"
 #include "Renderer/RenderDataManager.h"
 
 namespace OpenGLRenderer {
-extern std::unordered_map<std::string, Shader> _shaders;
-extern glm::mat4                               _view;
-extern glm::mat4                               _projection;
+extern std::unordered_map<std::string, Shader>            _shaders;
+extern std::unordered_map<std::string, OpenGLFrameBuffer> _frame_buffers;
+extern glm::mat4                                          _view;
+extern glm::mat4                                          _projection;
 
 void decal_pass() {
-  Shader &shader             = _shaders["Decal"];
-  Shader &shader_decal_blood = _shaders["DecalBlood"]; // TODO: Neater code
+  Shader            &shader             = _shaders["Decal"];
+  Shader            &shader_decal_blood = _shaders["DecalBlood"]; // TODO: Neater code
+  OpenGLFrameBuffer &g_buffer           = _frame_buffers["G_Buffer"];
+
+  g_buffer.bind();
+  g_buffer.draw_buffers({"Position", "Normal", "AlbedoSpec"});
 
   shader.use();
   shader.setMat4("u_view", _view);
@@ -43,6 +49,8 @@ void decal_pass() {
   glDepthMask(GL_TRUE);
   glDisable(GL_BLEND);
   glBindVertexArray(0);
+
+  g_buffer.unbind();
 }
 
 } // namespace OpenGLRenderer
