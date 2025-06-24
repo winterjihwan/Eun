@@ -23,7 +23,7 @@ std::vector<AnimEntity>                            _anim_entities;
 // Uniforms
 constexpr glm::vec3 LIGHT_POS  = glm::vec3(-5.0f, 5.0f, -5.0f);
 constexpr float     LIGHT_NEAR = 1.0f;
-constexpr float     LIGHT_FAR  = 7.5f;
+constexpr float     LIGHT_FAR  = 75.0f;
 glm::mat4           _projection;
 glm::mat4           _view;
 glm::mat4           _light_space;
@@ -44,6 +44,8 @@ void init() {
   _shaders["UI"]              = Shader("shaders/ui.vert", "shaders/ui.frag");
   _shaders["Light"]           = Shader("shaders/light.vert", "shaders/light.frag");
   _shaders["Shadow"]          = Shader("shaders/shadow.vert", "shaders/shadow.frag");
+  _shaders["Shadow_Anim"]     = Shader("shaders/shadow_anim.vert", "shaders/shadow.frag");
+  _shaders["Texture"]         = Shader("shaders/texture.vert", "shaders/texture.frag");
 
   /* Framebuffers */
   _frame_buffers["G_Buffer"] = OpenGLFrameBuffer("G_Buffer", *viewport.width, *viewport.height);
@@ -83,6 +85,9 @@ void render_game() {
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+  // Shadow Pass
+  shadow_pass();
 
   // Deferred Pass
   g_buffer.clear_bind();

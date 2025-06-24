@@ -9,15 +9,15 @@ extern glm::mat4                                          _view;
 extern glm::mat4                                          _projection;
 
 void anim_pass() {
-  Shader             shader   = _shaders["Anim"];
-  OpenGLFrameBuffer &g_buffer = _frame_buffers["G_Buffer"];
+  Shader             shader_anim = _shaders["Anim"];
+  OpenGLFrameBuffer &g_buffer    = _frame_buffers["G_Buffer"];
 
   g_buffer.bind();
   g_buffer.draw_buffers({"Position", "Normal", "AlbedoSpec"});
 
-  shader.use();
-  shader.setMat4("u_projection", _projection);
-  shader.setMat4("u_view", _view);
+  shader_anim.use();
+  shader_anim.setMat4("u_projection", _projection);
+  shader_anim.setMat4("u_view", _view);
 
   // Anim Entities
   std::vector<AnimEntity *> anim_entities = RenderDataManager::get_anim_entities();
@@ -31,11 +31,11 @@ void anim_pass() {
         exit(1);
       }
       std::string name = "u_bones[" + std::to_string(i) + "]";
-      shader.setMat4(name.c_str(), transforms[i]);
+      shader_anim.setMat4(name.c_str(), transforms[i]);
     }
 
     glm::mat4 model = anim_entity->get_model_matrix();
-    shader.setMat4("u_model", model);
+    shader_anim.setMat4("u_model", model);
     anim_entity->render();
   }
 

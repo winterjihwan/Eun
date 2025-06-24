@@ -43,8 +43,8 @@ struct FlashLight {
 uniform DirLight dirLight;
 uniform FlashLight flashLight;
 uniform vec3 viewPos;
-uniform vec3 lightPos;
 uniform float shininess;
+uniform vec3 lightPos;
 uniform mat4 lightSpaceMatrix;
 
 float CalcShadow(vec3 fragPosWorldSpace, vec3 normal, vec3 lightPos);
@@ -70,7 +70,7 @@ void main()
         lighting += CalcFlashLight(FragPos, Normal, viewDir, Albedo, Specular);
     }
 
-    // lighting *= (1.0 - shadow);
+    lighting *= (1.0 - shadow);
     FragColor = vec4(lighting, 1.0);
 }
 

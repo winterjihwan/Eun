@@ -70,6 +70,21 @@ void light_pass() {
 
   Mesh *g_buffer_quad = AssetManager::get_mesh_by_name("G_Buffer");
   g_buffer_quad->draw(shader_light);
+
+  // Shader &shader_texture = _shaders["Texture"];
+  // shader_texture.use();
+  //
+  // glActiveTexture(GL_TEXTURE0);
+  // glBindTexture(GL_TEXTURE_2D, shadow_buffer.get_depth_attachment_handle());
+  // shader_texture.setMat4("u_projection", _projection);
+  // shader_texture.setMat4("u_view", _view);
+  // glm::mat4 map = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, 0.0f));
+  // map           = glm::rotate(map, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  // shader_texture.setMat4("u_model", map);
+  // shader_texture.setInt("sampler", 0);
+  //
+  // Mesh *quad = AssetManager::get_mesh_by_name("G_Buffer");
+  // quad->draw(shader_texture);
 }
 
 } // namespace OpenGLRenderer

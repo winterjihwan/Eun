@@ -32,18 +32,14 @@ public:
   GLuint get_texture() const {
     return _texture_obj;
   }
-  GLuint64 get_bindless_handle() const {
-    return _bindless_handle;
-  }
 
 private:
   void load_internal(const void *image_data);
 
   std::string _file_name;
   std::string _name;
-  GLuint64    _bindless_handle = -1;
-  int         _image_width     = 0;
-  int         _image_height    = 0;
-  int         _image_bpp       = 0;
+  int         _image_width  = 0;
+  int         _image_height = 0;
+  int         _image_bpp    = 0;
   GLuint      _texture_obj;
 };

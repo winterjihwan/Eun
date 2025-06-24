@@ -13,4 +13,5 @@ void blood_volumetric_pass();
 void decal_pass();
 void ui_pass();
 void light_pass();
+void shadow_pass();
 } // namespace OpenGLRenderer

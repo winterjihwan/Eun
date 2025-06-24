@@ -4,7 +4,6 @@
 - [x] Hand Animation  
 - [x] Character Controller
 - [x] Animation 'Play' upon consecutive event trigger
-- [ ] Shadows
 - [x] Audio  
 - [ ] Audio Handle  
 - [x] Weapon Manager  
@@ -40,6 +39,10 @@
 - [x] FPS UI
 - [x] New Skybox + Floor
 - [ ] Crosshair
+- [ ] Remove Externs + Cleanup GL Renderer
+- [x] Shadow
+    - [ ] Flashlight Shadow 
+    - [ ] Point Light Shadow 
 - [ ] FPS Governor
 - [ ] Custom Map
 - [ ] Map Editor
