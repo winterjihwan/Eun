@@ -10,7 +10,7 @@ OBJFILES     := $(patsubst $(SRC_DIR)/%, $(OBJ_DIR)/%.o, $(basename $(SRCFILES))
 OBJFILES 		 += $(patsubst vendor/%, $(OBJ_DIR)/vendor/%.o, $(basename $(JOLT_SRC)))
 
 CC           := clang++
-CXXFLAGS     := -std=c++20 -g -Wall -Wno-deprecated -MMD -MP
+CXXFLAGS     := -std=c++20 -O3 -g -Wall -Wno-deprecated -MMD -MP
 INCLUDES     := -Isrc \
 								-Isrc/Common \
 								-Ivendor \

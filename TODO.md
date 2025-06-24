@@ -1,5 +1,6 @@
 # TODO's
 
+
 - [x] Hand Animation  
 - [x] Character Controller
 - [x] Animation 'Play' upon consecutive event trigger
@@ -35,8 +36,8 @@
 - [ ] Instancing using specific Draw call
 - [x] Timer
 - [x] New Animation System
-- [ ] Lighting Rework
-- [ ] FPS UI
+- [x] Lighting Rework
+- [x] FPS UI
 - [x] New Skybox + Floor
 - [ ] Crosshair
 - [ ] FPS Governor

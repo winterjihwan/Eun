@@ -44,7 +44,7 @@ void init() {
     npc_create_info.animations.idle  = "Mannequin_Idle";
     npc_create_info.position         = glm::vec3(0.0f, -3.0f, -5.0f);
     npc_create_info.scale            = glm::vec3(.01f, .01f, .01f);
-    npc_create_info.capsule_radius   = 0.15f;
+    npc_create_info.capsule_radius   = 0.2f;
     npc_create_info.capsule_height   = 1.5f;
     npc_create_info.capsule_position = glm::vec3(
         0.0f,

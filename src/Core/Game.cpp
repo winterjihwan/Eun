@@ -1,6 +1,6 @@
 #include "Game.h"
-// #include "Audio/Audio.h"
 #include "Backend/GLFW.h"
+#include "UI/UIBackend.h"
 #include "World/World.h"
 #include <GLFW/glfw3.h>
 
@@ -37,6 +37,11 @@ void update() {
   _camera.update(_player.get_pos());
 
   World::update(_delta_time);
+
+  std::stringstream fps;
+  fps << "FPS " << (1.0f / _delta_time);
+  UIBackend::blit_text(
+      fps.str(), "AncizarSerif", 0, VIEWPORT_HEIGHT - 16, UIAlignment::CENTERED, 0.5f);
 }
 
 void begin_frame() {

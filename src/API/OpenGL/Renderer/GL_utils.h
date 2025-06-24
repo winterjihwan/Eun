@@ -88,12 +88,20 @@ inline static GLenum gl_internal_format_to_gl_type(GLenum internal_format) {
     return GL_FLOAT;
   case GL_RGBA32F:
     return GL_FLOAT;
-    // Depth and depth-stencil formats (if needed)
-    // case GL_DEPTH_COMPONENT16:       return GL_UNSIGNED_SHORT;
-    // case GL_DEPTH_COMPONENT24:       return GL_UNSIGNED_INT;
-    // case GL_DEPTH_COMPONENT32F:      return GL_FLOAT;
-    // case GL_DEPTH24_STENCIL8:        return GL_UNSIGNED_INT_24_8;
-    // case GL_DEPTH32F_STENCIL8:       return GL_FLOAT_32_UNSIGNED_INT_24_8_REV;
+
+    // Depth and depth-stencil formats
+  case GL_DEPTH_COMPONENT:
+    return GL_FLOAT;
+  case GL_DEPTH_COMPONENT16:
+    return GL_UNSIGNED_SHORT;
+  case GL_DEPTH_COMPONENT24:
+    return GL_UNSIGNED_INT;
+  case GL_DEPTH_COMPONENT32F:
+    return GL_FLOAT;
+  case GL_DEPTH24_STENCIL8:
+    return GL_UNSIGNED_INT_24_8;
+  case GL_DEPTH32F_STENCIL8:
+    return GL_FLOAT_32_UNSIGNED_INT_24_8_REV;
   default:
     std::cout << "OpenGLUtil::InternalFormatToType(GLenum internalFormat) failed Unsupported "
                  "internal format\n";
@@ -176,6 +184,7 @@ inline static GLenum gl_internal_format_to_gl_format(GLenum internal_format) {
     return GL_RGBA;
 
     // Depth formats
+  case GL_DEPTH_COMPONENT:
   case GL_DEPTH_COMPONENT16:
   case GL_DEPTH_COMPONENT24:
   case GL_DEPTH_COMPONENT32F:

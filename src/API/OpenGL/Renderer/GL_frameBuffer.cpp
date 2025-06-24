@@ -14,10 +14,10 @@ void OpenGLFrameBuffer::clean_up() {
   _handle = 0;
 }
 
-void OpenGLFrameBuffer::create_attachment(const char *name,
-                                          GLenum      internal_format,
-                                          GLenum      min_filter,
-                                          GLenum      mag_filter) {
+void OpenGLFrameBuffer::create_color_attachment(const char *name,
+                                                GLenum      internal_format,
+                                                GLenum      min_filter,
+                                                GLenum      mag_filter) {
   ColorAttachment &color_attachment = _color_attachments.emplace_back();
   color_attachment.name             = name;
   color_attachment.internal_format  = internal_format;
@@ -45,11 +45,26 @@ void OpenGLFrameBuffer::create_attachment(const char *name,
 }
 
 void OpenGLFrameBuffer::create_depth_attachment() {
-  glGenRenderbuffers(1, &_depth_attachment.handle);
-  glBindRenderbuffer(GL_RENDERBUFFER, _depth_attachment.handle);
+  glGenTextures(1, &_depth_attachment.handle);
+  glBindTexture(GL_TEXTURE_2D, _depth_attachment.handle);
+  glTexImage2D(
+      GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, _width, _height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+  float borderColor[] = {1.0, 1.0, 1.0, 1.0};
+  glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+  glFramebufferTexture2D(
+      GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, _depth_attachment.handle, 0);
+}
+
+void OpenGLFrameBuffer::create_render_buffer_attachment() {
+  glGenRenderbuffers(1, &_render_buffer_attachment.handle);
+  glBindRenderbuffer(GL_RENDERBUFFER, _render_buffer_attachment.handle);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, _width, _height);
   glFramebufferRenderbuffer(
-      GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depth_attachment.handle);
+      GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _render_buffer_attachment.handle);
 }
 
 void OpenGLFrameBuffer::bind() {
@@ -71,6 +86,19 @@ void OpenGLFrameBuffer::draw_buffers(std::vector<const char *> names) {
     attachments.push_back(get_color_attachment_slot_by_name(name));
   }
   glDrawBuffers(attachments.size(), attachments.data());
+}
+
+void OpenGLFrameBuffer::draw_none() {
+  glDrawBuffer(GL_NONE);
+}
+
+void OpenGLFrameBuffer::read_buffer(const char *name) {
+  GLuint handle = get_color_attachment_handle_by_name(name);
+  glReadBuffer(handle);
+}
+
+void OpenGLFrameBuffer::read_none() {
+  glReadBuffer(GL_NONE);
 }
 
 void OpenGLFrameBuffer::blit_and_bind_to_default_frame_buffer() {
@@ -113,11 +141,15 @@ GLuint OpenGLFrameBuffer::get_color_attachment_handle_by_name(const char *name) 
   }
   std::cerr << "OpenGLFrameBuffer::get_color_attachment_handle_by_name() Fail, no attachment "
             << name << " in framebuffer " << _name << '\n';
-  return GL_NONE;
+  assert(0);
 }
 
-GLuint OpenGLFrameBuffer::get_depth_attachment_handle_by_name() const {
+GLuint OpenGLFrameBuffer::get_depth_attachment_handle() const {
   return _depth_attachment.handle;
+}
+
+GLuint OpenGLFrameBuffer::get_render_buffer_attachment_handle() const {
+  return _render_buffer_attachment.handle;
 }
 
 GLuint OpenGLFrameBuffer::get_color_attachment_slot_by_name(const char *name) const {

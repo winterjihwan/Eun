@@ -7,6 +7,7 @@ in vec2 UV;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
+uniform sampler2D gShadow;
 
 struct PointLight {
     vec3 position;
@@ -39,13 +40,14 @@ struct FlashLight {
     bool is_on;
 };
 
-const int NR_LIGHTS = 32;
-uniform PointLight pointLights[NR_LIGHTS];
 uniform DirLight dirLight;
 uniform FlashLight flashLight;
 uniform vec3 viewPos;
+uniform vec3 lightPos;
 uniform float shininess;
+uniform mat4 lightSpaceMatrix;
 
+float CalcShadow(vec3 fragPosWorldSpace, vec3 normal, vec3 lightPos);
 vec3 CalcDirLight(vec3 normal, vec3 viewDir, vec3 albedo, float specular);
 vec3 CalcFlashLight(vec3 fragPos, vec3 normal, vec3 viewDir, vec3 albedo, float specular);
 
@@ -57,32 +59,55 @@ void main()
     float Specular = texture(gAlbedoSpec, UV).a;
     vec3 viewDir = normalize(viewPos - FragPos);
 
+    // Shadow
+    float shadow = CalcShadow(FragPos, Normal, lightPos);
+
     // Directional Light
     vec3 lighting = CalcDirLight(Normal, viewDir, Albedo, Specular);
-
-    // Point lights
-    for (int i = 0; i < NR_LIGHTS; ++i)
-    {
-        vec3 lightDir = normalize(pointLights[i].position - FragPos);
-        float diff = max(dot(Normal, lightDir), 0.0);
-        vec3 diffuse = diff * Albedo * pointLights[i].color;
-
-        vec3 halfwayDir = normalize(lightDir + viewDir);
-        float spec = pow(max(dot(Normal, halfwayDir), 0.0), shininess);
-        vec3 specular = pointLights[i].color * spec * Specular;
-
-        float distance = length(pointLights[i].position - FragPos);
-        float attenuation = 1.0 / (1.0 + pointLights[i].linear * distance + pointLights[i].quadratic * distance * distance);
-
-        lighting += attenuation * (diffuse + specular);
-    }
 
     // Flashlight
     if (flashLight.is_on) {
         lighting += CalcFlashLight(FragPos, Normal, viewDir, Albedo, Specular);
     }
 
+    // lighting *= (1.0 - shadow);
     FragColor = vec4(lighting, 1.0);
+}
+
+float CalcShadow(vec3 fragPosWorldSpace, vec3 normal, vec3 lightPos)
+{
+    // Light space position
+    vec4 fragPosLightSpace = lightSpaceMatrix * vec4(fragPosWorldSpace, 1.0);
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // Depth values
+    float currentDepth = projCoords.z;
+    float closestDepth = texture(gShadow, projCoords.xy).r;
+
+    // Bias
+    vec3 lightDir = normalize(lightPos - fragPosWorldSpace);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+
+    // PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(gShadow, 0);
+    for (int x = -1; x <= 1; ++x)
+    {
+        for (int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(gShadow, projCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
+
+    // Cull Light frustum
+    if (projCoords.z > 1.0) {
+        shadow = 0.0;
+    }
+
+    return shadow;
 }
 
 vec3 CalcDirLight(vec3 normal, vec3 viewDir, vec3 albedo, float specular)

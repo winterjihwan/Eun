@@ -20,9 +20,13 @@ std::vector<AnimEntity>                            _anim_entities;
 
 // TODO: Remove Externs
 
-// HACK
-glm::mat4 _projection;
-glm::mat4 _view;
+// Uniforms
+constexpr glm::vec3 LIGHT_POS  = glm::vec3(-5.0f, 5.0f, -5.0f);
+constexpr float     LIGHT_NEAR = 1.0f;
+constexpr float     LIGHT_FAR  = 7.5f;
+glm::mat4           _projection;
+glm::mat4           _view;
+glm::mat4           _light_space;
 
 void init() {
   Viewport viewport = Backend::get_viewport();
@@ -39,20 +43,33 @@ void init() {
   _shaders["DecalBlood"]      = Shader("shaders/decal.vert", "shaders/decal_blood.frag");
   _shaders["UI"]              = Shader("shaders/ui.vert", "shaders/ui.frag");
   _shaders["Light"]           = Shader("shaders/light.vert", "shaders/light.frag");
+  _shaders["Shadow"]          = Shader("shaders/shadow.vert", "shaders/shadow.frag");
 
   /* Framebuffers */
   _frame_buffers["G_Buffer"] = OpenGLFrameBuffer("G_Buffer", *viewport.width, *viewport.height);
   _frame_buffers["G_Buffer"].bind();
-  _frame_buffers["G_Buffer"].create_attachment("Position", GL_RGBA16F);
-  _frame_buffers["G_Buffer"].create_attachment("Normal", GL_RGBA16F);
-  _frame_buffers["G_Buffer"].create_attachment("AlbedoSpec", GL_RGBA);
-  _frame_buffers["G_Buffer"].create_depth_attachment();
-  // HACK
+  _frame_buffers["G_Buffer"].create_color_attachment("Position", GL_RGBA16F);
+  _frame_buffers["G_Buffer"].create_color_attachment("Normal", GL_RGBA16F);
+  _frame_buffers["G_Buffer"].create_color_attachment("AlbedoSpec", GL_RGBA);
+  _frame_buffers["G_Buffer"].create_render_buffer_attachment();
   _frame_buffers["G_Buffer"].sanitize_check();
   _frame_buffers["G_Buffer"].unbind();
 
+  _frame_buffers["Shadow"] = OpenGLFrameBuffer("Shadow", SHADOW_WIDTH, SHADOW_HEIGHT);
+  _frame_buffers["Shadow"].bind();
+  _frame_buffers["Shadow"].create_depth_attachment();
+  _frame_buffers["Shadow"].draw_none();
+  _frame_buffers["Shadow"].read_none();
+  _frame_buffers["Shadow"].sanitize_check();
+  _frame_buffers["Shadow"].unbind();
+
   init_light();
   init_skybox();
+
+  // TODO: Move somewhere else I don't know
+  glm::mat4 light_projection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, LIGHT_NEAR, LIGHT_FAR);
+  glm::mat4 light_view       = glm::lookAt(LIGHT_POS, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+  _light_space               = light_projection * light_view;
 }
 
 void render_game() {
