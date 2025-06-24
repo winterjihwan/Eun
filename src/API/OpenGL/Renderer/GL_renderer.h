@@ -1,5 +1,8 @@
 #pragma once
 
+#include "API/OpenGL/Renderer/GL_frameBuffer.h"
+#include "Types/Renderer/Shader.h"
+
 namespace OpenGLRenderer {
 void init();
 void init_light();
@@ -14,4 +17,7 @@ void decal_pass();
 void ui_pass();
 void light_pass();
 void shadow_pass();
+
+Shader            &get_shader(const std::string &name);
+OpenGLFrameBuffer &get_frame_buffer(const std::string &name);
 } // namespace OpenGLRenderer

@@ -39,7 +39,7 @@
 - [x] FPS UI
 - [x] New Skybox + Floor
 - [ ] Crosshair
-- [ ] Remove Externs + Cleanup GL Renderer
+- [x] Remove Externs + Cleanup GL Renderer
 - [x] Shadow
     - [ ] Flashlight Shadow 
     - [ ] Point Light Shadow 

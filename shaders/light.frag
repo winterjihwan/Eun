@@ -40,44 +40,44 @@ struct FlashLight {
     bool is_on;
 };
 
-uniform DirLight dirLight;
-uniform FlashLight flashLight;
-uniform vec3 viewPos;
-uniform float shininess;
-uniform vec3 lightPos;
-uniform mat4 lightSpaceMatrix;
+uniform DirLight u_dirLight;
+uniform FlashLight u_flashLight;
+uniform vec3 u_viewPos;
+uniform float u_shininess;
+uniform vec3 u_lightPos;
+uniform mat4 u_light_space;
 
-float CalcShadow(vec3 fragPosWorldSpace, vec3 normal, vec3 lightPos);
+float CalcShadow(vec3 fragPosWorldSpace, vec3 normal);
 vec3 CalcDirLight(vec3 normal, vec3 viewDir, vec3 albedo, float specular);
 vec3 CalcFlashLight(vec3 fragPos, vec3 normal, vec3 viewDir, vec3 albedo, float specular);
 
 void main()
 {
-    vec3 FragPos = texture(gPosition, UV).rgb;
-    vec3 Normal = normalize(texture(gNormal, UV).rgb);
-    vec3 Albedo = texture(gAlbedoSpec, UV).rgb;
-    float Specular = texture(gAlbedoSpec, UV).a;
-    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 fragPos = texture(gPosition, UV).rgb;
+    vec3 normal = normalize(texture(gNormal, UV).rgb);
+    vec3 albedo = texture(gAlbedoSpec, UV).rgb;
+    float specular = texture(gAlbedoSpec, UV).a;
+    vec3 viewDir = normalize(u_viewPos - fragPos);
 
     // Shadow
-    float shadow = CalcShadow(FragPos, Normal, lightPos);
+    float shadow = CalcShadow(fragPos, normal);
 
     // Directional Light
-    vec3 lighting = CalcDirLight(Normal, viewDir, Albedo, Specular);
+    vec3 lighting = CalcDirLight(normal, viewDir, albedo, specular);
 
     // Flashlight
-    if (flashLight.is_on) {
-        lighting += CalcFlashLight(FragPos, Normal, viewDir, Albedo, Specular);
+    if (u_flashLight.is_on) {
+        lighting += CalcFlashLight(fragPos, normal, viewDir, albedo, specular);
     }
 
     lighting *= (1.0 - shadow);
     FragColor = vec4(lighting, 1.0);
 }
 
-float CalcShadow(vec3 fragPosWorldSpace, vec3 normal, vec3 lightPos)
+float CalcShadow(vec3 fragPosWorldSpace, vec3 normal)
 {
     // Light space position
-    vec4 fragPosLightSpace = lightSpaceMatrix * vec4(fragPosWorldSpace, 1.0);
+    vec4 fragPosLightSpace = u_light_space * vec4(fragPosWorldSpace, 1.0);
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
 
@@ -86,7 +86,7 @@ float CalcShadow(vec3 fragPosWorldSpace, vec3 normal, vec3 lightPos)
     float closestDepth = texture(gShadow, projCoords.xy).r;
 
     // Bias
-    vec3 lightDir = normalize(lightPos - fragPosWorldSpace);
+    vec3 lightDir = normalize(u_lightPos - fragPosWorldSpace);
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
 
     // PCF
@@ -112,37 +112,37 @@ float CalcShadow(vec3 fragPosWorldSpace, vec3 normal, vec3 lightPos)
 
 vec3 CalcDirLight(vec3 normal, vec3 viewDir, vec3 albedo, float specular)
 {
-    vec3 lightDir = normalize(-dirLight.direction);
+    vec3 lightDir = normalize(-u_dirLight.direction);
     float diff = max(dot(normal, lightDir), 0.0);
 
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_shininess);
 
-    vec3 ambient = dirLight.ambient * albedo;
-    vec3 diffuse = dirLight.diffuse * diff * albedo;
-    vec3 specularColor = dirLight.specular * spec * specular;
+    vec3 ambient = u_dirLight.ambient * albedo;
+    vec3 diffuse = u_dirLight.diffuse * diff * albedo;
+    vec3 specularColor = u_dirLight.specular * spec * specular;
 
     return ambient + diffuse + specularColor;
 }
 
 vec3 CalcFlashLight(vec3 fragPos, vec3 normal, vec3 viewDir, vec3 albedo, float specular)
 {
-    vec3 lightDir = normalize(flashLight.position - fragPos);
+    vec3 lightDir = normalize(u_flashLight.position - fragPos);
     float diff = max(dot(normal, lightDir), 0.0);
 
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_shininess);
 
-    float distance = length(flashLight.position - fragPos);
-    float attenuation = 1.0 / (flashLight.constant + flashLight.linear * distance + flashLight.quadratic * (distance * distance));
+    float distance = length(u_flashLight.position - fragPos);
+    float attenuation = 1.0 / (u_flashLight.constant + u_flashLight.linear * distance + u_flashLight.quadratic * (distance * distance));
 
-    float theta = dot(lightDir, normalize(-flashLight.direction));
-    float epsilon = flashLight.cutOff - flashLight.outerCutOff;
-    float intensity = clamp((theta - flashLight.outerCutOff) / epsilon, 0.0, 1.0);
+    float theta = dot(lightDir, normalize(-u_flashLight.direction));
+    float epsilon = u_flashLight.cutOff - u_flashLight.outerCutOff;
+    float intensity = clamp((theta - u_flashLight.outerCutOff) / epsilon, 0.0, 1.0);
 
-    vec3 ambient = flashLight.ambient * albedo;
-    vec3 diffuse = flashLight.diffuse * diff * albedo;
-    vec3 specularColor = flashLight.specular * spec * specular;
+    vec3 ambient = u_flashLight.ambient * albedo;
+    vec3 diffuse = u_flashLight.diffuse * diff * albedo;
+    vec3 specularColor = u_flashLight.specular * spec * specular;
 
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;

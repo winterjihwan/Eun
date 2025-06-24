@@ -1,16 +1,15 @@
 #include "API/OpenGL/Renderer/GL_frameBuffer.h"
+#include "API/OpenGL/Renderer/GL_renderer.h"
 #include "Renderer/RenderDataManager.h"
 #include "Types/Game/AnimEntity.h"
 
 namespace OpenGLRenderer {
-extern std::unordered_map<std::string, Shader>            _shaders;
-extern std::unordered_map<std::string, OpenGLFrameBuffer> _frame_buffers;
-extern glm::mat4                                          _view;
-extern glm::mat4                                          _projection;
+extern glm::mat4 _view;
+extern glm::mat4 _projection;
 
 void anim_pass() {
-  Shader             shader_anim = _shaders["Anim"];
-  OpenGLFrameBuffer &g_buffer    = _frame_buffers["G_Buffer"];
+  Shader            &shader_anim = get_shader("Anim");
+  OpenGLFrameBuffer &g_buffer    = get_frame_buffer("G_Buffer");
 
   g_buffer.bind();
   g_buffer.draw_buffers({"Position", "Normal", "AlbedoSpec"});

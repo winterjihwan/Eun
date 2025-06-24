@@ -6,13 +6,11 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <string>
-#include <unordered_map>
 
 namespace OpenGLRenderer {
-extern std::unordered_map<std::string, Shader> _shaders;
 
 void ui_pass() {
-  Shader shader = _shaders["UI"];
+  Shader shader = get_shader("UI");
 
   glDisable(GL_CULL_FACE);
   glDisable(GL_DEPTH_TEST);

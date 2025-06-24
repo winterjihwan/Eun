@@ -18,8 +18,6 @@ std::unordered_map<std::string, OpenGLFrameBuffer> _frame_buffers;
 std::unordered_map<std::string, OpenGLCubemapView> _cubemap_views;
 std::vector<AnimEntity>                            _anim_entities;
 
-// TODO: Remove Externs
-
 // Uniforms
 constexpr glm::vec3 LIGHT_POS  = glm::vec3(-5.0f, 5.0f, -5.0f);
 constexpr float     LIGHT_NEAR = 1.0f;
@@ -65,20 +63,20 @@ void init() {
   _frame_buffers["Shadow"].sanitize_check();
   _frame_buffers["Shadow"].unbind();
 
-  init_light();
-  init_skybox();
-
-  // TODO: Move somewhere else I don't know
+  /* Base Uniforms */
   glm::mat4 light_projection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, LIGHT_NEAR, LIGHT_FAR);
   glm::mat4 light_view       = glm::lookAt(LIGHT_POS, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
   _light_space               = light_projection * light_view;
+
+  init_light();
+  init_skybox();
 }
 
 void render_game() {
   OpenGLFrameBuffer &g_buffer = _frame_buffers["G_Buffer"];
   Camera            *camera   = Game::get_camera();
 
-  // Per Frame Transformations
+  // Per Frame Uniforms
   _projection = glm::perspective(
       glm::radians(camera->get_zoom()), (float)VIEWPORT_WIDTH / (float)VIEWPORT_HEIGHT, NEAR, FAR);
   _view = camera->view_matrix();
@@ -101,6 +99,26 @@ void render_game() {
   decal_pass();
   skybox_pass();
   ui_pass();
+}
+
+Shader &get_shader(const std::string &name) {
+  auto it = _shaders.find(name);
+  if (it != _shaders.end()) {
+    return it->second;
+  }
+
+  std::cerr << "GL_renderer::get_shader() fail for shader: " << name << '\n';
+  assert(0);
+}
+
+OpenGLFrameBuffer &get_frame_buffer(const std::string &name) {
+  auto it = _frame_buffers.find(name);
+  if (it != _frame_buffers.end()) {
+    return it->second;
+  }
+
+  std::cerr << "GL_renderer::get_frame_buffer() fail for framebuffer: " << name << '\n';
+  assert(0);
 }
 
 } // namespace OpenGLRenderer

@@ -1,4 +1,5 @@
 #include "API/OpenGL/Renderer/GL_frameBuffer.h"
+#include "API/OpenGL/Renderer/GL_renderer.h"
 #include "AssetManager/AssetManager.h"
 #include "Backend/Backend.h"
 #include "Renderer/RenderDataManager.h"
@@ -6,20 +7,17 @@
 #include <glm/gtx/euler_angles.hpp>
 
 namespace OpenGLRenderer {
-extern std::unordered_map<std::string, Shader>            _shaders;
-extern std::unordered_map<std::string, OpenGLFrameBuffer> _frame_buffers;
-extern glm::mat4                                          _view;
-extern glm::mat4                                          _projection;
-extern glm::mat4                                          _light_space;
+extern glm::mat4 _view;
+extern glm::mat4 _projection;
+extern glm::mat4 _light_space;
 
 void shadow_pass() {
-  Shader            &shader_shadow      = _shaders["Shadow"];
-  Shader            &shader_shadow_anim = _shaders["Shadow_Anim"];
-  OpenGLFrameBuffer &shadow_buffer      = _frame_buffers["Shadow"];
+  Shader            &shader_shadow      = get_shader("Shadow");
+  Shader            &shader_shadow_anim = get_shader("Shadow_Anim");
+  OpenGLFrameBuffer &shadow_buffer      = get_frame_buffer("Shadow");
 
   Viewport viewport = Backend::get_viewport();
 
-  /* Shadow */
   glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
   shadow_buffer.clear_bind();
 
@@ -41,7 +39,6 @@ void shadow_pass() {
   for (AnimEntity *anim_entity : anim_entities) {
     std::vector<glm::mat4> transforms = anim_entity->get_global_blended_bone_transforms();
 
-    // Bones
     for (uint i = 0; i < transforms.size(); i++) {
       if (i >= MAX_BONES) {
         std::cout << "INCREASE MAX_BONES" << std::endl;

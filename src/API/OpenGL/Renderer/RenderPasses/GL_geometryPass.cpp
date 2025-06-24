@@ -1,17 +1,16 @@
 #include "API/OpenGL/Renderer/GL_frameBuffer.h"
+#include "API/OpenGL/Renderer/GL_renderer.h"
 #include "AssetManager/AssetManager.h"
 #include "Renderer/RenderDataManager.h"
 #include <glm/gtx/euler_angles.hpp>
 
 namespace OpenGLRenderer {
-extern std::unordered_map<std::string, Shader>            _shaders;
-extern std::unordered_map<std::string, OpenGLFrameBuffer> _frame_buffers;
-extern glm::mat4                                          _view;
-extern glm::mat4                                          _projection;
+extern glm::mat4 _view;
+extern glm::mat4 _projection;
 
 void geometry_pass() {
-  Shader            &shader_model = _shaders["Model"];
-  OpenGLFrameBuffer &g_buffer     = _frame_buffers["G_Buffer"];
+  Shader            &shader_model = get_shader("Model");
+  OpenGLFrameBuffer &g_buffer     = get_frame_buffer("G_Buffer");
 
   g_buffer.bind();
   g_buffer.draw_buffers({"Position", "Normal", "AlbedoSpec"});
@@ -35,18 +34,5 @@ void geometry_pass() {
   // TODO: Render entities
 
   g_buffer.unbind();
-
-  // /* Shadow */
-  // glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-  // shadow_buffer.clear_bind();
-  //
-  // shader_shadow.use();
-  // shader_shadow.setMat4("u_light_space", _light_space);
-  // shader_shadow.setMat4("u_model", map);
-  //
-  // plane->draw(shader_shadow);
-  //
-  // shadow_buffer.unbind();
-  // glViewport(0, 0, *viewport.width, *viewport.height);
 }
 } // namespace OpenGLRenderer

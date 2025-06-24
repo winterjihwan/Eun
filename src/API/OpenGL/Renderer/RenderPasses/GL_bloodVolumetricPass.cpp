@@ -1,15 +1,14 @@
 #include "API/OpenGL/Renderer/GL_frameBuffer.h"
+#include "API/OpenGL/Renderer/GL_renderer.h"
 #include "Renderer/RenderDataManager.h"
 #include "Types/Game/BloodVolumetric.h"
 
 namespace OpenGLRenderer {
-extern std::unordered_map<std::string, Shader>            _shaders;
-extern std::unordered_map<std::string, OpenGLFrameBuffer> _frame_buffers;
-extern glm::mat4                                          _view;
-extern glm::mat4                                          _projection;
+extern glm::mat4 _view;
+extern glm::mat4 _projection;
 
 void blood_volumetric_pass() {
-  Shader &shader = _shaders["BloodVolumetric"];
+  Shader &shader = get_shader("BloodVolumetric");
 
   std::vector<BloodVolumetric *> blood_volumetrics = RenderDataManager::get_blood_volumetrics();
 

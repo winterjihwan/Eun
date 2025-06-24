@@ -1,13 +1,14 @@
 #include "API/OpenGL/Renderer/GL_cubemapView.h"
+#include "API/OpenGL/Renderer/GL_renderer.h"
 #include "Core/Game.h"
 #include "Types/Renderer/Shader.h"
 
 namespace OpenGLRenderer {
-extern std::unordered_map<std::string, Shader> _shaders;
-extern glm::mat4                               _projection;
-extern glm::mat4                               _view;
-unsigned int                                   _sky_vao;
-OpenGLCubemapView                              _cubemap_view;
+extern glm::mat4 _projection;
+extern glm::mat4 _view;
+
+unsigned int      _sky_vao;
+OpenGLCubemapView _cubemap_view;
 
 void init_skybox() {
   float skybox_vertices[] = {-1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
@@ -39,14 +40,14 @@ void init_skybox() {
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
 
   _cubemap_view.init();
-  Shader &sky_shader = _shaders["Sky"];
+  Shader &sky_shader = get_shader("Sky");
 
   sky_shader.use();
   sky_shader.setInt("skybox", 0);
 }
 
 void skybox_pass() {
-  Shader &shader = _shaders["Sky"];
+  Shader &shader = get_shader("Sky");
 
   // Cubemap
   glDepthFunc(GL_LEQUAL);
