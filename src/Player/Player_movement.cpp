@@ -3,7 +3,9 @@
 #include "Physics/Physics.h"
 #include "Player.h"
 #include "Types.h"
+#include "UI/UIBackend.h"
 #include <glm/glm.hpp>
+#include <iomanip>
 
 void Player::update_movement(float delta_time, Camera camera) {
   glm::vec3 front = camera.get_front();
@@ -51,7 +53,6 @@ void Player::update_movement(float delta_time, Camera camera) {
   JPH::Vec3 new_vel = move + JPH::Vec3(0, cur_vel.GetY(), 0);
 
   if (_character->GetGroundState() == JPH::CharacterBase::EGroundState::OnGround) {
-    // TODO: Enable Jump
     if (Input::key_pressed(EUN_KEY_SPACE)) {
       new_vel.SetY(4.9f);
     }
@@ -73,4 +74,10 @@ void Player::update_movement(float delta_time, Camera camera) {
       *Physics::get_temp_allocator());
 
   _position = get_pos();
+
+  std::stringstream ss;
+  ss << std::fixed << std::setprecision(2);
+  ss << "XYZ " << _position.x << ' ' << _position.y << ' ' << _position.z;
+  UIBackend::blit_text(
+      ss.str(), "AncizarSerif", 0, VIEWPORT_HEIGHT - 40, UIAlignment::CENTERED, 0.5f);
 }

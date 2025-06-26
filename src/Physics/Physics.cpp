@@ -145,7 +145,8 @@ void shutdown() {
 JPH::BodyID register_static_mesh(const std::vector<Vertex>       &vertices,
                                  const std::vector<unsigned int> &indices,
                                  const glm::mat4                 &transform,
-                                 const ObjectType                 object_type) {
+                                 const ObjectType                 object_type,
+                                 const uint64_t                   object_id) {
   JPH::VertexList jph_vertices;
   jph_vertices.reserve(vertices.size());
 
@@ -175,6 +176,7 @@ JPH::BodyID register_static_mesh(const std::vector<Vertex>       &vertices,
   PhysicsUserData user_data;
   user_data.physics_type = PhysicsType::RIGID_STATIC;
   user_data.object_type  = object_type;
+  user_data.object_id    = object_id;
   body->SetUserData(reinterpret_cast<JPH::uint64>(new PhysicsUserData(user_data)));
 
   // JPH::Body Register

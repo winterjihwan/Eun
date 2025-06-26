@@ -38,8 +38,13 @@
 - [x] Lighting Rework
 - [x] FPS UI
 - [x] New Skybox + Floor
-- [ ] AABB
-- [ ] Raycast AABB upon Editor hover
+- [x] AABB
+- [x] Raycast AABB upon Editor hover
+- [ ] Editor
+    - [x] Hover
+    - [x] Object ID
+    - [x] Selection
+    - [x] Translation
 - [ ] Crosshair
 - [x] Remove Externs + Cleanup GL Renderer
 - [x] Shadow
@@ -62,6 +67,7 @@
 - [ ] Fog of war  
 - [x] Loading Screen  
 - [x] UI Pass  
+- [x] UI Player Position
 - [x] True Font
 - [x] Simple Hot reloading  
 - [ ] Hot reloading with DLL
@@ -73,6 +79,7 @@
 - [ ] Array-ify instead of std::vector  
 - [ ] Precise Audio Handle  
 - [ ] Sanity Checks ~20% coverage
+- [ ] Gizmo Editor
 - [ ] Npc Intelligence
 - [ ] Light Volume
 - [ ] 강화해서  나무캐기 systems

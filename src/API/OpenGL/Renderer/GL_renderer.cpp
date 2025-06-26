@@ -78,9 +78,8 @@ void render_game() {
   Camera            *camera   = Game::get_camera();
 
   // Per Frame Uniforms
-  _projection = glm::perspective(
-      glm::radians(camera->get_zoom()), (float)VIEWPORT_WIDTH / (float)VIEWPORT_HEIGHT, NEAR, FAR);
-  _view = camera->view_matrix();
+  _projection = camera->projection();
+  _view       = camera->view_matrix();
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

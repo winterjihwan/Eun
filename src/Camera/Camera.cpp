@@ -66,6 +66,11 @@ glm::mat4 Camera::view_matrix() {
   return _view;
 }
 
+glm::mat4 Camera::projection() {
+  return glm::perspective(
+      glm::radians(get_zoom()), (float)VIEWPORT_WIDTH / (float)VIEWPORT_HEIGHT, NEAR, FAR);
+}
+
 glm::vec3 Camera::get_pos() {
   return _position;
 }

@@ -25,13 +25,12 @@ void init() {
   {
     Mesh *mesh = AssetManager::get_mesh_by_name("Plane");
 
-    glm::mat4 pos = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, 0.0f));
-    pos           = glm::rotate(pos, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
     EntityCreateInfo info;
     info.name        = mesh->name;
     info.renderable  = AssetManager::get_mesh_by_name("Plane");
-    info.transform   = pos;
+    info.position    = glm::vec3(0.0f, -3.0f, 0.0f);
+    info.rotation    = glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    info.scale       = glm::vec3(1.0f);
     info.object_type = ObjectType::MAP;
 
     add_entity(Entity(std::move(info)));
@@ -41,12 +40,12 @@ void init() {
   {
     Mesh *mesh = AssetManager::get_mesh_by_name("Door");
 
-    glm::mat4 pos = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, -1.0f));
-
     EntityCreateInfo info;
     info.name        = mesh->name;
-    info.renderable  = AssetManager::get_mesh_by_name("Door");
-    info.transform   = pos;
+    info.renderable  = mesh;
+    info.position    = glm::vec3(0.0f, -2.5f, -1.0f);
+    info.rotation    = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+    info.scale       = glm::vec3(1.0f);
     info.object_type = ObjectType::GAME_OBJECT;
 
     add_entity(Entity(std::move(info)));
@@ -138,6 +137,18 @@ Npc *get_npc_by_name(const std::string &name) {
   }
 
   std::cout << "World::get_npc_by_name() failed, no npc with name: " << name << std::endl;
+  assert(0);
+}
+
+Entity *get_entity_by_object_id(uint64_t object_id) {
+  for (Entity &entity : _entities) {
+    if (entity.get_id() == object_id) {
+      return &entity;
+    }
+  }
+
+  std::cout << "World::get_entity_by_object_id() failed, no entity with id: " << object_id
+            << std::endl;
   assert(0);
 }
 } // namespace World

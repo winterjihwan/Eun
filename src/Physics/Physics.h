@@ -33,7 +33,8 @@ void shutdown();
 JPH::BodyID               register_static_mesh(const std::vector<Vertex>       &vertices,
                                                const std::vector<unsigned int> &indices,
                                                const glm::mat4                 &transform,
-                                               const ObjectType                 object_type);
+                                               const ObjectType                 object_type,
+                                               const uint64_t                   object_id);
 JPH::AABox                get_aabb(const JPH::BodyID &body_id);
 std::optional<RayHitInfo> raycast(const JPH::Vec3 &origin, const JPH::Vec3 &dir, float dist);
 void                      register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback);

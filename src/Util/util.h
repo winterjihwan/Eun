@@ -17,8 +17,8 @@ glm::vec3 to_vec3(const JPH::Vec3 &v);
 std::string get_dir_from_filename(const std::string &filename);
 
 // To String
-std::string to_string(TextureType type);
 std::string to_string(const std::string &name, const glm::mat4 &mat);
+std::string to_string(ObjectType object_type);
 
 // Math
 float     random_float(float min, float max);

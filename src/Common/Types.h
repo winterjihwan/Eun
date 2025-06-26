@@ -39,7 +39,6 @@ struct PlayerControls {
   unsigned int WALK_BACKWARD = EUN_KEY_S;
   unsigned int WALK_LEFT     = EUN_KEY_A;
   unsigned int WALK_RIGHT    = EUN_KEY_D;
-  unsigned int RELOAD        = EUN_KEY_R;
   unsigned int FIRE          = EUN_MOUSE_LEFT;
   unsigned int JUMP          = EUN_KEY_SPACE;
   unsigned int NEXT_WEAPON   = EUN_KEY_Q;
@@ -50,6 +49,7 @@ struct PhysicsUserData {
   // TODO: Object UUID
   PhysicsType physics_type = PhysicsType::NONE;
   ObjectType  object_type  = ObjectType::NONE;
+  uint64_t    object_id    = 0;
 };
 
 struct Vertex {

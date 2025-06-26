@@ -39,10 +39,10 @@ void update() {
 
   World::update(_delta_time);
 
-  std::stringstream fps;
-  fps << "FPS " << (1.0f / _delta_time);
+  std::stringstream ss;
+  ss << "FPS " << (1.0f / _delta_time);
   UIBackend::blit_text(
-      fps.str(), "AncizarSerif", 0, VIEWPORT_HEIGHT - 16, UIAlignment::CENTERED, 0.5f);
+      ss.str(), "AncizarSerif", 0, VIEWPORT_HEIGHT - 16, UIAlignment::CENTERED, 0.5f);
 }
 
 void begin_frame() {

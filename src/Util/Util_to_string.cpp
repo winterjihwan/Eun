@@ -2,19 +2,7 @@
 #include <iomanip>
 
 namespace Util {
-std::string to_string(TextureType type) {
-  switch (type) {
-  case TextureType::DIFFUSE:
-    return "texture_diffuse";
-  case TextureType::SPECULAR:
-    return "texture_specular";
-  case TextureType::NORMAL:
-    return "texture_normal";
-  case TextureType::HEIGHT:
-    return "texture_height";
-  }
-}
-
+// HACK
 std::string to_string(const std::string &name, const glm::mat4 &mat) {
   std::ostringstream oss;
   oss << name << " =\n";
@@ -27,5 +15,22 @@ std::string to_string(const std::string &name, const glm::mat4 &mat) {
     oss << "]\n";
   }
   return oss.str();
+}
+
+std::string to_string(ObjectType object_type) {
+  switch (object_type) {
+  case ObjectType::NONE:
+    return "NONE";
+  case ObjectType::MAP:
+    return "MAP";
+  case ObjectType::GAME_OBJECT:
+    return "GAME_OBJECT";
+  case ObjectType::NPC:
+    return "NPC";
+  case ObjectType::DECAL:
+    return "DECAL";
+  default:
+    assert(0);
+  }
 }
 } // namespace Util

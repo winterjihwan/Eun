@@ -33,6 +33,7 @@ struct Camera {
   void third_person_view(const glm::vec3 &watch);
 
   glm::mat4 view_matrix();
+  glm::mat4 projection();
 
   void process_mouse_movement(float xoffset, float yoffset, GLboolean constrainPitch = true);
   void process_mouse_scroll(float yoffset);

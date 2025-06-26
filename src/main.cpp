@@ -21,7 +21,6 @@ int main(void) {
     return -1;
   }
 
-  // TODO: UI FPS
   while (Backend::is_window_open()) {
     Backend::update_subsystems();
     Backend::begin_frame();
