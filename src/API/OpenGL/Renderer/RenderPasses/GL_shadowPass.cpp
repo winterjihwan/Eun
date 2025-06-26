@@ -1,10 +1,8 @@
 #include "API/OpenGL/Renderer/GL_frameBuffer.h"
 #include "API/OpenGL/Renderer/GL_renderer.h"
-#include "AssetManager/AssetManager.h"
 #include "Backend/Backend.h"
 #include "Renderer/RenderDataManager.h"
 #include "Types/Game/AnimEntity.h"
-#include <glm/gtx/euler_angles.hpp>
 
 namespace OpenGLRenderer {
 extern glm::mat4 _view;
@@ -21,15 +19,21 @@ void shadow_pass() {
   glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
   shadow_buffer.clear_bind();
 
+  // Geometry
   shader_shadow.use();
   shader_shadow.setMat4("u_light_space", _light_space);
 
-  // Geometry
-  glm::mat4 map = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, 0.0f));
-  map           = glm::rotate(map, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  shader_shadow.setMat4("u_model", map);
-  Mesh *plane = AssetManager::get_mesh_by_name("Plane");
-  plane->draw(shader_shadow);
+  std::vector<Entity *> entities = RenderDataManager::get_entities();
+  for (Entity *entity : entities) {
+    glm::mat4 &model = entity->get_transform();
+    shader_shadow.setMat4("u_model", model);
+    std::variant<Model *, Mesh *> renderable = entity->get_renderable();
+
+    if (std::holds_alternative<Model *>(renderable)) {
+    } else if (std::holds_alternative<Mesh *>(renderable)) {
+      std::get<Mesh *>(renderable)->draw(shader_shadow);
+    }
+  }
 
   // Anim
   shader_shadow_anim.use();
@@ -41,8 +45,8 @@ void shadow_pass() {
 
     for (uint i = 0; i < transforms.size(); i++) {
       if (i >= MAX_BONES) {
-        std::cout << "INCREASE MAX_BONES" << std::endl;
-        exit(1);
+        std::cerr << "INCREASE MAX_BONES" << std::endl;
+        assert(0);
       }
       std::string name = "u_bones[" + std::to_string(i) + "]";
       shader_shadow_anim.setMat4(name.c_str(), transforms[i]);

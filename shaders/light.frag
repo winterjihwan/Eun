@@ -70,7 +70,7 @@ void main()
         lighting += CalcFlashLight(fragPos, normal, viewDir, albedo, specular);
     }
 
-    lighting *= (1.0 - shadow);
+    lighting *= (1.0 - shadow / 2); // shadow / 2 is HACK
     FragColor = vec4(lighting, 1.0);
 }
 

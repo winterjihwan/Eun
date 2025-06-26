@@ -41,7 +41,6 @@ void blood_volumetric_pass() {
     blood_volumetric->get_model()->render();
   }
 
-  glDisable(GL_CULL_FACE);
   glBindVertexArray(0);
 }
 } // namespace OpenGLRenderer

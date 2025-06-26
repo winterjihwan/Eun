@@ -23,7 +23,7 @@ void Player::update_movement(float delta_time, Camera camera) {
     walk_dir = glm::normalize(walk_dir);
 
   // Update Player State
-  if (_character->GetGroundState() != CharacterBase::EGroundState::OnGround) {
+  if (_character->GetGroundState() != JPH::CharacterBase::EGroundState::OnGround) {
     _player_state = PlayerState::JUMPING;
 
   } else if (glm::length(walk_dir) > 0.0f) {
@@ -46,11 +46,11 @@ void Player::update_movement(float delta_time, Camera camera) {
     _player_state = PlayerState::IDLE;
   }
 
-  Vec3 move    = Vec3(walk_dir.x, 0.0f, walk_dir.z) * _speed;
-  Vec3 cur_vel = _character->GetLinearVelocity();
-  Vec3 new_vel = move + Vec3(0, cur_vel.GetY(), 0);
+  JPH::Vec3 move    = JPH::Vec3(walk_dir.x, 0.0f, walk_dir.z) * _speed;
+  JPH::Vec3 cur_vel = _character->GetLinearVelocity();
+  JPH::Vec3 new_vel = move + JPH::Vec3(0, cur_vel.GetY(), 0);
 
-  if (_character->GetGroundState() == CharacterBase::EGroundState::OnGround) {
+  if (_character->GetGroundState() == JPH::CharacterBase::EGroundState::OnGround) {
     // TODO: Enable Jump
     if (Input::key_pressed(EUN_KEY_SPACE)) {
       new_vel.SetY(4.9f);
@@ -61,7 +61,7 @@ void Player::update_movement(float delta_time, Camera camera) {
 
   _character->SetLinearVelocity(new_vel);
 
-  CharacterVirtual::ExtendedUpdateSettings settings;
+  JPH::CharacterVirtual::ExtendedUpdateSettings settings;
   _character->ExtendedUpdate(
       delta_time,
       Physics::get_physics_system().GetGravity(),

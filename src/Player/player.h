@@ -2,6 +2,7 @@
 
 #include "Camera/Camera.h"
 #include "Enums.h"
+#include "Types/AABB/AABB.h"
 #include "Types/Game/AnimEntity.h"
 #include "Weapon/WeaponCommon.h"
 #include <Jolt/Jolt.h>
@@ -29,6 +30,7 @@ private:
   PlayerState _player_state = PlayerState::IDLE;
 
   JPH::CharacterVirtual *_character;
+  AABB                   _character_aabb;
   float                  _speed = 5.0f;
   glm::vec3              _position;
   float                  _y_velocity = 0.0f;

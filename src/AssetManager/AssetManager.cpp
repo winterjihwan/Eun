@@ -43,14 +43,31 @@ void init() {
     _meshes.emplace_back(quad_v, quad_i, nullptr, "G_Buffer");
   }
 
+  // Editor
+  {
+    std::vector<Vertex>   quad_v = Util::generate_quad_vertices(1.0f, 1.0f);
+    std::vector<uint32_t> quad_i = Util::generate_quad_indices();
+
+    _meshes.emplace_back(quad_v, quad_i, nullptr, "Mesh");
+  }
+
   // Plane
   {
     std::vector<Vertex>   quad_v = Util::generate_quad_vertices(30.0f, 30.0f);
     std::vector<uint32_t> quad_i = Util::generate_quad_indices();
-    Texture              *marble =
+    Texture              *laminate_floor =
         &_textures.emplace_back(GL_TEXTURE_2D, "res/textures/Laminate_Floor.jpg", "Laminate_Floor");
 
-    _meshes.emplace_back(quad_v, quad_i, marble, "Plane");
+    _meshes.emplace_back(quad_v, quad_i, laminate_floor, "Plane");
+  }
+
+  // Door HACK
+  {
+    std::vector<Vertex>   quad_v = Util::generate_quad_vertices(1.0f, 1.0f);
+    std::vector<uint32_t> quad_i = Util::generate_quad_indices();
+    Texture *marble = &_textures.emplace_back(GL_TEXTURE_2D, "res/textures/marble.jpg", "Marble");
+
+    _meshes.emplace_back(quad_v, quad_i, marble, "Door");
   }
 
   // Weapon View

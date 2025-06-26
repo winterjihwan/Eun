@@ -2,9 +2,7 @@
 
 #include "Defines.h"
 
-using namespace JPH;
-
-class BPLayerInterfaceImpl final : public BroadPhaseLayerInterface {
+class BPLayerInterfaceImpl final : public JPH::BroadPhaseLayerInterface {
 public:
   BPLayerInterfaceImpl() {
     mObjectToBroadPhase[Layers::NON_MOVING] = BroadPhaseLayers::NON_MOVING;
@@ -15,7 +13,7 @@ public:
     return BroadPhaseLayers::NUM_LAYERS;
   }
 
-  BroadPhaseLayer GetBroadPhaseLayer(ObjectLayer inLayer) const override {
+  JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer inLayer) const override {
     JPH_ASSERT(inLayer < Layers::NUM_LAYERS);
     return mObjectToBroadPhase[inLayer];
   }
@@ -35,12 +33,12 @@ public:
 #endif
 
 private:
-  BroadPhaseLayer mObjectToBroadPhase[Layers::NUM_LAYERS];
+  JPH::BroadPhaseLayer mObjectToBroadPhase[Layers::NUM_LAYERS];
 };
 
-class ObjectVsBroadPhaseLayerFilterImpl : public ObjectVsBroadPhaseLayerFilter {
+class ObjectVsBroadPhaseLayerFilterImpl : public JPH::ObjectVsBroadPhaseLayerFilter {
 public:
-  bool ShouldCollide(ObjectLayer inLayer1, BroadPhaseLayer inLayer2) const override {
+  bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const override {
     switch (inLayer1) {
     case Layers::NON_MOVING:
       return inLayer2 == BroadPhaseLayers::MOVING;
@@ -53,9 +51,9 @@ public:
   }
 };
 
-class ObjectLayerPairFilterImpl : public ObjectLayerPairFilter {
+class ObjectLayerPairFilterImpl : public JPH::ObjectLayerPairFilter {
 public:
-  bool ShouldCollide(ObjectLayer inObject1, ObjectLayer inObject2) const override {
+  bool ShouldCollide(JPH::ObjectLayer inObject1, JPH::ObjectLayer inObject2) const override {
     switch (inObject1) {
     case Layers::NON_MOVING:
       return inObject2 == Layers::MOVING;
@@ -68,11 +66,11 @@ public:
   }
 };
 
-class EunContactListener : public ContactListener {
-  void OnContactAdded(const Body &body1,
-                      const Body &body2,
-                      const ContactManifold &,
-                      ContactSettings &) override {
+class EunContactListener : public JPH::ContactListener {
+  void OnContactAdded(const JPH::Body &body1,
+                      const JPH::Body &body2,
+                      const JPH::ContactManifold &,
+                      JPH::ContactSettings &) override {
     auto it1 = Physics::get_contact_callbacks().find(body1.GetID());
     if (it1 != Physics::get_contact_callbacks().end())
       it1->second(body1.GetID(), body2.GetID());
@@ -84,27 +82,27 @@ class EunContactListener : public ContactListener {
 };
 
 namespace Physics {
-static Factory                                 *_factory        = nullptr;
-static TempAllocatorImpl                       *_temp_allocator = nullptr;
-static JobSystemThreadPool                     *_job_system     = nullptr;
-static BPLayerInterfaceImpl                     _broad_phase_if;
-static ObjectVsBroadPhaseLayerFilterImpl        _obj_vs_broad_filter;
-static ObjectLayerPairFilterImpl                _obj_layer_filter;
-static EunContactListener                       _contact_listener;
-std::unordered_map<BodyID, PFN_ContactCallback> _contact_callbacks;
+static JPH::Factory                                 *_factory        = nullptr;
+static JPH::TempAllocatorImpl                       *_temp_allocator = nullptr;
+static JPH::JobSystemThreadPool                     *_job_system     = nullptr;
+static BPLayerInterfaceImpl                          _broad_phase_if;
+static ObjectVsBroadPhaseLayerFilterImpl             _obj_vs_broad_filter;
+static ObjectLayerPairFilterImpl                     _obj_layer_filter;
+static EunContactListener                            _contact_listener;
+std::unordered_map<JPH::BodyID, PFN_ContactCallback> _contact_callbacks;
 
-PhysicsSystem _physics_system;
+JPH::PhysicsSystem _physics_system;
 
 void init() {
-  RegisterDefaultAllocator();
+  JPH::RegisterDefaultAllocator();
 
-  _factory           = new Factory();
-  Factory::sInstance = _factory;
-  RegisterTypes();
+  _factory                = new JPH::Factory();
+  JPH::Factory::sInstance = _factory;
+  JPH::RegisterTypes();
 
-  _temp_allocator = new TempAllocatorImpl(10 * 1024 * 1024);
-  _job_system     = new JobSystemThreadPool(
-      cMaxPhysicsJobs, cMaxPhysicsBarriers, std::thread::hardware_concurrency() - 1);
+  _temp_allocator = new JPH::TempAllocatorImpl(10 * 1024 * 1024);
+  _job_system     = new JPH::JobSystemThreadPool(
+      JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsBarriers, std::thread::hardware_concurrency() - 1);
 
   const uint32_t c_max_bodies              = 1024;
   const uint32_t c_num_body_mutexes        = 0;
@@ -119,7 +117,7 @@ void init() {
                        _obj_vs_broad_filter,
                        _obj_layer_filter);
 
-  _physics_system.SetGravity(Vec3(0.0f, GRAVITY, 0.0f));
+  _physics_system.SetGravity(JPH::Vec3(0.0f, GRAVITY, 0.0f));
 
   _physics_system.SetContactListener(&_contact_listener);
 }
@@ -144,56 +142,65 @@ void shutdown() {
   Factory::sInstance = nullptr;
 }
 
-void register_static_mesh(const std::vector<Vertex>       &vertices,
-                          const std::vector<unsigned int> &indices,
-                          const glm::mat4                 &transform) {
-  VertexList jph_vertices;
+JPH::BodyID register_static_mesh(const std::vector<Vertex>       &vertices,
+                                 const std::vector<unsigned int> &indices,
+                                 const glm::mat4                 &transform,
+                                 const ObjectType                 object_type) {
+  JPH::VertexList jph_vertices;
   jph_vertices.reserve(vertices.size());
-  for (const Vertex &v : vertices)
-    jph_vertices.push_back(Float3(v.position.x, v.position.y, v.position.z));
 
-  Array<IndexedTriangle> jph_triangles;
+  // << Vertices
+  for (const Vertex &v : vertices)
+    jph_vertices.push_back(JPH::Float3(v.position.x, v.position.y, v.position.z));
+
+  // << Triangles
+  JPH::Array<JPH::IndexedTriangle> jph_triangles;
   for (size_t i = 0; i < indices.size(); i += 3) {
-    jph_triangles.push_back(IndexedTriangle(indices[i], indices[i + 1], indices[i + 2]));
+    jph_triangles.push_back(JPH::IndexedTriangle(indices[i], indices[i + 1], indices[i + 2]));
   }
 
-  MeshShapeSettings shape_settings(jph_vertices, jph_triangles);
+  JPH::MeshShapeSettings shape_settings(jph_vertices, jph_triangles);
   shape_settings.SetEmbedded();
-  ShapeRefC shape = shape_settings.Create().Get();
+  JPH::ShapeRefC shape = shape_settings.Create().Get();
 
-  RVec3     pos(transform[3].x, transform[3].y, transform[3].z);
-  glm::quat rotation = glm::quat_cast(transform);
-  Quat      rot      = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+  // Get Transform
+  JPH::RVec3 pos(transform[3].x, transform[3].y, transform[3].z);
+  glm::quat  rotation = glm::quat_cast(transform);
+  JPH::Quat  rot      = JPH::Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
-  BodyCreationSettings settings(shape, pos, rot, EMotionType::Static, Layers::NON_MOVING);
-  Body                *body = _physics_system.GetBodyInterface().CreateBody(settings);
+  JPH::BodyCreationSettings settings(shape, pos, rot, JPH::EMotionType::Static, Layers::NON_MOVING);
+  JPH::Body                *body = _physics_system.GetBodyInterface().CreateBody(settings);
 
+  // << User Data
   PhysicsUserData user_data;
   user_data.physics_type = PhysicsType::RIGID_STATIC;
-  user_data.object_type  = ObjectType::MAP;
-  body->SetUserData(reinterpret_cast<uint64>(new PhysicsUserData(user_data)));
+  user_data.object_type  = object_type;
+  body->SetUserData(reinterpret_cast<JPH::uint64>(new PhysicsUserData(user_data)));
 
-  _physics_system.GetBodyInterface().AddBody(body->GetID(), EActivation::DontActivate);
+  // JPH::Body Register
+  _physics_system.GetBodyInterface().AddBody(body->GetID(), JPH::EActivation::DontActivate);
+
+  return body->GetID();
 }
 
 std::optional<RayHitInfo> raycast(const JPH::Vec3 &origin, const JPH::Vec3 &dir, float dist) {
-  const NarrowPhaseQuery &query = get_physics_system().GetNarrowPhaseQuery();
-  RRayCast                ray(origin, dir * dist);
-  RayCastResult           result;
+  const JPH::NarrowPhaseQuery &query = get_physics_system().GetNarrowPhaseQuery();
+  JPH::RRayCast                ray(origin, dir * dist);
+  JPH::RayCastResult           result;
 
   if (!query.CastRay(ray, result))
     return std::nullopt;
 
-  const Body *body =
+  const JPH::Body *body =
       Physics::get_physics_system().GetBodyLockInterface().TryGetBody(result.mBodyID);
 
   if (!body)
     return std::nullopt;
 
-  JPH::RVec3       pos   = body->GetPosition();
-  JPH::Quat        rot   = body->GetRotation();
-  const Shape     *shape = body->GetShape();
-  TransformedShape ts(pos, rot, shape, body->GetID());
+  JPH::RVec3            pos   = body->GetPosition();
+  JPH::Quat             rot   = body->GetRotation();
+  const JPH::Shape     *shape = body->GetShape();
+  JPH::TransformedShape ts(pos, rot, shape, body->GetID());
 
   JPH::Vec3 hit_pos    = origin + dir * (result.mFraction * dist);
   JPH::Vec3 hit_normal = ts.GetWorldSpaceSurfaceNormal(result.mSubShapeID2, hit_pos);
@@ -209,19 +216,29 @@ std::optional<RayHitInfo> raycast(const JPH::Vec3 &origin, const JPH::Vec3 &dir,
   return ray_hit_info;
 }
 
+JPH::AABox get_aabb(const JPH::BodyID &body_id) {
+  const JPH::BodyLockInterface &lock_interface = _physics_system.GetBodyLockInterface();
+  JPH::BodyLockRead             lock(lock_interface, body_id);
+
+  const JPH::Body  *body  = &lock.GetBody();
+  const JPH::Shape *shape = body->GetShape();
+  JPH::Mat44 transform = JPH::Mat44::sRotationTranslation(body->GetRotation(), body->GetPosition());
+  return shape->GetWorldSpaceBounds(transform, JPH::Vec3::sReplicate(1.0f));
+}
+
 void register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback) {
   _contact_callbacks[id] = std::move(callback);
 }
 
-PhysicsSystem &get_physics_system() {
+JPH::PhysicsSystem &get_physics_system() {
   return _physics_system;
 }
 
-TempAllocatorImpl *get_temp_allocator() {
+JPH::TempAllocatorImpl *get_temp_allocator() {
   return _temp_allocator;
 }
 
-std::unordered_map<BodyID, PFN_ContactCallback> &get_contact_callbacks() {
+std::unordered_map<JPH::BodyID, PFN_ContactCallback> &get_contact_callbacks() {
   return _contact_callbacks;
 }
 

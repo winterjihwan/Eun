@@ -1,8 +1,6 @@
 #include "API/OpenGL/Renderer/GL_frameBuffer.h"
 #include "API/OpenGL/Renderer/GL_renderer.h"
-#include "AssetManager/AssetManager.h"
 #include "Renderer/RenderDataManager.h"
-#include <glm/gtx/euler_angles.hpp>
 
 namespace OpenGLRenderer {
 extern glm::mat4 _view;
@@ -21,17 +19,17 @@ void geometry_pass() {
   shader_model.setMat4("u_projection", _projection);
   shader_model.setMat4("u_view", _view);
 
-  // TODO: Move below to World.cpp
-  // TODO: Use custom Map
-  // Map
-  glm::mat4 map = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, 0.0f));
-  map           = glm::rotate(map, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  shader_model.setMat4("u_model", map);
-  Mesh *plane = AssetManager::get_mesh_by_name("Plane");
-  plane->draw(shader_model);
-
   std::vector<Entity *> entities = RenderDataManager::get_entities();
-  // TODO: Render entities
+  for (Entity *entity : entities) {
+    glm::mat4 &model = entity->get_transform();
+    shader_model.setMat4("u_model", model);
+    std::variant<Model *, Mesh *> renderable = entity->get_renderable();
+
+    if (std::holds_alternative<Model *>(renderable)) {
+    } else if (std::holds_alternative<Mesh *>(renderable)) {
+      std::get<Mesh *>(renderable)->draw(shader_model);
+    }
+  }
 
   g_buffer.unbind();
 }

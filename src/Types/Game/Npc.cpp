@@ -7,7 +7,6 @@
 #include "Types/Game/AnimEntity.h"
 #include "Util/Util.h"
 
-// TODO: Npc Create Info
 void Npc::init(NpcCreateInfo &&npc_create_info) {
   _name           = npc_create_info.name;
   _npc_animations = npc_create_info.animations;
@@ -20,27 +19,28 @@ void Npc::init(NpcCreateInfo &&npc_create_info) {
   _npc_entity.set_scale(npc_create_info.scale);
 
   // Physics
-  float     capsule_radius   = npc_create_info.capsule_radius;
-  float     capsule_height   = npc_create_info.capsule_height;
-  glm::vec3 capsule_position = npc_create_info.capsule_position;
-  RVec3     pos              = Util::to_jolt_vec3(capsule_position);
-  Quat      rot              = Quat::sIdentity();
+  float      capsule_radius   = npc_create_info.capsule_radius;
+  float      capsule_height   = npc_create_info.capsule_height;
+  glm::vec3  capsule_position = npc_create_info.capsule_position;
+  JPH::RVec3 pos              = Util::to_jolt_vec3(capsule_position);
+  JPH::Quat  rot              = JPH::Quat::sIdentity();
 
-  CapsuleShapeSettings shape_settings(capsule_height / 2, capsule_radius);
-  ShapeRefC            shape = shape_settings.Create().Get();
+  JPH::CapsuleShapeSettings shape_settings(capsule_height / 2, capsule_radius);
+  JPH::ShapeRefC            shape = shape_settings.Create().Get();
 
   // TODO: Make motion type dynamic please
-  BodyCreationSettings settings(shape, pos, rot, EMotionType::Static, Layers::MOVING);
-  BodyInterface       &bi   = Physics::get_physics_system().GetBodyInterface();
-  Body                *body = bi.CreateBody(settings);
+  JPH::BodyCreationSettings settings(shape, pos, rot, JPH::EMotionType::Static, Layers::MOVING);
+  JPH::BodyInterface       &bi   = Physics::get_physics_system().GetBodyInterface();
+  JPH::Body                *body = bi.CreateBody(settings);
 
   PhysicsUserData user_data;
   user_data.physics_type = PhysicsType::RIGID_DYNAMIC;
   user_data.object_type  = ObjectType::NPC;
-  body->SetUserData(reinterpret_cast<uint64>(new PhysicsUserData(user_data)));
-  bi.AddBody(body->GetID(), EActivation::Activate);
+  body->SetUserData(reinterpret_cast<JPH::uint64>(new PhysicsUserData(user_data)));
+  bi.AddBody(body->GetID(), JPH::EActivation::Activate);
 
   _collider = body->GetID();
+  _aabb     = shape->GetLocalBounds();
 }
 
 void Npc::update(float delta_time) {
@@ -51,14 +51,21 @@ void Npc::update(float delta_time) {
 
   _npc_entity.update(delta_time);
 
-  // Collider
-  const Body *body = Physics::get_physics_system().GetBodyLockInterface().TryGetBody(_collider);
+  // Physics
+  const JPH::Body *body =
+      Physics::get_physics_system().GetBodyLockInterface().TryGetBody(_collider);
   if (body) {
-    RVec3 pos = body->GetCenterOfMassPosition();
+    // Collider
+    JPH::RVec3 pos = body->GetCenterOfMassPosition();
 
     // HACK: Subtract capsule height by half
     _model_transform =
         glm::translate(glm::mat4(1.0f), glm::vec3(pos.GetX(), pos.GetY() - 0.9f, pos.GetZ()));
+
+    // AABB
+    JPH::Mat44 transform =
+        JPH::Mat44::sRotationTranslation(body->GetRotation(), body->GetPosition());
+    _aabb = body->GetShape()->GetWorldSpaceBounds(transform, JPH::Vec3::sReplicate(1.0f));
   } else {
     std::cout << "AnimEntity::update(), No body found for body_id: " << _collider.GetIndex()
               << std::endl;

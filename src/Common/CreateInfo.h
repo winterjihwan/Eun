@@ -56,4 +56,5 @@ struct EntityCreateInfo {
   std::string                   name;
   std::variant<Model *, Mesh *> renderable;
   glm::mat4                     transform;
+  ObjectType                    object_type = ObjectType::NONE;
 };

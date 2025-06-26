@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Backend/GLFW.h"
+#include "Editor/Editor.h"
 #include "UI/UIBackend.h"
 #include "World/World.h"
 #include <GLFW/glfw3.h>
@@ -76,7 +77,10 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
   _lastX = xpos;
   _lastY = ypos;
 
-  _camera.process_mouse_movement(xoffset, yoffset);
+  // HACK kind of...
+  if (!Editor::is_open()) {
+    _camera.process_mouse_movement(xoffset, yoffset);
+  }
 }
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {

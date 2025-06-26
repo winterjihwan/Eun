@@ -17,12 +17,12 @@ void OpenGLCubemapView::create_cubemap() {
   glBindTexture(GL_TEXTURE_CUBE_MAP, _handle);
 
   std::vector<std::string> faces{
-      "res/textures/SkyWater/right.jpg",
-      "res/textures/SkyWater/left.jpg",
-      "res/textures/SkyWater/top.jpg",
-      "res/textures/SkyWater/bottom.jpg",
-      "res/textures/SkyWater/front.jpg",
-      "res/textures/SkyWater/back.jpg",
+      "res/textures/Sky/skybox_r.jpg",
+      "res/textures/Sky/skybox_l.jpg",
+      "res/textures/Sky/skybox_u.jpg",
+      "res/textures/Sky/skybox_d.jpg",
+      "res/textures/Sky/skybox_f.jpg",
+      "res/textures/Sky/skybox_b.jpg",
   };
 
   int width, height, nrChannels;

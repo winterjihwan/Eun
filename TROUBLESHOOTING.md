@@ -98,3 +98,10 @@ Spend 10 hours, and I got a solution (not complete tho)
 10. 2025.06.22
 While Framebufferifying, I had accidentally put viewport to 0 hence the attachments to the framebuffers  
 were actually not being created. That's why framebuffer itself was faulty  
+
+11. 2025.06.26
+Noticed the opposite side was not being renderered  
+Turns out if its completely 2D and I did not draw the opposite side,  
+it will be culled out entirely  
+
+

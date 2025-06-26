@@ -17,6 +17,8 @@ struct Entity {
 
 private:
   std::string                          _name;
+  JPH::BodyID                          _mesh;
+  JPH::AABox                           _aabb;
   std::variant<Model *, Mesh *>        _renderable;
   JPH::BodyID                         *_collider  = 0;
   glm::mat4                            _transform = glm::mat4(1.0f);

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Core/Game.h"
 #include "Defines.h"
+#include "Editor/Editor.h"
 #include "Keycodes.h"
 #include <glm/glm.hpp>
 
@@ -15,6 +16,10 @@ void Player::init(glm::vec3 position) {
 }
 
 void Player::update(float delta_time, Camera camera) {
+  if (Editor::is_open()) {
+    return;
+  }
+
   update_movement(delta_time, camera);
   update_weapon(delta_time);
   update_flashlight();

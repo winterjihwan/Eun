@@ -8,10 +8,11 @@ Entity::Entity(EntityCreateInfo &&info) {
   _renderable = info.renderable;
   _transform  = info.transform;
 
-  // TODO: Take physics creation as config
   if (std::holds_alternative<Mesh *>(_renderable)) {
     Mesh *mesh = std::get<Mesh *>(_renderable);
-    Physics::register_static_mesh(mesh->vertices, mesh->indices, info.transform);
+    _mesh      = Physics::register_static_mesh(
+        mesh->vertices, mesh->indices, info.transform, info.object_type);
+    _aabb = Physics::get_aabb(_mesh);
   } else {
     // TODO: Physics creation for <Model *>
   }

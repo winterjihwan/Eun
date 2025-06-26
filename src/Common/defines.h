@@ -15,8 +15,8 @@ constexpr float        NEAR            = 0.3f;
 constexpr float        FAR             = 100.0f;
 
 // Viewport
-constexpr unsigned int SHADOW_WIDTH  = 1024;
-constexpr unsigned int SHADOW_HEIGHT = 1024;
+constexpr unsigned int SHADOW_WIDTH  = 4096;
+constexpr unsigned int SHADOW_HEIGHT = 4096;
 
 // Player
 const float     PLAYER_HEIGHT    = 1.65f;

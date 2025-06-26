@@ -5,6 +5,7 @@
 #include "Core/Debug.h"
 #include "Core/Game.h"
 #include "Core/Timer.h"
+#include "Editor/Editor.h"
 #include "HotReload/HotReload.h"
 #include "Input/Input.h"
 #include "Physics/Physics.h"
@@ -31,6 +32,7 @@ bool init() {
   TimerManager::init();
   Audio::init();
   Input::init(get_window_pointer());
+  Editor::init();
   WeaponManager::init();
 
   return true;
@@ -49,7 +51,7 @@ void update_game() {
   if (Input::key_pressed(EUN_KEY_0)) {
     HotReload::hot_reload();
   }
-
+  Editor::update(delta_time);
   Game::update();
   Physics::update(delta_time);
   World::submit_render_items();

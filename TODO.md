@@ -38,11 +38,15 @@
 - [x] Lighting Rework
 - [x] FPS UI
 - [x] New Skybox + Floor
+- [ ] AABB
+- [ ] Raycast AABB upon Editor hover
 - [ ] Crosshair
 - [x] Remove Externs + Cleanup GL Renderer
 - [x] Shadow
     - [ ] Flashlight Shadow 
     - [ ] Point Light Shadow 
+- [ ] Light Water Simulation
+- [ ] Ambience for shadows
 - [ ] FPS Governor
 - [ ] Custom Map
 - [ ] Map Editor

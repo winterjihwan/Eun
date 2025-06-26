@@ -31,6 +31,7 @@ void init() {
 
   // HACK
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
 
   /* Shaders */
   _shaders["Model"]           = Shader("shaders/model.vert", "shaders/model.frag");

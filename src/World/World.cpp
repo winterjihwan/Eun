@@ -21,7 +21,7 @@ void init() {
   _npcs.reserve(8);
   _blood_volumetrics.reserve(32);
 
-  // Custom Map
+  // Plane
   {
     Mesh *mesh = AssetManager::get_mesh_by_name("Plane");
 
@@ -29,9 +29,25 @@ void init() {
     pos           = glm::rotate(pos, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
     EntityCreateInfo info;
-    info.name       = mesh->name;
-    info.renderable = AssetManager::get_mesh_by_name("Plane");
-    info.transform  = pos;
+    info.name        = mesh->name;
+    info.renderable  = AssetManager::get_mesh_by_name("Plane");
+    info.transform   = pos;
+    info.object_type = ObjectType::MAP;
+
+    add_entity(Entity(std::move(info)));
+  }
+
+  // Door
+  {
+    Mesh *mesh = AssetManager::get_mesh_by_name("Door");
+
+    glm::mat4 pos = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, -1.0f));
+
+    EntityCreateInfo info;
+    info.name        = mesh->name;
+    info.renderable  = AssetManager::get_mesh_by_name("Door");
+    info.transform   = pos;
+    info.object_type = ObjectType::GAME_OBJECT;
 
     add_entity(Entity(std::move(info)));
   }

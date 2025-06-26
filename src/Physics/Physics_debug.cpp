@@ -5,7 +5,7 @@ void submit_debug_lines() {
   JPH::BodyIDVector body_ids;
   Physics::get_physics_system().GetBodies(body_ids);
 
-  const BodyLockInterface &body_lock_interface =
+  const JPH::BodyLockInterface &body_lock_interface =
       Physics::get_physics_system().GetBodyLockInterface();
 
   for (const JPH::BodyID &id : body_ids) {
@@ -13,20 +13,20 @@ void submit_debug_lines() {
     if (!lock.Succeeded())
       continue;
 
-    const Body   &body      = lock.GetBody();
-    const Shape  *shape     = body.GetShape();
-    const RMat44 &transform = body.GetWorldTransform();
+    const JPH::Body   &body      = lock.GetBody();
+    const JPH::Shape  *shape     = body.GetShape();
+    const JPH::RMat44 &transform = body.GetWorldTransform();
 
-    RVec3 pos = transform.GetTranslation();
-    Quat  rot = transform.GetRotation().GetQuaternion();
+    JPH::RVec3 pos = transform.GetTranslation();
+    JPH::Quat  rot = transform.GetRotation().GetQuaternion();
 
-    TransformedShape transformed_shape(pos, rot, shape, body.GetID());
+    JPH::TransformedShape transformed_shape(pos, rot, shape, body.GetID());
 
-    Vec3  scale  = Vec3::sReplicate(1.0f);
-    AABox bounds = shape->GetWorldSpaceBounds(transform, scale);
+    JPH::Vec3  scale  = JPH::Vec3::sReplicate(1.0f);
+    JPH::AABox bounds = shape->GetWorldSpaceBounds(transform, scale);
 
-    Shape::GetTrianglesContext context;
-    transformed_shape.GetTrianglesStart(context, bounds, RVec3::sZero());
+    JPH::Shape::GetTrianglesContext context;
+    transformed_shape.GetTrianglesStart(context, bounds, JPH::RVec3::sZero());
 
     // TODO: Triangles are too expensive
     // constexpr int max_triangles = 256;

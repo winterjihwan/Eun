@@ -33,7 +33,6 @@ enum class ObjectType {
   GAME_OBJECT,
   NPC,
   DECAL,
-  UNDEFINED,
 };
 
 enum class TextureType {
@@ -66,4 +65,8 @@ enum class PlayerState {
   WALKING_RIGHT,
   JUMPING,
   STAB,
+};
+
+enum class EditorState {
+  IDLE,
 };

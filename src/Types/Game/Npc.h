@@ -19,6 +19,7 @@ struct Npc {
 private:
   std::string   _name = "Npc";
   AnimEntity    _npc_entity;
+  JPH::AABox    _aabb;
   NpcAnimations _npc_animations;
   NpcState      _npc_state       = NpcState::IDLE;
   glm::mat4     _model_transform = glm::mat4(1.0f);
