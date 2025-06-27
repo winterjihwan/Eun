@@ -33,7 +33,7 @@ void anim_pass() {
       shader_anim.setMat4(name.c_str(), transforms[i]);
     }
 
-    glm::mat4 model = anim_entity->get_model_matrix();
+    glm::mat4 model = anim_entity->get_transform();
     shader_anim.setMat4("u_model", model);
     anim_entity->render();
   }

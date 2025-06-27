@@ -2,6 +2,7 @@
 #include "AssetManager/AssetManager.h"
 #include "Renderer/RenderDataManager.h"
 #include "Util/Util.h"
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
 void AnimEntity::update(float delta_time) {
@@ -88,35 +89,43 @@ void AnimEntity::translate(const glm::vec3 &delta) {
   _position += delta;
 }
 
-void AnimEntity::set_position(const glm::vec3 &pos) {
-  _position = pos;
+void AnimEntity::set_position(const glm::vec3 &position) {
+  _position = position;
+  _dirty    = true;
 }
 
-void AnimEntity::set_rotation(const glm::vec3 &rot) {
-  _rotation = rot;
+void AnimEntity::set_rotation(const glm::quat &rotation) {
+  _rotation = rotation;
+  _dirty    = true;
 }
 
 void AnimEntity::set_scale(const glm::vec3 &scale) {
   _scale = scale;
-}
-
-void AnimEntity::set_quat(const glm::quat &quat) {
-  _quat = quat;
+  _dirty = true;
 }
 
 const std::string &AnimEntity::get_name() {
   return _name;
 }
 
-glm::mat4 AnimEntity::get_model_matrix() {
-  glm::mat4 model = glm::mat4(1.0f);
-  model           = glm::translate(model, _position);
-  model           = glm::rotate(model, glm::radians(_rotation.x), glm::vec3(1, 0, 0));
-  model           = glm::rotate(model, glm::radians(_rotation.y), glm::vec3(0, 1, 0));
-  model           = glm::rotate(model, glm::radians(_rotation.z), glm::vec3(0, 0, 1));
-  model *= glm::toMat4(_quat);
-  model = glm::scale(model, _scale);
-  return model;
+glm::mat4 &AnimEntity::get_transform() {
+  if (_dirty) {
+    glm::mat4 T      = glm::translate(glm::mat4(1.0f), _position);
+    glm::mat4 R      = glm::toMat4(_rotation);
+    glm::mat4 S      = glm::scale(glm::mat4(1.0f), _scale);
+    _transform_cache = T * R * S;
+    _dirty           = false;
+  }
+
+  return _transform_cache;
+}
+
+std::vector<Vertex> &AnimEntity::get_vertices() {
+  return _skinned_model->get_vertices();
+}
+
+std::vector<uint> &AnimEntity::get_indices() {
+  return _skinned_model->get_indices();
 }
 
 bool AnimEntity::all_anim_states_complete() {

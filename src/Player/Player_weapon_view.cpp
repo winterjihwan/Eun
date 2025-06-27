@@ -18,7 +18,7 @@ void Player::update_weapon_view(float delta_time) {
     _weapon_view.set_position(weapon_pos);
 
     glm::quat rot = glm::quatLookAt(-cam_front, cam_up);
-    _weapon_view.set_quat(rot);
+    _weapon_view.set_rotation(rot);
 
     _weapon_view.submit_render_item();
   }

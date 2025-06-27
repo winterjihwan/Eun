@@ -24,8 +24,7 @@ Entity::Entity(EntityCreateInfo &&info) {
 
   } else {
     Model *model = std::get<Model *>(_renderable);
-
-    _body = Physics::register_static_mesh(
+    _body        = Physics::register_static_mesh(
         model->get_vertices(), model->get_indices(), get_transform(), _object_type, _object_id);
     _aabb = Physics::get_aabb(_body);
   }
@@ -39,10 +38,6 @@ void Entity::update(float delta_time) {
 
 void Entity::submit_render_item() {
   RenderDataManager::submit_entity(this);
-}
-
-void Entity::set_collider(JPH::BodyID *collider) {
-  _collider = collider;
 }
 
 void Entity::set_on_update(std::function<void(Entity &, float)> on_update) {

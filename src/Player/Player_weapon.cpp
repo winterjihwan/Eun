@@ -102,10 +102,8 @@ void Player::switch_weapon(const std::string &name) {
 
   if (weapon_info->type == WeaponType::KNIFE) {
     _weapon_view.set_skinned_model("Knife_View");
-    // _weapon_view.set_rotation(glm::vec3(0.0f, 0.0f, 0.0f));
   } else if (weapon_info->type == WeaponType::GLOCK) {
     _weapon_view.set_skinned_model("Glock_View");
-    // _weapon_view.set_rotation(glm::vec3(0.0f, -160.0f, 0.0f));
   }
 }
 

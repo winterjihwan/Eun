@@ -320,10 +320,6 @@ const std::string &Model::get_name() {
   return name;
 }
 
-std::vector<Model::BasicMeshEntry> &Model::get_meshes() {
-  return _meshes;
-}
-
 std::vector<Vertex> &Model::get_vertices() {
   return _vertices;
 }

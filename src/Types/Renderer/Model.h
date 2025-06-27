@@ -28,6 +28,22 @@ public:
 
   virtual ~Model();
 
+  void               load();
+  void               render();
+  void               setup_materials(unsigned int mesh_index, unsigned int material_index);
+  const std::string &get_name();
+  virtual std::vector<Vertex> &get_vertices();
+  std::vector<uint>           &get_indices();
+
+protected:
+  enum BUFFER_TYPE {
+    INDEX_BUFFER     = 0,
+    VERTEX_BUFFER    = 1,
+    WVP_MAT_BUFFER   = 2,
+    WORLD_MAT_BUFFER = 3,
+    NUM_BUFFERS      = 4
+  };
+
   struct BasicMeshEntry {
     BasicMeshEntry() {
       NumIndices    = 0;
@@ -40,23 +56,6 @@ public:
     uint BaseVertex;
     uint BaseIndex;
     uint MaterialIndex;
-  };
-
-  void               load();
-  void               render();
-  void               setup_materials(unsigned int mesh_index, unsigned int material_index);
-  const std::string &get_name();
-  std::vector<BasicMeshEntry> &get_meshes();
-  std::vector<Vertex>         &get_vertices();
-  std::vector<uint>           &get_indices();
-
-protected:
-  enum BUFFER_TYPE {
-    INDEX_BUFFER     = 0,
-    VERTEX_BUFFER    = 1,
-    WVP_MAT_BUFFER   = 2,
-    WORLD_MAT_BUFFER = 3,
-    NUM_BUFFERS      = 4
   };
 
   const aiScene              *_scene = 0;

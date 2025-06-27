@@ -199,6 +199,21 @@ void SkinnedModel::get_bone_transforms(Animation              *animation,
   }
 }
 
+std::vector<Vertex> &SkinnedModel::get_vertices() {
+  std::vector<Vertex> vertices;
+  vertices.reserve(_skinned_vertices.size());
+  for (const auto &sv : _skinned_vertices) {
+    Vertex v;
+    v.position   = sv.position;
+    v.tex_coords = sv.tex_coords;
+    v.normal     = sv.normal;
+    vertices.push_back(v);
+  }
+
+  _plain_vertices = vertices;
+  return _plain_vertices;
+};
+
 void SkinnedModel::read_node_hierarchy(float            animation_time_ticks,
                                        const aiNode    *node,
                                        const glm::mat4 &parent_transform,

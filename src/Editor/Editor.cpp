@@ -63,6 +63,9 @@ void update_hover() {
     const RayHitInfo &info = hit.value();
     _hovered_object_type   = info.user_data->object_type;
     _hovered_object_id     = info.user_data->object_id;
+  } else {
+    _hovered_object_type = ObjectType::NONE;
+    _hovered_object_id   = 0;
   }
 }
 
@@ -82,24 +85,26 @@ void update_translation() {
     return;
   }
 
-  Entity *entity = World::get_entity_by_object_id(_selected_object_id);
+  if (_selected_object_type == ObjectType::GAME_OBJECT) {
+    Entity *entity = World::get_entity_by_object_id(_selected_object_id);
 
-  if (Input::key_pressed(EUN_KEY_UP))
-    entity->add_translation(glm::vec3(0.0f, 0.05f, 0.0f));
-  else if (Input::key_pressed(EUN_KEY_DOWN))
-    entity->add_translation(glm::vec3(0.0f, -0.05f, 0.0f));
-  else if (Input::key_pressed(EUN_KEY_LEFT))
-    entity->add_translation(glm::vec3(-0.05f, 0.0f, 0.0f));
-  else if (Input::key_pressed(EUN_KEY_RIGHT))
-    entity->add_translation(glm::vec3(0.05f, 0.0f, 0.0f));
-  else if (Input::key_pressed(EUN_KEY_LEFT_BRACKET))
-    entity->add_translation(glm::vec3(0.0f, 0.0f, 0.05f));
-  else if (Input::key_pressed(EUN_KEY_RIGHT_BRACKET))
-    entity->add_translation(glm::vec3(0.0f, 0.0f, -0.05f));
-  else
-    return;
+    if (Input::key_pressed(EUN_KEY_UP))
+      entity->add_translation(glm::vec3(0.0f, 0.05f, 0.0f));
+    else if (Input::key_pressed(EUN_KEY_DOWN))
+      entity->add_translation(glm::vec3(0.0f, -0.05f, 0.0f));
+    else if (Input::key_pressed(EUN_KEY_LEFT))
+      entity->add_translation(glm::vec3(-0.05f, 0.0f, 0.0f));
+    else if (Input::key_pressed(EUN_KEY_RIGHT))
+      entity->add_translation(glm::vec3(0.05f, 0.0f, 0.0f));
+    else if (Input::key_pressed(EUN_KEY_LEFT_BRACKET))
+      entity->add_translation(glm::vec3(0.0f, 0.0f, 0.05f));
+    else if (Input::key_pressed(EUN_KEY_RIGHT_BRACKET))
+      entity->add_translation(glm::vec3(0.0f, 0.0f, -0.05f));
+    else
+      return;
 
-  entity->log_transform();
+    entity->log_transform();
+  }
 }
 
 void open_editor() {

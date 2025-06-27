@@ -1,6 +1,7 @@
 #include "Physics.h"
 
 #include "Defines.h"
+#include "Enums.h"
 
 class BPLayerInterfaceImpl final : public JPH::BroadPhaseLayerInterface {
 public:
@@ -181,6 +182,26 @@ JPH::BodyID register_static_mesh(std::vector<Vertex>       &vertices,
 
   // JPH::Body Register
   _physics_system.GetBodyInterface().AddBody(body->GetID(), JPH::EActivation::DontActivate);
+
+  return body->GetID();
+}
+
+JPH::BodyID register_collider(JPH::ShapeRefC shape,
+                              JPH::RVec3    &position,
+                              JPH::Quat     &rotation,
+                              ObjectType     object_type,
+                              uint64_t       object_id) {
+  JPH::BodyCreationSettings settings(
+      shape, position, rotation, JPH::EMotionType::Static, Layers::MOVING); // TODO: Config Layers
+  JPH::Body *body = _physics_system.GetBodyInterface().CreateBody(settings);
+
+  PhysicsUserData user_data;
+  user_data.physics_type = PhysicsType::RIGID_DYNAMIC;
+  user_data.object_type  = object_type;
+  user_data.object_id    = object_id;
+  body->SetUserData(reinterpret_cast<JPH::uint64>(new PhysicsUserData(user_data)));
+
+  _physics_system.GetBodyInterface().AddBody(body->GetID(), JPH::EActivation::Activate);
 
   return body->GetID();
 }

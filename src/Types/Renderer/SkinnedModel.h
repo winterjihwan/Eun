@@ -20,9 +20,10 @@ public:
   SkinnedModel &operator=(SkinnedModel &&) = default;
   ~SkinnedModel();
 
-  void get_bone_transforms(Animation              *animation,
-                           float                   time_ticks,
-                           std::vector<glm::mat4> &out_transforms);
+  void                         get_bone_transforms(Animation              *animation,
+                                                   float                   time_ticks,
+                                                   std::vector<glm::mat4> &out_transforms);
+  virtual std::vector<Vertex> &get_vertices();
 
 private:
   virtual void reserve_space(unsigned int num_vertices, unsigned int num_indices);
@@ -93,6 +94,7 @@ private:
     aiVector3D   translation;
   };
 
+  std::vector<Vertex>             _plain_vertices;
   std::vector<SkinnedVertex>      _skinned_vertices;
   std::map<std::string, uint>     _bone_name_to_index_map;
   std::vector<BoneInfo>           _bone_infos;
