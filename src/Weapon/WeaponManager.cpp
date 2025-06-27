@@ -22,7 +22,7 @@ void init() {
   glock.audio_files.fire       = "Glock_Fire.wav";
   glock.audio_files.reload     = "Glock_Reload.wav";
   // pistol.audio_files.draw        = ;
-  glock.damage       = 5;
+  glock.damage       = 10;
   glock.offset_pos   = glm::vec3(0.0f, 15.0f, 0.1f);
   glock.offset_rot   = glm::radians(glm::vec3(0.0f, 180.0f, 270.0f));
   glock.offset_scale = glm::vec3(100.0f);
@@ -40,7 +40,7 @@ void init() {
       "Knife_Swing2",
   };
   knife.audio_files.stab = "Glock_Fire.wav";
-  knife.damage           = 25;
+  knife.damage           = 12;
   knife.offset_pos       = glm::vec3(0.0f, 0.0f, 0.0f);
   knife.offset_rot       = glm::radians(glm::vec3(0.0f, 0.0f, 0.0f));
   knife.offset_scale     = glm::vec3(100.0f);

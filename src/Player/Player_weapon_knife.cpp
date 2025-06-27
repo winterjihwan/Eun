@@ -15,7 +15,9 @@ void Player::stab() {
   _weapon_view.play_animation(weapon_info->animation_names.stab);
   _weapon_action = WeaponAction::STAB;
 
+  float damage = weapon_info->damage;
+
   // Extra
   float stab_delay = 0.0f;
-  TimerManager::add_timer(stab_delay, [this]() { perform_stab(); });
+  TimerManager::add_timer(stab_delay, [this, damage]() { perform_stab(damage); });
 }

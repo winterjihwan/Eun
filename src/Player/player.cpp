@@ -20,6 +20,7 @@ void Player::update(float delta_time, Camera camera) {
     return;
   }
 
+  update_ui();
   update_movement(delta_time, camera);
   update_weapon(delta_time);
   update_flashlight();

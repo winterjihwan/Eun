@@ -35,7 +35,11 @@ struct NpcCreateInfo {
   glm::quat     rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
   glm::vec3     scale    = glm::vec3(1.0f, 1.0f, 1.0f);
 
-  // Collider Capsule
+  // Game
+  float health = 100.0f;
+  int   reward = 50;
+
+  // Collider
   float     capsule_radius;
   float     capsule_height;
   glm::vec3 capsule_position;

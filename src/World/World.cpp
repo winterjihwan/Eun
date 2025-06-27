@@ -3,6 +3,7 @@
 #include "CreateInfo.h"
 #include "Keycodes.h"
 #include "Types/Game/BloodVolumetric.h"
+#include "Types/Game/Npc.h"
 #include <vector>
 
 namespace World {
@@ -55,21 +56,27 @@ void init() {
 
   // Npc
   {
-    NpcCreateInfo npc_create_info;
-    npc_create_info.name             = "Npc1";
-    npc_create_info.skinned_model    = "Mannequin";
-    npc_create_info.animations.idle  = "Mannequin_Idle";
-    npc_create_info.position         = glm::vec3(0.0f, -3.0f, -5.0f);
-    npc_create_info.scale            = glm::vec3(.01f, .01f, .01f);
-    npc_create_info.capsule_radius   = 0.2f;
-    npc_create_info.capsule_height   = 1.5f;
-    npc_create_info.capsule_position = glm::vec3(
-        0.0f,
-        (npc_create_info.capsule_height + 2.0f * npc_create_info.capsule_radius) / 2.0f - 3.0f,
-        -5.0f); // TODO: Capsule position based on position
+    NpcCreateInfo info;
+    info.name            = "Mannequin";
+    info.skinned_model   = "Mannequin";
+    info.animations.idle = "Mannequin_Idle";
+    info.position        = glm::vec3(0.0f, -3.0f, -5.0f);
+    info.scale           = glm::vec3(.01f, .01f, .01f);
+
+    // Game
+    info.health = 100;
+    info.reward = 10;
+
+    // Collider
+    info.capsule_radius = 0.2f;
+    info.capsule_height = 1.5f;
+    info.capsule_position =
+        glm::vec3(0.0f,
+                  (info.capsule_height + 2.0f * info.capsule_radius) / 2.0f - 3.0f,
+                  -5.0f); // TODO: Capsule position based on position
 
     Npc &npc = _npcs.emplace_back();
-    npc.init(std::move(npc_create_info));
+    npc.init(std::move(info));
   }
 }
 
@@ -151,6 +158,17 @@ Entity *get_entity_by_object_id(uint64_t object_id) {
 
   std::cout << "World::get_entity_by_object_id() failed, no entity with id: " << object_id
             << std::endl;
+  assert(0);
+}
+
+Npc *get_npc_by_object_id(uint64_t object_id) {
+  for (Npc &npc : _npcs) {
+    if (npc.get_id() == object_id) {
+      return &npc;
+    }
+  }
+
+  std::cout << "World::get_npc_by_object_id() failed, no npc with id: " << object_id << std::endl;
   assert(0);
 }
 } // namespace World

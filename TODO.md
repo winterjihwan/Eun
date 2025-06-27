@@ -45,12 +45,22 @@
     - [x] Selection
     - [x] Translation
 - [x] Model Static Mesh Physics
+- [ ] Game UI
+    - [ ] Unit Health Bar
+    - [x] Player Minerals
+    - [ ] Player Mineral Texture
+- [ ] Game Logics
+    - [ ] Npc Kill Reward
+    - [ ] Buy Unit
+    - [ ] Unit Auto Attack
+    - [ ] Unit Enhance
 - [ ] Instancing using specific Draw call
 - [x] Remove Externs + Cleanup GL Renderer
 - [x] Shadow
     - [ ] Flashlight Shadow 
     - [ ] Point Light Shadow 
 - [ ] Light Water Simulation
+- [ ] SpriteSheet
 - [ ] Ambience for shadows
 - [ ] FPS Governor
 - [ ] Custom Map

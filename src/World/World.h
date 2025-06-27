@@ -25,5 +25,6 @@ std::vector<Bullet> &get_bullets();
 std::vector<Npc>    &get_npcs();
 Npc                 *get_npc_by_name(const std::string &name);
 Entity              *get_entity_by_object_id(uint64_t object_id);
+Npc                 *get_npc_by_object_id(uint64_t object_id);
 
 } // namespace World

@@ -134,7 +134,7 @@ void Player::spawn_bullet(float variance) {
   World::add_bullet(Bullet(createInfo));
 }
 
-void Player::perform_stab() {
+void Player::perform_stab(float damage) {
   // Decals
   Camera *camera = Game::get_camera();
 
@@ -167,11 +167,19 @@ void Player::perform_stab() {
   if (data->physics_type == PhysicsType::RIGID_DYNAMIC && data->object_type == ObjectType::NPC) {
     Audio::play_audio("Knife_Stab.wav", 1.0f);
 
+    // TODO: Separate Function?
+    // Damage NPC
+    Npc *npc  = World::get_npc_by_object_id(data->object_id);
+    bool dead = npc->take_damage(damage);
+    if (dead) {
+      _minerals += npc->get_reward();
+    }
+
+    // Blood Volumetric
     static unsigned int blood_volumetric_index = 1;
     if (++blood_volumetric_index > 6)
       blood_volumetric_index = 1;
 
-    // Blood Volumetric
     BloodVolumetricCreateInfo info;
     info.position          = Util::to_vec3(hit->hit_pos);
     info.rotation          = glm::vec3(0.0f);

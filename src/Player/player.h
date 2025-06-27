@@ -10,10 +10,9 @@
 #include <glm/glm.hpp>
 
 struct Player {
+  // Player
   void init(glm::vec3 position);
   void update(float delta_time, Camera camera);
-
-  JPH::CharacterVirtual *create_character_virtual(glm::vec3 position, float height, float radius);
 
   glm::vec3 get_pos();
   glm::vec3 get_pos_feet();
@@ -40,6 +39,15 @@ private:
   void      update_movement(float delta_time, Camera camera);
   void      update_anim_entity();
 
+  // Physics
+  JPH::CharacterVirtual *create_character_virtual(glm::vec3 position, float height, float radius);
+
+  // UI
+  void update_ui();
+
+  // Game
+  int _minerals = 0;
+
   // Flashlight
   bool _flashlight_on = false;
 
@@ -62,7 +70,7 @@ private:
   void switch_weapon(const std::string &name);
   void next_weapon();
   void stab();
-  void perform_stab();
+  void perform_stab(float damage);
   void reload_gun();
   void fire_gun();
   void inspect_gun();
