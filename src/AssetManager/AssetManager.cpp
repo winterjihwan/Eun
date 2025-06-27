@@ -63,11 +63,7 @@ void init() {
 
   // Door HACK
   {
-    std::vector<Vertex>   quad_v = Util::generate_quad_vertices(1.0f, 1.0f);
-    std::vector<uint32_t> quad_i = Util::generate_quad_indices();
-    Texture *marble = &_textures.emplace_back(GL_TEXTURE_2D, "res/textures/marble.jpg", "Marble");
-
-    _meshes.emplace_back(quad_v, quad_i, marble, "Door");
+    _models.emplace_back("Shop", "res/objects/Shop/source/Shop.glb");
   }
 
   // Weapon View

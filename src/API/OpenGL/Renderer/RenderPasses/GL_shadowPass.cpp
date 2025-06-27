@@ -30,6 +30,7 @@ void shadow_pass() {
     std::variant<Model *, Mesh *> renderable = entity->get_renderable();
 
     if (std::holds_alternative<Model *>(renderable)) {
+      std::get<Model *>(renderable)->render();
     } else if (std::holds_alternative<Mesh *>(renderable)) {
       std::get<Mesh *>(renderable)->draw(shader_shadow);
     }

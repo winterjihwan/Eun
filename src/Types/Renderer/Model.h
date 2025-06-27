@@ -2,6 +2,7 @@
 
 #include "Defines.h"
 #include "Material.h"
+#include "Types.h"
 #include "stb_image/stb_image.h"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -27,12 +28,6 @@ public:
 
   virtual ~Model();
 
-  void               load();
-  void               render();
-  void               setup_materials(unsigned int mesh_index, unsigned int material_index);
-  const std::string &get_name();
-
-protected:
   struct BasicMeshEntry {
     BasicMeshEntry() {
       NumIndices    = 0;
@@ -47,6 +42,15 @@ protected:
     uint MaterialIndex;
   };
 
+  void               load();
+  void               render();
+  void               setup_materials(unsigned int mesh_index, unsigned int material_index);
+  const std::string &get_name();
+  std::vector<BasicMeshEntry> &get_meshes();
+  std::vector<Vertex>         &get_vertices();
+  std::vector<uint>           &get_indices();
+
+protected:
   enum BUFFER_TYPE {
     INDEX_BUFFER     = 0,
     VERTEX_BUFFER    = 1,
@@ -58,6 +62,7 @@ protected:
   const aiScene              *_scene = 0;
   glm::mat4                   _global_inverse_transform;
   std::vector<BasicMeshEntry> _meshes;
+  std::vector<Vertex>         _vertices;
   std::vector<uint>           _indices;
 
   GLuint _VAO                  = 0;
@@ -72,14 +77,7 @@ protected:
 private:
   std::unique_ptr<Assimp::Importer> _importer;
 
-  struct Vertex {
-    glm::vec3 position;
-    glm::vec2 tex_coords;
-    glm::vec3 normal;
-  };
-
   std::vector<Material> _materials;
-  std::vector<Vertex>   _vertices;
 
   void init_from_scene(const aiScene *scene, const std::string &path);
   void load_textures(const std::string &dir, const aiMaterial *material, int index);

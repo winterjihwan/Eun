@@ -294,10 +294,11 @@ void Model::init_single_mesh(uint mesh_index, const aiMesh *aiMesh) {
   }
 
   for (unsigned int i = 0; i < aiMesh->mNumFaces; i++) {
-    const aiFace &Face = aiMesh->mFaces[i];
-    _indices.push_back(Face.mIndices[0]);
-    _indices.push_back(Face.mIndices[1]);
-    _indices.push_back(Face.mIndices[2]);
+    const aiFace &face = aiMesh->mFaces[i];
+
+    _indices.push_back(face.mIndices[0]);
+    _indices.push_back(face.mIndices[1]);
+    _indices.push_back(face.mIndices[2]);
   }
 }
 
@@ -318,3 +319,15 @@ void Model::count_vertices_and_indices(const aiScene *scene,
 const std::string &Model::get_name() {
   return name;
 }
+
+std::vector<Model::BasicMeshEntry> &Model::get_meshes() {
+  return _meshes;
+}
+
+std::vector<Vertex> &Model::get_vertices() {
+  return _vertices;
+}
+
+std::vector<uint> &Model::get_indices() {
+  return _indices;
+};

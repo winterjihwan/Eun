@@ -1,6 +1,7 @@
 #include "Entity.h"
 #include "Physics/Physics.h"
 #include "Renderer/RenderDataManager.h"
+#include "Types/Renderer/Model.h"
 #include "Types/UID/UID.h"
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
@@ -20,8 +21,13 @@ Entity::Entity(EntityCreateInfo &&info) {
     _body      = Physics::register_static_mesh(
         mesh->vertices, mesh->indices, get_transform(), _object_type, _object_id);
     _aabb = Physics::get_aabb(_body);
+
   } else {
-    // TODO: Physics creation for <Model *>
+    Model *model = std::get<Model *>(_renderable);
+
+    _body = Physics::register_static_mesh(
+        model->get_vertices(), model->get_indices(), get_transform(), _object_type, _object_id);
+    _aabb = Physics::get_aabb(_body);
   }
 }
 

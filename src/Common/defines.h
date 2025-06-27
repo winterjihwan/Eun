@@ -11,7 +11,7 @@ constexpr float EUN_PI = 3.141592653589793f;
 // Game
 constexpr unsigned int VIEWPORT_WIDTH  = 1280;
 constexpr unsigned int VIEWPORT_HEIGHT = 800;
-constexpr float        NEAR            = 0.3f;
+constexpr float        NEAR            = 0.1f;
 constexpr float        FAR             = 100.0f;
 
 // Viewport
@@ -83,9 +83,12 @@ const float ZOOM        = 45.0f;
 #define MAX_BONES                (200)
 
 // Assimp
+// #define ASSIMP_LOAD_FLAGS_GEOMETRY \
+//   (aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_GenSmoothNormals | \
+//    aiProcess_LimitBoneWeights | aiProcess_SplitLargeMeshes | aiProcess_ImproveCacheLocality | \
+//    aiProcess_RemoveRedundantMaterials | aiProcess_FindDegenerates | aiProcess_FindInvalidData | \
+//    aiProcess_GenUVCoords | aiProcess_CalcTangentSpace | aiProcess_FlipUVs)
 #define ASSIMP_LOAD_FLAGS_GEOMETRY                                                                 \
-  (aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_GenSmoothNormals |          \
-   aiProcess_LimitBoneWeights | aiProcess_SplitLargeMeshes | aiProcess_ImproveCacheLocality |      \
-   aiProcess_RemoveRedundantMaterials | aiProcess_FindDegenerates | aiProcess_FindInvalidData |    \
-   aiProcess_GenUVCoords | aiProcess_CalcTangentSpace | aiProcess_FlipUVs)
+  (aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs |                        \
+   aiProcess_CalcTangentSpace | aiProcess_LimitBoneWeights)
 #define ASSIMP_LOAD_FLAGS_ANIMATION aiProcess_ValidateDataStructure

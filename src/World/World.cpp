@@ -36,15 +36,17 @@ void init() {
     add_entity(Entity(std::move(info)));
   }
 
-  // Door
+  // Shop
   {
-    Mesh *mesh = AssetManager::get_mesh_by_name("Door");
+    Model *model = AssetManager::get_model_by_name("Shop");
 
     EntityCreateInfo info;
-    info.name        = mesh->name;
-    info.renderable  = mesh;
-    info.position    = glm::vec3(0.0f, -2.5f, -1.0f);
-    info.rotation    = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+    info.name        = model->name;
+    info.renderable  = model;
+    info.position    = glm::vec3(5.0f, -2.0f, -3.0f);
+    glm::quat rot_x  = glm::angleAxis(glm::radians(90.0f), glm::vec3(1, 0, 0));
+    glm::quat rot_y  = glm::angleAxis(glm::radians(-90.0f), glm::vec3(0, 1, 0));
+    info.rotation    = rot_y * rot_x;
     info.scale       = glm::vec3(1.0f);
     info.object_type = ObjectType::GAME_OBJECT;
 

@@ -37,7 +37,7 @@ void update(float delta_time) {
 
   // Blood Volumetrics
   for (auto it = _blood_volumetrics.begin(); it != _blood_volumetrics.end();) {
-    if (it->_current_time > 0.9f) {
+    if (it->_current_time > 2.0f) {
       it = _blood_volumetrics.erase(it);
     } else {
       it->update(delta_time);

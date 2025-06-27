@@ -104,4 +104,10 @@ Noticed the opposite side was not being renderered
 Turns out if its completely 2D and I did not draw the opposite side,  
 it will be culled out entirely  
 
-
+12. 2025.06.27
+Had Sanitize error for JPH when I tried to register static mesh for Model  
+There were two errors  
+1. Assimp load import flags  
+    JoinIdenticalVertices, SplitLargeMeshes would mess around the vertices that needs special treatment  
+    when proccesing in the CPU side which is too buggy  
+2. Quaternion not being normalized  

@@ -32,7 +32,6 @@
     - [x] Gun
 - [x] Animation Blend In Transition
 - [x] Multiple Animations Blending
-- [ ] Instancing using specific Draw call
 - [x] Timer
 - [x] New Animation System
 - [x] Lighting Rework
@@ -40,12 +39,13 @@
 - [x] New Skybox + Floor
 - [x] AABB
 - [x] Raycast AABB upon Editor hover
-- [ ] Editor
+- [x] Editor
     - [x] Hover
     - [x] Object ID
     - [x] Selection
     - [x] Translation
-- [ ] Crosshair
+- [x] Model Static Mesh Physics
+- [ ] Instancing using specific Draw call
 - [x] Remove Externs + Cleanup GL Renderer
 - [x] Shadow
     - [ ] Flashlight Shadow 
@@ -81,6 +81,7 @@
 - [ ] Sanity Checks ~20% coverage
 - [ ] Gizmo Editor
 - [ ] Npc Intelligence
+- [ ] Sync Edited Translation and BroadPhase
 - [ ] Light Volume
 - [ ] 강화해서  나무캐기 systems
     - [ ] Gamble

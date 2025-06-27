@@ -49,8 +49,8 @@ void light_pass() {
 
   // Directional Light
   shader_light.setVec3("u_dirLight.direction", 0.2f, -1.0f, 0.3f);
-  shader_light.setVec3("u_dirLight.ambient", 0.05f, 0.05f, 0.05f);
-  shader_light.setVec3("u_dirLight.diffuse", 0.6f, 0.6f, 0.6f);
+  shader_light.setVec3("u_dirLight.ambient", 0.2f, 0.2f, 0.2f);
+  shader_light.setVec3("u_dirLight.diffuse", 0.8f, 0.8f, 0.8f);
   shader_light.setVec3("u_dirLight.specular", 0.5f, 0.5f, 0.5f);
 
   // FlashLight

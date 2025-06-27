@@ -142,11 +142,11 @@ void shutdown() {
   Factory::sInstance = nullptr;
 }
 
-JPH::BodyID register_static_mesh(const std::vector<Vertex>       &vertices,
-                                 const std::vector<unsigned int> &indices,
-                                 const glm::mat4                 &transform,
-                                 const ObjectType                 object_type,
-                                 const uint64_t                   object_id) {
+JPH::BodyID register_static_mesh(std::vector<Vertex>       &vertices,
+                                 std::vector<unsigned int> &indices,
+                                 glm::mat4                 &transform,
+                                 ObjectType                 object_type,
+                                 uint64_t                   object_id) {
   JPH::VertexList jph_vertices;
   jph_vertices.reserve(vertices.size());
 
@@ -166,7 +166,7 @@ JPH::BodyID register_static_mesh(const std::vector<Vertex>       &vertices,
 
   // Get Transform
   JPH::RVec3 pos(transform[3].x, transform[3].y, transform[3].z);
-  glm::quat  rotation = glm::quat_cast(transform);
+  glm::quat  rotation = glm::normalize(glm::quat_cast(transform));
   JPH::Quat  rot      = JPH::Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 
   JPH::BodyCreationSettings settings(shape, pos, rot, JPH::EMotionType::Static, Layers::NON_MOVING);

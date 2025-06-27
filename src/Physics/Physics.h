@@ -30,11 +30,11 @@ void init();
 void update(float delta_time);
 void shutdown();
 
-JPH::BodyID               register_static_mesh(const std::vector<Vertex>       &vertices,
-                                               const std::vector<unsigned int> &indices,
-                                               const glm::mat4                 &transform,
-                                               const ObjectType                 object_type,
-                                               const uint64_t                   object_id);
+JPH::BodyID               register_static_mesh(std::vector<Vertex>       &vertices,
+                                               std::vector<unsigned int> &indices,
+                                               glm::mat4                 &transform,
+                                               ObjectType                 object_type,
+                                               uint64_t                   object_id);
 JPH::AABox                get_aabb(const JPH::BodyID &body_id);
 std::optional<RayHitInfo> raycast(const JPH::Vec3 &origin, const JPH::Vec3 &dir, float dist);
 void                      register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback);

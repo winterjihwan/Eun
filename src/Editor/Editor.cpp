@@ -84,19 +84,20 @@ void update_translation() {
 
   Entity *entity = World::get_entity_by_object_id(_selected_object_id);
 
-  if (Input::key_pressed(EUN_KEY_UP)) {
+  if (Input::key_pressed(EUN_KEY_UP))
     entity->add_translation(glm::vec3(0.0f, 0.05f, 0.0f));
-  } else if (Input::key_pressed(EUN_KEY_DOWN)) {
+  else if (Input::key_pressed(EUN_KEY_DOWN))
     entity->add_translation(glm::vec3(0.0f, -0.05f, 0.0f));
-  } else if (Input::key_pressed(EUN_KEY_LEFT)) {
+  else if (Input::key_pressed(EUN_KEY_LEFT))
     entity->add_translation(glm::vec3(-0.05f, 0.0f, 0.0f));
-  } else if (Input::key_pressed(EUN_KEY_RIGHT)) {
+  else if (Input::key_pressed(EUN_KEY_RIGHT))
     entity->add_translation(glm::vec3(0.05f, 0.0f, 0.0f));
-  } else if (Input::key_pressed(EUN_KEY_LEFT_BRACKET)) {
+  else if (Input::key_pressed(EUN_KEY_LEFT_BRACKET))
     entity->add_translation(glm::vec3(0.0f, 0.0f, 0.05f));
-  } else if (Input::key_pressed(EUN_KEY_RIGHT_BRACKET)) {
+  else if (Input::key_pressed(EUN_KEY_RIGHT_BRACKET))
     entity->add_translation(glm::vec3(0.0f, 0.0f, -0.05f));
-  }
+  else
+    return;
 
   entity->log_transform();
 }
