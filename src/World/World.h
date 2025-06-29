@@ -5,7 +5,7 @@
 #include "Types/Game/Bullet.h"
 #include "Types/Game/Decal.h"
 #include "Types/Game/Entity.h"
-#include "Types/Game/Npc.h"
+#include "Types/Game/NpcEnemy.h"
 
 namespace World {
 void init();
@@ -22,9 +22,8 @@ void        add_decal(Decal &&decal);
 void        add_blood_volumetric(BloodVolumetric &&blood_volumetric);
 
 std::vector<Bullet> &get_bullets();
-std::vector<Npc>    &get_npcs();
-Npc                 *get_npc_by_name(const std::string &name);
 Entity              *get_entity_by_object_id(uint64_t object_id);
-Npc                 *get_npc_by_object_id(uint64_t object_id);
+NpcEnemy            *get_npc_enemy_by_name(const std::string &name);
+NpcEnemy            *get_npc_enemy_by_object_id(uint64_t object_id);
 
 } // namespace World

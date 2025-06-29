@@ -15,6 +15,8 @@ Entity::Entity(EntityCreateInfo &&info) {
   _scale       = info.scale;
   _object_type = info.object_type;
   _object_id   = UID::get_next();
+  _on_update   = info.on_update;
+  _on_stand    = info.on_stand;
 
   if (std::holds_alternative<Mesh *>(_renderable)) {
     Mesh *mesh = std::get<Mesh *>(_renderable);
@@ -40,8 +42,16 @@ void Entity::submit_render_item() {
   RenderDataManager::submit_entity(this);
 }
 
+void Entity::on_stand(float delta_time) {
+  _on_stand(*this, delta_time);
+}
+
 void Entity::set_on_update(std::function<void(Entity &, float)> on_update) {
   _on_update = on_update;
+}
+
+void Entity::set_on_stand(std::function<void(Entity &, float)> on_stand) {
+  _on_stand = on_stand;
 }
 
 void Entity::set_position(glm::vec3 &position) {

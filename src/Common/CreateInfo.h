@@ -31,13 +31,17 @@ struct NpcCreateInfo {
   std::string   name;
   std::string   skinned_model;
   NpcAnimations animations;
-  glm::vec3     position = glm::vec3(0.0f, 0.0f, 0.0f);
-  glm::quat     rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-  glm::vec3     scale    = glm::vec3(1.0f, 1.0f, 1.0f);
+  glm::vec3     position    = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::quat     rotation    = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+  glm::vec3     scale       = glm::vec3(1.0f, 1.0f, 1.0f);
+  ObjectType    object_type = ObjectType::NPC_ENEMY;
 
-  // Game
-  float health = 100.0f;
-  int   reward = 50;
+  // Enemy
+  float health = 0.0f;
+  int   reward = 0.0f;
+
+  // Ally
+  float damage = 0.0f;
 
   // Collider
   float     capsule_radius;
@@ -56,11 +60,14 @@ struct BloodVolumetricCreateInfo {
   glm::vec3 front;
 };
 
+struct Entity;
 struct EntityCreateInfo {
-  std::string                   name;
-  std::variant<Model *, Mesh *> renderable;
-  glm::vec3                     position    = glm::vec3(0.0f);
-  glm::quat                     rotation    = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-  glm::vec3                     scale       = glm::vec3(1.0f);
-  ObjectType                    object_type = ObjectType::NONE;
+  std::string                          name;
+  std::variant<Model *, Mesh *>        renderable;
+  glm::vec3                            position    = glm::vec3(0.0f);
+  glm::quat                            rotation    = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+  glm::vec3                            scale       = glm::vec3(1.0f);
+  ObjectType                           object_type = ObjectType::NONE;
+  std::function<void(Entity &, float)> on_update   = nullptr;
+  std::function<void(Entity &, float)> on_stand    = nullptr;
 };

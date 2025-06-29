@@ -50,10 +50,14 @@
     - [x] Player Minerals
     - [ ] Player Mineral Texture
 - [ ] Game Logics
-    - [ ] Npc Kill Reward
+    - [x] Npc Kill Reward
     - [ ] Buy Unit
+        - [ ] Buy Beacon
+        - [ ] Spawn Point
     - [ ] Unit Auto Attack
     - [ ] Unit Enhance
+- [x] Npc Ally, Enemy
+- [ ] Npc Manager
 - [ ] Instancing using specific Draw call
 - [x] Remove Externs + Cleanup GL Renderer
 - [x] Shadow

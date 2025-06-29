@@ -8,7 +8,7 @@ void Player::update_ui() {
   ss << "Minerals " << std::setw(8) << std::setfill(' ') << _minerals;
   UIBackend::blit_text(ss.str(),
                        "AncizarSerif",
-                       VIEWPORT_WIDTH - 196,
+                       VIEWPORT_WIDTH - 154,
                        VIEWPORT_HEIGHT - 16,
                        UIAlignment::CENTERED,
                        0.5f);

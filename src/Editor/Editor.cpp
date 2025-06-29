@@ -56,8 +56,7 @@ void update_hover() {
   glm::vec3 ray_origin    = Game::get_camera()->get_pos();
 
   // Raycast
-  auto hit =
-      Physics::raycast(Util::to_jolt_vec3(ray_origin), Util::to_jolt_vec3(ray_dir_world), 100.0f);
+  std::optional<RayHitInfo> hit = Physics::raycast(ray_origin, ray_dir_world, 100.0f);
 
   if (hit.has_value()) {
     const RayHitInfo &info = hit.value();

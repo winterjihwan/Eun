@@ -9,8 +9,10 @@ struct Entity {
 
   void update(float delta_time);
   void submit_render_item();
+  void on_stand(float _delta_time);
 
   void set_on_update(std::function<void(Entity &, float)> on_update);
+  void set_on_stand(std::function<void(Entity &, float)> on_stand);
   void set_position(glm::vec3 &position);
   void set_rotation(glm::quat &rotation);
   void set_scale(glm::vec3 &scale);
@@ -32,6 +34,7 @@ private:
   uint64_t                             _object_id;
   ObjectType                           _object_type;
   std::function<void(Entity &, float)> _on_update = 0;
+  std::function<void(Entity &, float)> _on_stand  = 0;
 
   // Physics
   JPH::BodyID _body;

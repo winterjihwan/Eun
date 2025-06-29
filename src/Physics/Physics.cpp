@@ -1,5 +1,6 @@
 #include "Physics.h"
 
+#include "AssetManager/AssetManager.h"
 #include "Defines.h"
 #include "Enums.h"
 
@@ -204,6 +205,10 @@ JPH::BodyID register_collider(JPH::ShapeRefC shape,
   _physics_system.GetBodyInterface().AddBody(body->GetID(), JPH::EActivation::Activate);
 
   return body->GetID();
+}
+
+std::optional<RayHitInfo> raycast(const glm::vec3 &origin, const glm::vec3 &dir, float dist) {
+  return raycast(Util::to_jolt_vec3(origin), Util::to_jolt_vec3(dir), dist);
 }
 
 std::optional<RayHitInfo> raycast(const JPH::Vec3 &origin, const JPH::Vec3 &dir, float dist) {

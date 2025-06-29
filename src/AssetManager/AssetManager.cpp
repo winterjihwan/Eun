@@ -43,6 +43,7 @@ void init() {
     _meshes.emplace_back(quad_v, quad_i, nullptr, "G_Buffer");
   }
 
+  // TODO: Make this general mesh
   // Editor
   {
     std::vector<Vertex>   quad_v = Util::generate_quad_vertices(1.0f, 1.0f);
@@ -61,7 +62,17 @@ void init() {
     _meshes.emplace_back(quad_v, quad_i, laminate_floor, "Plane");
   }
 
-  // Door HACK
+  // TODO: Replace with beacon
+  // Blue
+  {
+    std::vector<Vertex>   quad_v = Util::generate_quad_vertices(1.0f, 1.0f);
+    std::vector<uint32_t> quad_i = Util::generate_quad_indices();
+    Texture *blue = &_textures.emplace_back(GL_TEXTURE_2D, "res/textures/Blue.jpg", "Blue");
+
+    _meshes.emplace_back(quad_v, quad_i, blue, "Blue");
+  }
+
+  // Shop
   {
     _models.emplace_back("Shop", "res/objects/Shop/source/Shop.glb");
   }
@@ -77,6 +88,20 @@ void init() {
     _skinned_models.emplace_back("Mannequin", "res/objects/Mannequin/Mannequin_Idle.fbx");
     Animation &mannequin_idle = _animations.emplace_back();
     mannequin_idle.init("Mannequin_Idle", "res/objects/Mannequin/Mannequin_Idle.fbx");
+  }
+
+  // Greece_Soldier
+  {
+    _skinned_models.emplace_back("Greece_Soldier",
+                                 "res/objects/Greece_Soldier/Greece_Soldier_Hook.fbx");
+
+    Animation &greece_soldier_idle = _animations.emplace_back();
+    greece_soldier_idle.init("Greece_Soldier_Idle",
+                             "res/objects/Greece_Soldier/Greece_Soldier_Idle.fbx");
+
+    Animation &greece_soldier_hook = _animations.emplace_back();
+    greece_soldier_hook.init("Greece_Soldier_Hook",
+                             "res/objects/Greece_Soldier/Greece_Soldier_Hook.fbx");
   }
 
   // Knife Animations

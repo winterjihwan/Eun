@@ -6,6 +6,7 @@
 #include "Types.h"
 #include "Types/Game/BloodVolumetric.h"
 #include "Types/Game/Decal.h"
+#include "Types/Game/NpcAlly.h"
 #include "Util/Util.h"
 #include "World.h"
 
@@ -14,14 +15,18 @@ extern std::vector<AnimEntity>      _anim_entities;
 extern std::vector<Entity>          _entities;
 extern std::vector<Bullet>          _bullets;
 extern std::vector<Decal>           _decals;
-extern std::vector<Npc>             _npcs;
+extern std::vector<NpcEnemy>        _npc_enemies;
+extern std::vector<NpcAlly>         _npc_allies;
 extern std::vector<BloodVolumetric> _blood_volumetrics;
 
 void update(float delta_time) {
   process_bullets();
 
   // Npcs
-  for (Npc &npc : _npcs) {
+  for (NpcEnemy &npc : _npc_enemies) {
+    npc.update(delta_time);
+  }
+  for (NpcAlly &npc : _npc_allies) {
     npc.update(delta_time);
   }
 
@@ -48,11 +53,8 @@ void update(float delta_time) {
 
 void process_bullets() {
   for (Bullet &bullet : _bullets) {
-    JPH::Vec3 origin    = Util::to_jolt_vec3(bullet.get_origin());
-    JPH::Vec3 direction = Util::to_jolt_vec3(bullet.get_direction());
-    float     max_dist  = 100.0f;
-
-    std::optional<RayHitInfo> hit = Physics::raycast(origin, direction, max_dist);
+    std::optional<RayHitInfo> hit =
+        Physics::raycast(bullet.get_origin(), bullet.get_direction(), 100.0f);
     if (!hit.has_value()) {
       continue;
     }
@@ -78,7 +80,8 @@ void process_bullets() {
     }
 
     // Blood
-    if (data->physics_type == PhysicsType::RIGID_DYNAMIC && data->object_type == ObjectType::NPC) {
+    if (data->physics_type == PhysicsType::RIGID_DYNAMIC &&
+        data->object_type == ObjectType::NPC_ENEMY) {
 
       static unsigned int blood_volumetric_index = 1;
       if (++blood_volumetric_index > 6)

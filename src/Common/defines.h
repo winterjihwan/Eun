@@ -13,15 +13,18 @@ constexpr unsigned int VIEWPORT_WIDTH  = 1280;
 constexpr unsigned int VIEWPORT_HEIGHT = 800;
 constexpr float        NEAR            = 0.1f;
 constexpr float        FAR             = 100.0f;
+constexpr float        GROUND_HEIGHT   = -3.0f;
+constexpr float        PLATFORM_HEIGHT = -2.99f;
 
 // Viewport
 constexpr unsigned int SHADOW_WIDTH  = 4096;
 constexpr unsigned int SHADOW_HEIGHT = 4096;
 
 // Player
-const float     PLAYER_HEIGHT    = 1.65f;
-const glm::vec3 PLAYER_SPAWN_POS = glm::vec3(0.0f, PLAYER_HEIGHT, 0.0f);
-const float     GRAVITY          = -15.75f;
+const float         PLAYER_HEIGHT    = 1.65f;
+const glm::vec3     PLAYER_SPAWN_POS = glm::vec3(0.0f, PLAYER_HEIGHT, 0.0f);
+const float         GRAVITY          = -15.75f;
+constexpr glm::vec3 DOWN_DIRECTION   = glm::vec3(0.0f, -1.0f, 0.0f);
 
 // Camera
 const float YAW         = -90.0f;

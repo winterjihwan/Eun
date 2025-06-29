@@ -7,6 +7,7 @@
 #include "Keycodes.h"
 #include "Physics/Physics.h"
 #include "Player.h"
+#include "Types/Game/NpcEnemy.h"
 #include "Weapon/WeaponCommon.h"
 #include "Weapon/WeaponManager.h"
 #include "World/World.h"
@@ -138,11 +139,7 @@ void Player::perform_stab(float damage) {
   // Decals
   Camera *camera = Game::get_camera();
 
-  JPH::Vec3 origin    = Util::to_jolt_vec3(_position);
-  JPH::Vec3 direction = Util::to_jolt_vec3(camera->get_front());
-  float     stab_dist = 2.0f;
-
-  std::optional<RayHitInfo> hit = Physics::raycast(origin, direction, stab_dist);
+  std::optional<RayHitInfo> hit = Physics::raycast(_position, camera->get_front(), 2.0f);
   if (!hit.has_value()) {
     return;
   }
@@ -164,13 +161,14 @@ void Player::perform_stab(float damage) {
   }
 
   // Blood
-  if (data->physics_type == PhysicsType::RIGID_DYNAMIC && data->object_type == ObjectType::NPC) {
+  if (data->physics_type == PhysicsType::RIGID_DYNAMIC &&
+      data->object_type == ObjectType::NPC_ENEMY) {
     Audio::play_audio("Knife_Stab.wav", 1.0f);
 
     // TODO: Separate Function?
     // Damage NPC
-    Npc *npc  = World::get_npc_by_object_id(data->object_id);
-    bool dead = npc->take_damage(damage);
+    NpcEnemy *npc  = World::get_npc_enemy_by_object_id(data->object_id);
+    bool      dead = npc->take_damage(damage);
     if (dead) {
       _minerals += npc->get_reward();
     }

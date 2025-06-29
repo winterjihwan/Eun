@@ -41,6 +41,7 @@ JPH::BodyID               register_collider(JPH::ShapeRefC shape,
                                             ObjectType     object_type,
                                             uint64_t       object_id);
 JPH::AABox                get_aabb(const JPH::BodyID &body_id);
+std::optional<RayHitInfo> raycast(const glm::vec3 &origin, const glm::vec3 &dir, float dist);
 std::optional<RayHitInfo> raycast(const JPH::Vec3 &origin, const JPH::Vec3 &dir, float dist);
 void                      register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback);
 void                      submit_debug_lines();

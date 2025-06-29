@@ -30,8 +30,10 @@ enum class PhysicsType {
 enum class ObjectType {
   NONE = 0,
   MAP,
+  PLATFORM,
   GAME_OBJECT,
-  NPC,
+  NPC_ENEMY,
+  NPC_ALLY,
   DECAL,
 };
 

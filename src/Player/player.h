@@ -48,6 +48,9 @@ private:
   // Game
   int _minerals = 0;
 
+  // Feet Interaction
+  void update_feet_interaction(float delta_time);
+
   // Flashlight
   bool _flashlight_on = false;
 

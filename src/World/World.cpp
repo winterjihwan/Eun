@@ -1,9 +1,11 @@
 #include "World.h"
 #include "AssetManager/AssetManager.h"
 #include "CreateInfo.h"
+#include "Defines.h"
+#include "Enums.h"
 #include "Keycodes.h"
 #include "Types/Game/BloodVolumetric.h"
-#include "Types/Game/Npc.h"
+#include "Types/Game/NpcAlly.h"
 #include <vector>
 
 namespace World {
@@ -11,7 +13,8 @@ std::vector<AnimEntity>      _anim_entities;
 std::vector<Entity>          _entities;
 std::vector<Bullet>          _bullets;
 std::vector<Decal>           _decals;
-std::vector<Npc>             _npcs;
+std::vector<NpcEnemy>        _npc_enemies;
+std::vector<NpcAlly>         _npc_allies;
 std::vector<BloodVolumetric> _blood_volumetrics;
 
 void init() {
@@ -19,7 +22,8 @@ void init() {
   _entities.reserve(64);
   _bullets.reserve(32);
   _decals.reserve(32);
-  _npcs.reserve(8);
+  _npc_enemies.reserve(8);
+  _npc_enemies.reserve(64);
   _blood_volumetrics.reserve(32);
 
   // Plane
@@ -29,7 +33,7 @@ void init() {
     EntityCreateInfo info;
     info.name        = mesh->name;
     info.renderable  = AssetManager::get_mesh_by_name("Plane");
-    info.position    = glm::vec3(0.0f, -3.0f, 0.0f);
+    info.position    = glm::vec3(0.0f, GROUND_HEIGHT, 0.0f);
     info.rotation    = glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     info.scale       = glm::vec3(1.0f);
     info.object_type = ObjectType::MAP;
@@ -48,13 +52,34 @@ void init() {
     glm::quat rot_x  = glm::angleAxis(glm::radians(90.0f), glm::vec3(1, 0, 0));
     glm::quat rot_y  = glm::angleAxis(glm::radians(-90.0f), glm::vec3(0, 1, 0));
     info.rotation    = rot_y * rot_x;
-    info.scale       = glm::vec3(1.0f);
     info.object_type = ObjectType::GAME_OBJECT;
 
     add_entity(Entity(std::move(info)));
   }
 
-  // Npc
+  // Blue Beacon
+  {
+
+    Mesh *mesh = AssetManager::get_mesh_by_name("Blue");
+
+    EntityCreateInfo info;
+    info.name        = mesh->name;
+    info.renderable  = AssetManager::get_mesh_by_name("Blue");
+    info.position    = glm::vec3(3.8f, PLATFORM_HEIGHT, 4.5f);
+    info.rotation    = glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    info.object_type = ObjectType::PLATFORM;
+    info.on_stand    = [acc = 0.0f](Entity &entity, float delta_time) mutable {
+      acc += delta_time;
+      if (acc >= 0.2f) {
+        std::cout << "Entity " << entity.get_name() << '\n';
+        acc = 0.0f;
+      }
+    };
+
+    add_entity(Entity(std::move(info)));
+  }
+
+  // Mannequin
   {
     NpcCreateInfo info;
     info.name            = "Mannequin";
@@ -62,6 +87,7 @@ void init() {
     info.animations.idle = "Mannequin_Idle";
     info.position        = glm::vec3(0.0f, -3.0f, -5.0f);
     info.scale           = glm::vec3(.01f, .01f, .01f);
+    info.object_type     = ObjectType::NPC_ENEMY;
 
     // Game
     info.health = 100;
@@ -71,18 +97,44 @@ void init() {
     info.capsule_radius = 0.2f;
     info.capsule_height = 1.5f;
     info.capsule_position =
-        glm::vec3(0.0f,
-                  (info.capsule_height + 2.0f * info.capsule_radius) / 2.0f - 3.0f,
-                  -5.0f); // TODO: Capsule position based on position
+        glm::vec3(info.position.x,
+                  (info.capsule_height + 2.0f * info.capsule_radius) / 2.0f + info.position.y,
+                  info.position.z);
 
-    Npc &npc = _npcs.emplace_back();
+    NpcEnemy &npc = _npc_enemies.emplace_back();
+    npc.init(std::move(info));
+  }
+
+  // Greece_Soldier
+  {
+    NpcCreateInfo info;
+    info.name            = "Greece_Soldier";
+    info.skinned_model   = "Greece_Soldier";
+    info.animations.idle = "Greece_Soldier_Idle";
+    info.position        = glm::vec3(1.0f, -3.0f, -5.0f);
+    info.scale           = glm::vec3(.005f, .005f, .005f);
+    info.object_type     = ObjectType::NPC_ALLY;
+
+    // Collider
+    info.capsule_radius = 0.1f;
+    info.capsule_height = 0.75f;
+    info.capsule_position =
+        glm::vec3(info.position.x,
+                  (info.capsule_height + 2.0f * info.capsule_radius) / 2.0f + info.position.y,
+                  info.position.z);
+
+    NpcAlly &npc = _npc_allies.emplace_back();
     npc.init(std::move(info));
   }
 }
 
 void submit_render_items() {
-  // Npc
-  for (Npc &npc : _npcs) {
+  // Npcs
+  for (NpcEnemy &npc : _npc_enemies) {
+    AnimEntity *anim_entity = npc.get_anim_entity();
+    anim_entity->submit_render_item();
+  }
+  for (NpcAlly &npc : _npc_allies) {
     AnimEntity *anim_entity = npc.get_anim_entity();
     anim_entity->submit_render_item();
   }
@@ -134,21 +186,6 @@ std::vector<Bullet> &get_bullets() {
   return _bullets;
 }
 
-std::vector<Npc> &get_npcs() {
-  return _npcs;
-}
-
-Npc *get_npc_by_name(const std::string &name) {
-  for (Npc &npc : _npcs) {
-    if (name == npc.get_name()) {
-      return &npc;
-    }
-  }
-
-  std::cout << "World::get_npc_by_name() failed, no npc with name: " << name << std::endl;
-  assert(0);
-}
-
 Entity *get_entity_by_object_id(uint64_t object_id) {
   for (Entity &entity : _entities) {
     if (entity.get_id() == object_id) {
@@ -161,14 +198,26 @@ Entity *get_entity_by_object_id(uint64_t object_id) {
   assert(0);
 }
 
-Npc *get_npc_by_object_id(uint64_t object_id) {
-  for (Npc &npc : _npcs) {
+NpcEnemy *get_npc_enemy_by_name(const std::string &name) {
+  for (NpcEnemy &npc : _npc_enemies) {
+    if (name == npc.get_name()) {
+      return &npc;
+    }
+  }
+
+  std::cout << "World::get_npc_enemy_by_name() failed, no npc with name: " << name << std::endl;
+  assert(0);
+}
+
+NpcEnemy *get_npc_enemy_by_object_id(uint64_t object_id) {
+  for (NpcEnemy &npc : _npc_enemies) {
     if (npc.get_id() == object_id) {
       return &npc;
     }
   }
 
-  std::cout << "World::get_npc_by_object_id() failed, no npc with id: " << object_id << std::endl;
+  std::cout << "World::get_npc_enemy_by_object_id() failed, no npc with id: " << object_id
+            << std::endl;
   assert(0);
 }
 } // namespace World
