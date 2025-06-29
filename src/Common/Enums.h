@@ -32,8 +32,8 @@ enum class ObjectType {
   MAP,
   PLATFORM,
   GAME_OBJECT,
-  NPC_ENEMY,
-  NPC_ALLY,
+  ALLY,
+  BOT,
   DECAL,
 };
 

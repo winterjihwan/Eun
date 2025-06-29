@@ -20,21 +20,16 @@ struct DecalCreateInfo {
   Mesh *mesh;
 };
 
-struct NpcAnimations {
-  std::string idle;
-  // std::string death;
-};
-
 struct NpcCreateInfo {
   NpcCreateInfo() = default;
 
-  std::string   name;
-  std::string   skinned_model;
-  NpcAnimations animations;
-  glm::vec3     position    = glm::vec3(0.0f, 0.0f, 0.0f);
-  glm::quat     rotation    = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-  glm::vec3     scale       = glm::vec3(1.0f, 1.0f, 1.0f);
-  ObjectType    object_type = ObjectType::NPC_ENEMY;
+  std::string name;
+  std::string skinned_model;
+
+  glm::vec3  position    = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::quat  rotation    = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+  glm::vec3  scale       = glm::vec3(1.0f, 1.0f, 1.0f);
+  ObjectType object_type = ObjectType::ALLY;
 
   // Collider
   float     capsule_radius;

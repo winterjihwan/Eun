@@ -7,7 +7,7 @@
 #include "Keycodes.h"
 #include "Physics/Physics.h"
 #include "Player.h"
-#include "Types/Game/Bot.h"
+#include "Types/Game/Bot/Bot.h"
 #include "Weapon/WeaponCommon.h"
 #include "Weapon/WeaponManager.h"
 #include "World/World.h"
@@ -161,8 +161,7 @@ void Player::perform_stab(float damage) {
   }
 
   // Blood
-  if (data->physics_type == PhysicsType::RIGID_DYNAMIC &&
-      data->object_type == ObjectType::NPC_ENEMY) {
+  if (data->physics_type == PhysicsType::RIGID_DYNAMIC && data->object_type == ObjectType::BOT) {
     Audio::play_audio("Knife_Stab.wav", 1.0f);
 
     // TODO: Separate Function?

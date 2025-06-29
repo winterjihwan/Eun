@@ -11,6 +11,8 @@
 #include "Physics/Physics.h"
 #include "Renderer/RenderDataManager.h"
 #include "Renderer/Renderer.h"
+#include "Types/Game/Ally/AllyManager.h"
+#include "Types/Game/Bot/BotManager.h"
 #include "UI/UIBackend.h"
 #include "Weapon/WeaponManager.h"
 #include "World/World.h"
@@ -34,6 +36,8 @@ bool init() {
   Input::init(get_window_pointer());
   Editor::init();
   WeaponManager::init();
+  AllyManager::init();
+  BotManager::init();
 
   return true;
 }

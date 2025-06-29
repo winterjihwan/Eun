@@ -11,7 +11,7 @@ enum class WeaponType {
   UNDEFINED,
 };
 
-struct AnimationNames {
+struct WeaponAnimationNames {
   std::string idle;
   std::string draw;
 
@@ -31,12 +31,12 @@ struct AudioFiles {
 };
 
 struct WeaponInfo {
-  std::string    name;
-  std::string    model_name;
-  AudioFiles     audio_files;
-  AnimationNames animation_names;
-  WeaponType     type;
-  float          damage;
+  std::string          name;
+  std::string          model_name;
+  AudioFiles           audio_files;
+  WeaponAnimationNames animation_names;
+  WeaponType           type;
+  float                damage;
 
   // Local Offset
   glm::vec3 offset_pos;

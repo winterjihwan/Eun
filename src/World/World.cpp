@@ -4,7 +4,7 @@
 #include "Defines.h"
 #include "Enums.h"
 #include "Keycodes.h"
-#include "Types/Game/Ally.h"
+#include "Types/Game/Ally/Ally.h"
 #include "Types/Game/BloodVolumetric.h"
 #include <vector>
 
@@ -79,52 +79,16 @@ void init() {
     add_entity(Entity(std::move(info)));
   }
 
-  // Mannequin
+  // // Mannequin
   {
-    BotCreateInfo info;
-    info.name            = "Mannequin";
-    info.skinned_model   = "Mannequin";
-    info.animations.idle = "Mannequin_Idle";
-    info.position        = glm::vec3(0.0f, -3.0f, -5.0f);
-    info.scale           = glm::vec3(.01f, .01f, .01f);
-    info.object_type     = ObjectType::NPC_ENEMY;
-
-    // Game
-    info.health = 100;
-    info.reward = 10;
-
-    // Collider
-    info.capsule_radius = 0.2f;
-    info.capsule_height = 1.5f;
-    info.capsule_position =
-        glm::vec3(info.position.x,
-                  (info.capsule_height + 2.0f * info.capsule_radius) / 2.0f + info.position.y,
-                  info.position.z);
-
     Bot &bot = _bots.emplace_back();
-    bot.init(std::move(info));
+    bot.init("Mannequin");
   }
 
   // Greece_Soldier
   {
-    AllyCreateInfo info;
-    info.name            = "Greece_Soldier";
-    info.skinned_model   = "Greece_Soldier";
-    info.animations.idle = "Greece_Soldier_Idle";
-    info.position        = glm::vec3(1.0f, -3.0f, -5.0f);
-    info.scale           = glm::vec3(.005f, .005f, .005f);
-    info.object_type     = ObjectType::NPC_ALLY;
-
-    // Collider
-    info.capsule_radius = 0.1f;
-    info.capsule_height = 0.75f;
-    info.capsule_position =
-        glm::vec3(info.position.x,
-                  (info.capsule_height + 2.0f * info.capsule_radius) / 2.0f + info.position.y,
-                  info.position.z);
-
     Ally &ally = _allies.emplace_back();
-    ally.init(std::move(info));
+    ally.init("Greece_Soldier");
   }
 }
 

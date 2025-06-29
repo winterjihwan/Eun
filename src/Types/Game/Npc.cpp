@@ -7,18 +7,14 @@
 #include "Util/Util.h"
 
 void Npc::init(NpcCreateInfo &&info) {
-  _name           = info.name;
-  _npc_animations = info.animations;
-  _npc_state      = info.npc_state;
-  _object_type    = info.object_type;
-  _uid            = UID::get_next();
+  _name = info.name;
+  _uid  = UID::get_next();
 
-  _npc_entity.set_name(info.name);
-  _npc_entity.set_skinned_model(info.skinned_model);
-  _npc_entity.set_position(info.position);
-  _npc_entity.set_rotation(info.rotation);
-  _npc_entity.set_scale(info.scale);
-  _npc_entity.loop_animation(_npc_animations.idle);
+  _anim_entity.set_name(info.name);
+  _anim_entity.set_skinned_model(info.skinned_model);
+  _anim_entity.set_position(info.position);
+  _anim_entity.set_rotation(info.rotation);
+  _anim_entity.set_scale(info.scale);
 
   // Physics
   float                     capsule_radius   = info.capsule_radius;
@@ -29,16 +25,16 @@ void Npc::init(NpcCreateInfo &&info) {
   JPH::CapsuleShapeSettings shape_settings(capsule_height / 2, capsule_radius);
   JPH::ShapeRefC            shape = shape_settings.Create().Get();
 
-  _body = Physics::register_collider(shape, position, rotation, _object_type, _uid);
+  _body = Physics::register_collider(shape, position, rotation, info.object_type, _uid);
   _aabb = Physics::get_aabb(_body);
 }
 
 void Npc::update(float delta_time) {
-  _npc_entity.update(delta_time);
+  _anim_entity.update(delta_time);
 }
 
 AnimEntity *Npc::get_anim_entity() {
-  return &_npc_entity;
+  return &_anim_entity;
 }
 
 const std::string &Npc::get_name() {
@@ -50,5 +46,5 @@ uint64_t &Npc::get_id() {
 }
 
 glm::vec3 Npc::get_position() {
-  return _npc_entity.get_transform()[3];
+  return _anim_entity.get_transform()[3];
 }

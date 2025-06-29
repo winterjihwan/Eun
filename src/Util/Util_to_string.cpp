@@ -25,10 +25,10 @@ std::string to_string(ObjectType object_type) {
     return "MAP";
   case ObjectType::GAME_OBJECT:
     return "GAME_OBJECT";
-  case ObjectType::NPC_ENEMY:
-    return "NPC_ENEMY";
-  case ObjectType::NPC_ALLY:
-    return "NPC_ALLY";
+  case ObjectType::BOT:
+    return "BOT";
+  case ObjectType::ALLY:
+    return "ALLY";
   case ObjectType::DECAL:
     return "DECAL";
   default:

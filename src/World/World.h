@@ -2,7 +2,7 @@
 
 #include "Types/Game/AnimEntity.h"
 #include "Types/Game/BloodVolumetric.h"
-#include "Types/Game/Bot.h"
+#include "Types/Game/Bot/Bot.h"
 #include "Types/Game/Bullet.h"
 #include "Types/Game/Decal.h"
 #include "Types/Game/Entity.h"

@@ -4,9 +4,9 @@
 #include "Keycodes.h"
 #include "Physics/Physics.h"
 #include "Types.h"
-#include "Types/Game/Ally.h"
+#include "Types/Game/Ally/Ally.h"
 #include "Types/Game/BloodVolumetric.h"
-#include "Types/Game/Bot.h"
+#include "Types/Game/Bot/Bot.h"
 #include "Types/Game/Decal.h"
 #include "Util/Util.h"
 #include "World.h"
@@ -83,8 +83,7 @@ void process_bullets() {
     }
 
     // Blood
-    if (data->physics_type == PhysicsType::RIGID_DYNAMIC &&
-        data->object_type == ObjectType::NPC_ENEMY) {
+    if (data->physics_type == PhysicsType::RIGID_DYNAMIC && data->object_type == ObjectType::BOT) {
 
       static unsigned int blood_volumetric_index = 1;
       if (++blood_volumetric_index > 6)
