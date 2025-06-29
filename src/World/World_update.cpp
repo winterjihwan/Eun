@@ -4,9 +4,10 @@
 #include "Keycodes.h"
 #include "Physics/Physics.h"
 #include "Types.h"
+#include "Types/Game/Ally.h"
 #include "Types/Game/BloodVolumetric.h"
+#include "Types/Game/Bot.h"
 #include "Types/Game/Decal.h"
-#include "Types/Game/NpcAlly.h"
 #include "Util/Util.h"
 #include "World.h"
 
@@ -15,19 +16,21 @@ extern std::vector<AnimEntity>      _anim_entities;
 extern std::vector<Entity>          _entities;
 extern std::vector<Bullet>          _bullets;
 extern std::vector<Decal>           _decals;
-extern std::vector<NpcEnemy>        _npc_enemies;
-extern std::vector<NpcAlly>         _npc_allies;
+extern std::vector<Bot>             _bots;
+extern std::vector<Ally>            _allies;
 extern std::vector<BloodVolumetric> _blood_volumetrics;
 
 void update(float delta_time) {
   process_bullets();
 
-  // Npcs
-  for (NpcEnemy &npc : _npc_enemies) {
-    npc.update(delta_time);
+  // Bots
+  for (Bot &bot : _bots) {
+    bot.update(delta_time);
   }
-  for (NpcAlly &npc : _npc_allies) {
-    npc.update(delta_time);
+
+  // Allies
+  for (Ally &ally : _allies) {
+    ally.update(delta_time);
   }
 
   // Anim Entities

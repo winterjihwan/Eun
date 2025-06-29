@@ -4,8 +4,8 @@
 #include "Defines.h"
 #include "Enums.h"
 #include "Keycodes.h"
+#include "Types/Game/Ally.h"
 #include "Types/Game/BloodVolumetric.h"
-#include "Types/Game/NpcAlly.h"
 #include <vector>
 
 namespace World {
@@ -13,8 +13,8 @@ std::vector<AnimEntity>      _anim_entities;
 std::vector<Entity>          _entities;
 std::vector<Bullet>          _bullets;
 std::vector<Decal>           _decals;
-std::vector<NpcEnemy>        _npc_enemies;
-std::vector<NpcAlly>         _npc_allies;
+std::vector<Bot>             _bots;
+std::vector<Ally>            _allies;
 std::vector<BloodVolumetric> _blood_volumetrics;
 
 void init() {
@@ -22,8 +22,8 @@ void init() {
   _entities.reserve(64);
   _bullets.reserve(32);
   _decals.reserve(32);
-  _npc_enemies.reserve(8);
-  _npc_enemies.reserve(64);
+  _bots.reserve(8);
+  _allies.reserve(64);
   _blood_volumetrics.reserve(32);
 
   // Plane
@@ -81,7 +81,7 @@ void init() {
 
   // Mannequin
   {
-    NpcCreateInfo info;
+    BotCreateInfo info;
     info.name            = "Mannequin";
     info.skinned_model   = "Mannequin";
     info.animations.idle = "Mannequin_Idle";
@@ -101,13 +101,13 @@ void init() {
                   (info.capsule_height + 2.0f * info.capsule_radius) / 2.0f + info.position.y,
                   info.position.z);
 
-    NpcEnemy &npc = _npc_enemies.emplace_back();
-    npc.init(std::move(info));
+    Bot &bot = _bots.emplace_back();
+    bot.init(std::move(info));
   }
 
   // Greece_Soldier
   {
-    NpcCreateInfo info;
+    AllyCreateInfo info;
     info.name            = "Greece_Soldier";
     info.skinned_model   = "Greece_Soldier";
     info.animations.idle = "Greece_Soldier_Idle";
@@ -123,19 +123,21 @@ void init() {
                   (info.capsule_height + 2.0f * info.capsule_radius) / 2.0f + info.position.y,
                   info.position.z);
 
-    NpcAlly &npc = _npc_allies.emplace_back();
-    npc.init(std::move(info));
+    Ally &ally = _allies.emplace_back();
+    ally.init(std::move(info));
   }
 }
 
 void submit_render_items() {
-  // Npcs
-  for (NpcEnemy &npc : _npc_enemies) {
-    AnimEntity *anim_entity = npc.get_anim_entity();
+  // Bots
+  for (Bot &bot : _bots) {
+    AnimEntity *anim_entity = bot.get_anim_entity();
     anim_entity->submit_render_item();
   }
-  for (NpcAlly &npc : _npc_allies) {
-    AnimEntity *anim_entity = npc.get_anim_entity();
+
+  // Allies
+  for (Ally &ally : _allies) {
+    AnimEntity *anim_entity = ally.get_anim_entity();
     anim_entity->submit_render_item();
   }
 
@@ -198,26 +200,25 @@ Entity *get_entity_by_object_id(uint64_t object_id) {
   assert(0);
 }
 
-NpcEnemy *get_npc_enemy_by_name(const std::string &name) {
-  for (NpcEnemy &npc : _npc_enemies) {
-    if (name == npc.get_name()) {
-      return &npc;
+Bot *get_bot_by_name(const std::string &name) {
+  for (Bot &bot : _bots) {
+    if (name == bot.get_name()) {
+      return &bot;
     }
   }
 
-  std::cout << "World::get_npc_enemy_by_name() failed, no npc with name: " << name << std::endl;
+  std::cout << "World::get_bot_by_name() failed, no npc with name: " << name << std::endl;
   assert(0);
 }
 
-NpcEnemy *get_npc_enemy_by_object_id(uint64_t object_id) {
-  for (NpcEnemy &npc : _npc_enemies) {
-    if (npc.get_id() == object_id) {
-      return &npc;
+Bot *get_bot_by_object_id(uint64_t object_id) {
+  for (Bot &bot : _bots) {
+    if (bot.get_id() == object_id) {
+      return &bot;
     }
   }
 
-  std::cout << "World::get_npc_enemy_by_object_id() failed, no npc with id: " << object_id
-            << std::endl;
+  std::cout << "World::get_bot_by_object_id() failed, no npc with id: " << object_id << std::endl;
   assert(0);
 }
 } // namespace World

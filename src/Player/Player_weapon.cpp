@@ -7,7 +7,7 @@
 #include "Keycodes.h"
 #include "Physics/Physics.h"
 #include "Player.h"
-#include "Types/Game/NpcEnemy.h"
+#include "Types/Game/Bot.h"
 #include "Weapon/WeaponCommon.h"
 #include "Weapon/WeaponManager.h"
 #include "World/World.h"
@@ -166,11 +166,11 @@ void Player::perform_stab(float damage) {
     Audio::play_audio("Knife_Stab.wav", 1.0f);
 
     // TODO: Separate Function?
-    // Damage NPC
-    NpcEnemy *npc  = World::get_npc_enemy_by_object_id(data->object_id);
-    bool      dead = npc->take_damage(damage);
+    // Damage Bot
+    Bot *bot  = World::get_bot_by_object_id(data->object_id);
+    bool dead = bot->take_damage(damage);
     if (dead) {
-      _minerals += npc->get_reward();
+      _minerals += bot->get_reward();
     }
 
     // Blood Volumetric

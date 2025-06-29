@@ -36,19 +36,21 @@ struct NpcCreateInfo {
   glm::vec3     scale       = glm::vec3(1.0f, 1.0f, 1.0f);
   ObjectType    object_type = ObjectType::NPC_ENEMY;
 
-  // Enemy
-  float health = 0.0f;
-  int   reward = 0.0f;
-
-  // Ally
-  float damage = 0.0f;
-
   // Collider
   float     capsule_radius;
   float     capsule_height;
   glm::vec3 capsule_position;
 
   NpcState npc_state = NpcState::IDLE;
+};
+
+struct BotCreateInfo : public NpcCreateInfo {
+  float health = 0.0f;
+  int   reward = 0;
+};
+
+struct AllyCreateInfo : public NpcCreateInfo {
+  float damage = 0.0f;
 };
 
 struct BloodVolumetricCreateInfo {

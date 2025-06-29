@@ -2,10 +2,10 @@
 
 #include "Npc.h"
 
-struct NpcEnemy : public Npc {
-  NpcEnemy() = default;
+struct Bot : public Npc {
+  Bot() = default;
 
-  void init(NpcCreateInfo &&npc_create_info);
+  void init(NpcCreateInfo &&info);
   bool take_damage(float damage);
   int  get_reward();
 

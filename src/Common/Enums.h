@@ -72,3 +72,7 @@ enum class PlayerState {
 enum class EditorState {
   IDLE,
 };
+
+enum class AllyType {
+  GREECE_SOLDIER,
+};

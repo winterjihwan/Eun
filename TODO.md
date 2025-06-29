@@ -45,6 +45,7 @@
     - [x] Selection
     - [x] Translation
 - [x] Model Static Mesh Physics
+- [ ] Extract name and logics from Entity 
 - [ ] Game UI
     - [ ] Unit Health Bar
     - [x] Player Minerals
@@ -58,7 +59,7 @@
     - [ ] Unit Enhance
 - [x] Npc Ally, Enemy
 - [ ] Npc Manager
-- [ ] Instancing using specific Draw call
+    - [ ] Instancing using specific Draw call
 - [x] Remove Externs + Cleanup GL Renderer
 - [x] Shadow
     - [ ] Flashlight Shadow 
