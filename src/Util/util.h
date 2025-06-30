@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
+#include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
 #include <assimp/matrix4x4.h>
 #include <assimp/quaternion.h>
 #include <glm/gtx/euler_angles.hpp>
@@ -11,6 +12,7 @@
 namespace Util {
 // Types
 JPH::Vec3 to_jolt_vec3(const glm::vec3 &v);
+JPH::Quat to_jolt_quat(const glm::quat &q);
 glm::vec3 to_vec3(const JPH::Vec3 &v);
 
 // File
@@ -26,6 +28,8 @@ glm::vec3 random_dir_in_hemisphere(const glm::vec3 &normal);
 glm::mat4 lerp(const glm::mat4 &a, const glm::mat4 &b, float factor);
 glm::mat4
 transform(const glm::vec3 &position, const glm::vec3 &rotation_rad, const glm::vec3 &scale);
+glm::vec3
+to_capsule_position(const glm::vec3 &base_position, float capsule_height, float capsule_radius);
 
 // Geometry
 std::vector<Vertex>   generate_sphere_vertices(float radius, int segments);
@@ -37,6 +41,9 @@ std::vector<uint32_t> generate_capsule_indices(unsigned int segments);
 
 std::vector<Vertex>   generate_quad_vertices(float width, float height);
 std::vector<uint32_t> generate_quad_indices();
+
+// JPH
+JPH::ShapeRefC generate_capsule_shape(float capsule_height, float capsule_radius);
 
 // Assimp
 glm::mat4 to_mat4(const aiMatrix4x4 &from);

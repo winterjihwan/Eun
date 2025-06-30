@@ -1,12 +1,14 @@
-// #includ "World.h"
+#include "Types/Game/Ally/Ally.h"
+#include "World/World.h"
+#include <string>
 
-#include "Enums.h"
 namespace World {
-void spawn_ally(AllyType &ally_type) {
-  switch (ally_type) {
-  case AllyType::GREECE_SOLDIER:
-    break;
-  }
+
+void spawn_ally(const std::string &name, const glm::vec3 &position) {
+  Ally ally;
+  ally.init("Greece_Soldier", position);
+
+  add_ally(std::move(ally));
 }
 
 } // namespace World

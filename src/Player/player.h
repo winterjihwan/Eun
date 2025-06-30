@@ -4,7 +4,7 @@
 #include "Enums.h"
 #include "Types/AABB/AABB.h"
 #include "Types/Game/AnimEntity.h"
-#include "Weapon/WeaponCommon.h"
+#include "Types/Game/Weapon/WeaponCommon.h"
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Character/CharacterVirtual.h>
 #include <glm/glm.hpp>
@@ -38,9 +38,6 @@ private:
   glm::mat4 player_view_transform();
   void      update_movement(float delta_time, Camera camera);
   void      update_anim_entity();
-
-  // Physics
-  JPH::CharacterVirtual *create_character_virtual(glm::vec3 position, float height, float radius);
 
   // UI
   void update_ui();

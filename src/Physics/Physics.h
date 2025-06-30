@@ -30,19 +30,22 @@ void init();
 void update(float delta_time);
 void shutdown();
 
-JPH::BodyID               register_static_mesh(std::vector<Vertex>       &vertices,
-                                               std::vector<unsigned int> &indices,
-                                               glm::mat4                 &transform,
-                                               ObjectType                 object_type,
-                                               uint64_t                   object_id);
-JPH::BodyID               register_collider(JPH::ShapeRefC shape,
-                                            JPH::RVec3    &position,
-                                            JPH::Quat     &rotation,
-                                            ObjectType     object_type,
-                                            uint64_t       object_id);
+JPH::BodyID            register_static_mesh(std::vector<Vertex>       &vertices,
+                                            std::vector<unsigned int> &indices,
+                                            glm::mat4                 &transform,
+                                            ObjectType                 object_type,
+                                            uint64_t                   object_id);
+JPH::BodyID            register_kinematic_collider(JPH::ShapeRefC shape,
+                                                   glm::vec3     &position,
+                                                   glm::quat     &rotation,
+                                                   ObjectType     object_type,
+                                                   uint64_t       object_id);
+JPH::CharacterVirtual *create_character_virtual(
+    glm::vec3 position, float height, float radius, ObjectType object_type, uint64_t object_id);
 JPH::AABox                get_aabb(const JPH::BodyID &body_id);
 std::optional<RayHitInfo> raycast(const glm::vec3 &origin, const glm::vec3 &dir, float dist);
 std::optional<RayHitInfo> raycast(const JPH::Vec3 &origin, const JPH::Vec3 &dir, float dist);
+void                      set_body_velocity(JPH::BodyID body_id, const glm::vec3 &velocity);
 void                      register_on_contact(const JPH::BodyID &id, PFN_ContactCallback callback);
 void                      submit_debug_lines();
 

@@ -29,6 +29,7 @@ enum class PhysicsType {
 
 enum class ObjectType {
   NONE = 0,
+  PLAYER,
   MAP,
   PLATFORM,
   GAME_OBJECT,
@@ -71,8 +72,4 @@ enum class PlayerState {
 
 enum class EditorState {
   IDLE,
-};
-
-enum class AllyType {
-  GREECE_SOLDIER,
 };

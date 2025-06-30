@@ -85,10 +85,6 @@ void AnimEntity::set_name(const std::string &name) {
   _name = name;
 }
 
-void AnimEntity::translate(const glm::vec3 &delta) {
-  _position += delta;
-}
-
 void AnimEntity::set_position(const glm::vec3 &position) {
   _position = position;
   _dirty    = true;
@@ -101,6 +97,21 @@ void AnimEntity::set_rotation(const glm::quat &rotation) {
 
 void AnimEntity::set_scale(const glm::vec3 &scale) {
   _scale = scale;
+  _dirty = true;
+}
+
+void AnimEntity::add_translation(const glm::vec3 &delta) {
+  _position += delta;
+  _dirty = true;
+}
+
+void AnimEntity::add_rotation(const glm::quat &delta) {
+  _rotation = delta * _rotation;
+  _dirty    = true;
+}
+
+void AnimEntity::add_scale(const glm::vec3 &delta) {
+  _scale *= delta;
   _dirty = true;
 }
 

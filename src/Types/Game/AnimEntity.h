@@ -8,25 +8,32 @@
 
 struct AnimEntity {
   AnimEntity() = default;
-  void                    update(float delta_time);
-  void                    render();
-  void                    submit_render_item();
+
+  void update(float delta_time);
+  void render();
+  void submit_render_item();
+
   void                    play_animation(const std::string &name, float speed = 1.0f);
   void                    play_animation(const std::vector<std::string> &names, float speed = 1.0f);
   void                    loop_animation(const std::string &name, float speed = 1.0f);
-  void                    set_skinned_model(const std::string &name);
-  void                    set_name(const std::string &name);
   bool                    all_anim_states_complete();
   std::vector<glm::mat4> &get_global_blended_bone_transforms();
   bool                    animation_by_name_is_complete(const std::string &name);
-  void                    translate(const glm::vec3 &delta);
-  void                    set_position(const glm::vec3 &position);
-  void                    set_rotation(const glm::quat &rotation);
-  void                    set_scale(const glm::vec3 &scale);
-  const std::string      &get_name();
-  glm::mat4              &get_transform();
-  std::vector<Vertex>    &get_vertices();
-  std::vector<uint>      &get_indices();
+
+  void set_skinned_model(const std::string &name);
+  void set_name(const std::string &name);
+  void set_position(const glm::vec3 &position);
+  void set_rotation(const glm::quat &rotation);
+  void set_scale(const glm::vec3 &scale);
+
+  void add_translation(const glm::vec3 &delta);
+  void add_rotation(const glm::quat &delta);
+  void add_scale(const glm::vec3 &delta);
+
+  const std::string   &get_name();
+  glm::mat4           &get_transform();
+  std::vector<Vertex> &get_vertices();
+  std::vector<uint>   &get_indices();
 
 private:
   std::string   _name = "UNSET";

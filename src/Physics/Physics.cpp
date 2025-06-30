@@ -3,6 +3,7 @@
 #include "AssetManager/AssetManager.h"
 #include "Defines.h"
 #include "Enums.h"
+#include "Jolt/Physics/Body/MotionType.h"
 
 class BPLayerInterfaceImpl final : public JPH::BroadPhaseLayerInterface {
 public:
@@ -182,19 +183,29 @@ JPH::BodyID register_static_mesh(std::vector<Vertex>       &vertices,
   body->SetUserData(reinterpret_cast<JPH::uint64>(new PhysicsUserData(user_data)));
 
   // JPH::Body Register
-  _physics_system.GetBodyInterface().AddBody(body->GetID(), JPH::EActivation::DontActivate);
+  _physics_system.GetBodyInterface().AddBody(body->GetID(), JPH::EActivation::Activate);
 
   return body->GetID();
 }
 
-JPH::BodyID register_collider(JPH::ShapeRefC shape,
-                              JPH::RVec3    &position,
-                              JPH::Quat     &rotation,
-                              ObjectType     object_type,
-                              uint64_t       object_id) {
-  JPH::BodyCreationSettings settings(
-      shape, position, rotation, JPH::EMotionType::Static, Layers::MOVING); // TODO: Config Layers
+JPH::BodyID register_kinematic_collider(JPH::ShapeRefC shape,
+                                        glm::vec3     &position,
+                                        glm::quat     &rotation,
+                                        ObjectType     object_type,
+                                        uint64_t       object_id) {
+  JPH::BodyCreationSettings settings(shape,
+                                     Util::to_jolt_vec3(position),
+                                     Util::to_jolt_quat(rotation),
+                                     JPH::EMotionType::Kinematic,
+                                     Layers::MOVING);
+
   JPH::Body *body = _physics_system.GetBodyInterface().CreateBody(settings);
+  _physics_system.GetBodyInterface().AddBody(body->GetID(), JPH::EActivation::Activate);
+
+  // Disable Gravity
+  if (JPH::MotionProperties *motion_properties = body->GetMotionProperties()) {
+    motion_properties->SetGravityFactor(0.0f);
+  }
 
   PhysicsUserData user_data;
   user_data.physics_type = PhysicsType::RIGID_DYNAMIC;
@@ -202,9 +213,28 @@ JPH::BodyID register_collider(JPH::ShapeRefC shape,
   user_data.object_id    = object_id;
   body->SetUserData(reinterpret_cast<JPH::uint64>(new PhysicsUserData(user_data)));
 
-  _physics_system.GetBodyInterface().AddBody(body->GetID(), JPH::EActivation::Activate);
-
   return body->GetID();
+}
+
+JPH::CharacterVirtual *create_character_virtual(
+    glm::vec3 position, float height, float radius, ObjectType object_type, uint64_t object_id) {
+  float                     half_cylinder = (height - 2.0f * radius) * 0.5f;
+  JPH::CapsuleShapeSettings capsule_shape(half_cylinder, radius);
+  JPH::ShapeRefC            shape = capsule_shape.Create().Get();
+
+  JPH::CharacterVirtualSettings settings;
+  settings.mShape            = shape;
+  settings.mSupportingVolume = JPH::Plane(JPH::Vec3::sAxisY(), -radius);
+  settings.mMaxSlopeAngle    = JPH::DegreesToRadians(60.0f);
+  settings.mMass             = 70.0f;
+
+  JPH::RVec3 jolt_position(position.x, position.y + height * 0.5f, position.z);
+  JPH::Quat  jolt_rotation = JPH::Quat::sIdentity();
+
+  JPH::CharacterVirtual *character = new JPH::CharacterVirtual(
+      &settings, jolt_position, jolt_rotation, 0, &Physics::get_physics_system());
+
+  return character;
 }
 
 std::optional<RayHitInfo> raycast(const glm::vec3 &origin, const glm::vec3 &dir, float dist) {
@@ -242,6 +272,12 @@ std::optional<RayHitInfo> raycast(const JPH::Vec3 &origin, const JPH::Vec3 &dir,
   ray_hit_info.ts         = ts;
 
   return ray_hit_info;
+}
+
+void set_body_velocity(JPH::BodyID body_id, const glm::vec3 &velocity) {
+  JPH::BodyInterface &body_interface = _physics_system.GetBodyInterface();
+  JPH::Vec3           jolt_velocity  = Util::to_jolt_vec3(velocity);
+  body_interface.SetLinearVelocity(body_id, jolt_velocity);
 }
 
 JPH::AABox get_aabb(const JPH::BodyID &body_id) {

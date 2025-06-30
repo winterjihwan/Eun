@@ -1,7 +1,7 @@
 #pragma once
 #include "CreateInfo.h"
-#include "Enums.h"
 #include "Types/Game/AnimEntity.h"
+#include <Jolt/Physics/Character/CharacterVirtual.h>
 #include <string>
 
 struct Npc {
@@ -11,12 +11,13 @@ struct Npc {
   void init(NpcCreateInfo &&npc_create_info);
   void update(float delta_time);
 
-  void        set_animation_state(NpcState npc_animation_state);
-  AnimEntity *get_anim_entity();
+  void set_velocity();
 
+  AnimEntity        *get_anim_entity();
   const std::string &get_name();
   uint64_t          &get_id();
   glm::vec3          get_position();
+  JPH::BodyID        get_body();
 
 protected:
   std::string _name = "Npc";

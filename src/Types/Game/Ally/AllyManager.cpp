@@ -1,5 +1,6 @@
 #include "AllyManager.h"
 #include "Types/Game/Ally/AllyCommon.h"
+#include "Util//Util.h"
 
 #include <vector>
 
@@ -20,15 +21,11 @@ void init() {
   greece_soldier.animation_names.attack = "";
   greece_soldier.audio_files.attack     = "";
   greece_soldier.damage                 = 10;
-  greece_soldier.base_position          = glm::vec3(1.0f, -3.0f, -5.0f);
   greece_soldier.base_scale             = glm::vec3(0.005f);
   greece_soldier.capsule_radius         = 0.1f;
   greece_soldier.capsule_height         = 0.75f;
-  greece_soldier.capsule_position =
-      glm::vec3(greece_soldier.base_position.x,
-                (greece_soldier.capsule_height + 2.0f * greece_soldier.capsule_radius) / 2.0f +
-                    greece_soldier.base_position.y,
-                greece_soldier.base_position.z);
+  greece_soldier.capsule_position       = Util::to_capsule_position(
+      greece_soldier.base_position, greece_soldier.capsule_height, greece_soldier.capsule_radius);
 }
 
 int get_ally_count() {

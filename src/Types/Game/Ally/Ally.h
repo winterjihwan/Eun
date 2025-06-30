@@ -6,7 +6,7 @@
 struct Ally : public Npc {
   Ally() = default;
 
-  void init(const std::string &name);
+  void init(const std::string &name, glm::vec3 position);
 
 private:
   float              _damage = 0.0f;

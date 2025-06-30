@@ -5,6 +5,7 @@
 #include "Types/Game/AnimEntity.h"
 #include "Types/UID/UID.h"
 #include "Util/Util.h"
+#include <glm/gtc/quaternion.hpp>
 
 void Npc::init(NpcCreateInfo &&info) {
   _name = info.name;
@@ -17,20 +18,20 @@ void Npc::init(NpcCreateInfo &&info) {
   _anim_entity.set_scale(info.scale);
 
   // Physics
-  float                     capsule_radius   = info.capsule_radius;
-  float                     capsule_height   = info.capsule_height;
-  glm::vec3                 capsule_position = info.capsule_position;
-  JPH::RVec3                position         = Util::to_jolt_vec3(capsule_position);
-  JPH::Quat                 rotation         = JPH::Quat::sIdentity();
-  JPH::CapsuleShapeSettings shape_settings(capsule_height / 2, capsule_radius);
-  JPH::ShapeRefC            shape = shape_settings.Create().Get();
-
-  _body = Physics::register_collider(shape, position, rotation, info.object_type, _uid);
+  JPH::ShapeRefC shape    = Util::generate_capsule_shape(info.capsule_height, info.capsule_radius);
+  glm::vec3      position = info.capsule_position;
+  glm::quat      rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+  _body = Physics::register_kinematic_collider(shape, position, rotation, info.object_type, _uid);
   _aabb = Physics::get_aabb(_body);
 }
 
 void Npc::update(float delta_time) {
   _anim_entity.update(delta_time);
+}
+
+void Npc::set_velocity() {
+  Physics::set_body_velocity(_body, glm::vec3(0.0f));
+  _aabb = Physics::get_aabb(_body);
 }
 
 AnimEntity *Npc::get_anim_entity() {
@@ -47,4 +48,8 @@ uint64_t &Npc::get_id() {
 
 glm::vec3 Npc::get_position() {
   return _anim_entity.get_transform()[3];
+}
+
+JPH::BodyID Npc::get_body() {
+  return _body;
 }

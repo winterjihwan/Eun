@@ -13,8 +13,8 @@
 #include "Renderer/Renderer.h"
 #include "Types/Game/Ally/AllyManager.h"
 #include "Types/Game/Bot/BotManager.h"
+#include "Types/Game/Weapon/WeaponManager.h"
 #include "UI/UIBackend.h"
-#include "Weapon/WeaponManager.h"
 #include "World/World.h"
 
 namespace Backend {
@@ -56,8 +56,8 @@ void update_game() {
     HotReload::hot_reload();
   }
   Editor::update(delta_time);
-  Game::update();
   Physics::update(delta_time);
+  Game::update();
   World::submit_render_items();
   TimerManager::update(delta_time);
   Debug::update();

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Types/Game/Ally/Ally.h"
 #include "Types/Game/AnimEntity.h"
 #include "Types/Game/BloodVolumetric.h"
 #include "Types/Game/Bot/Bot.h"
@@ -17,6 +18,7 @@ void process_bullets();
 
 AnimEntity *add_anim_entity(AnimEntity &&anim_entity);
 Entity     *add_entity(Entity &&entity);
+void        add_ally(Ally &&ally);
 void        add_bullet(Bullet &&bullet);
 void        add_decal(Decal &&decal);
 void        add_blood_volumetric(BloodVolumetric &&blood_volumetric);
@@ -27,6 +29,6 @@ Bot                 *get_bot_by_name(const std::string &name);
 Bot                 *get_bot_by_object_id(uint64_t object_id);
 
 // Npcs
-void spawn_ally(AllyType &npc_ally_type);
+void spawn_ally(const std::string &name, const glm::vec3 &position = glm::vec3(0.0f));
 
 } // namespace World

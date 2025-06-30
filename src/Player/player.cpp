@@ -2,13 +2,16 @@
 #include "Core/Game.h"
 #include "Defines.h"
 #include "Editor/Editor.h"
+#include "Enums.h"
 #include "Keycodes.h"
+#include "Physics/Physics.h"
+#include "Types/UID/UID.h"
 #include <glm/glm.hpp>
 
 void Player::init(glm::vec3 position) {
   _position  = position;
-  _character = create_character_virtual(
-      glm::vec3(_position.x, _position.y, _position.z), PLAYER_HEIGHT, 0.15f);
+  _character = Physics::create_character_virtual(
+      _position, PLAYER_HEIGHT, 0.15f, ObjectType::PLAYER, UID::get_next());
   _weapon_view.set_name("Weapon_View");
   _weapon_view.set_scale(glm::vec3(.01f, .01f, .01f));
 

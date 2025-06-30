@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Weapon/WeaponCommon.h"
+#include "Types/Game/Weapon/WeaponCommon.h"
 
 namespace WeaponManager {
 void        init();

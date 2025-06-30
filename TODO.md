@@ -58,6 +58,7 @@
     - [ ] Unit Auto Attack
     - [ ] Unit Enhance
 - [x] Npc Ally, Enemy
+- [x] Better Kinematic Physics
 - [ ] Npc Manager
     - [ ] Instancing using specific Draw call
 - [x] Remove Externs + Cleanup GL Renderer
@@ -70,6 +71,7 @@
 - [ ] FPS Governor
 - [ ] Custom Map
 - [ ] Map Editor
+- [ ] Combine Manager Logics
 - [ ] Dialogue System
 - [ ] Item Interaction
 - [ ] Item Hints

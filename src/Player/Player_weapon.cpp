@@ -8,8 +8,7 @@
 #include "Physics/Physics.h"
 #include "Player.h"
 #include "Types/Game/Bot/Bot.h"
-#include "Weapon/WeaponCommon.h"
-#include "Weapon/WeaponManager.h"
+#include "Types/Game/Weapon/WeaponManager.h"
 #include "World/World.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/euler_angles.hpp>

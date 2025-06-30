@@ -79,7 +79,7 @@ void init() {
     add_entity(Entity(std::move(info)));
   }
 
-  // // Mannequin
+  // Mannequin
   {
     Bot &bot = _bots.emplace_back();
     bot.init("Mannequin");
@@ -87,8 +87,8 @@ void init() {
 
   // Greece_Soldier
   {
-    Ally &ally = _allies.emplace_back();
-    ally.init("Greece_Soldier");
+    glm::vec3 offset_position = glm::vec3(1.0f, -3.0f, -5.0f);
+    spawn_ally("Greece_Soldier", offset_position);
   }
 }
 
@@ -134,6 +134,10 @@ AnimEntity *add_anim_entity(AnimEntity &&anim_entity) {
 Entity *add_entity(Entity &&entity) {
   _entities.push_back(std::move(entity));
   return &_entities.back();
+}
+
+void add_ally(Ally &&ally) {
+  _allies.push_back(std::move(ally));
 }
 
 void add_bullet(Bullet &&bullet) {
