@@ -11,18 +11,21 @@ void Bot::init(const std::string &name) {
   _animation_names = info->animation_names;
 
   NpcCreateInfo npc_info;
-  npc_info.name             = info->name;
-  npc_info.skinned_model    = info->skinned_model;
-  npc_info.position         = info->base_position;
-  npc_info.scale            = info->base_scale;
-  npc_info.object_type      = ObjectType::BOT;
-  npc_info.capsule_radius   = info->capsule_radius;
-  npc_info.capsule_height   = info->capsule_height;
-  npc_info.capsule_position = info->capsule_position;
+  npc_info.name            = info->name;
+  npc_info.model_name      = info->model_name;
+  npc_info.is_animated     = info->is_animated;
+  npc_info.position        = info->base_position;
+  npc_info.rotation        = info->base_rotation;
+  npc_info.scale           = info->base_scale;
+  npc_info.object_type     = ObjectType::BOT;
+  npc_info.collider_shape  = info->collider_shape;
+  npc_info.collider_offset = info->collider_offset;
 
   Npc::init(std::move(npc_info));
 
-  _anim_entity.loop_animation(_animation_names.idle);
+  if (AnimEntity *anim_entity = get_anim_entity()) {
+    anim_entity->loop_animation(_animation_names.idle);
+  }
 }
 
 bool Bot::take_damage(float damage) {

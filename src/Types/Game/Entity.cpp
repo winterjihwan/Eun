@@ -18,17 +18,20 @@ Entity::Entity(EntityCreateInfo &&info) {
   _on_update   = info.on_update;
   _on_stand    = info.on_stand;
 
-  if (std::holds_alternative<Mesh *>(_renderable)) {
-    Mesh *mesh = std::get<Mesh *>(_renderable);
-    _body      = Physics::register_static_mesh(
-        mesh->vertices, mesh->indices, get_transform(), _object_type, _object_id);
-    _aabb = Physics::get_aabb(_body);
+  // Collider
+  if (!info.skip_physics) {
+    if (std::holds_alternative<Mesh *>(_renderable)) {
+      Mesh *mesh = std::get<Mesh *>(_renderable);
+      _body      = Physics::register_static_mesh(
+          mesh->vertices, mesh->indices, get_transform(), _object_type, _object_id);
+      _aabb = Physics::get_aabb(_body);
 
-  } else {
-    Model *model = std::get<Model *>(_renderable);
-    _body        = Physics::register_static_mesh(
-        model->get_vertices(), model->get_indices(), get_transform(), _object_type, _object_id);
-    _aabb = Physics::get_aabb(_body);
+    } else {
+      Model *model = std::get<Model *>(_renderable);
+      _body        = Physics::register_static_mesh(
+          model->get_vertices(), model->get_indices(), get_transform(), _object_type, _object_id);
+      _aabb = Physics::get_aabb(_body);
+    }
   }
 }
 
@@ -43,7 +46,9 @@ void Entity::submit_render_item() {
 }
 
 void Entity::on_stand(float delta_time) {
-  _on_stand(*this, delta_time);
+  if (_on_stand) {
+    _on_stand(*this, delta_time);
+  }
 }
 
 void Entity::set_on_update(std::function<void(Entity &, float)> on_update) {

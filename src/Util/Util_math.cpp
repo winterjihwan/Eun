@@ -30,17 +30,4 @@ transform(const glm::vec3 &position, const glm::vec3 &rotation_rad, const glm::v
   return transform;
 }
 
-glm::vec3
-to_capsule_position(const glm::vec3 &base_position, float capsule_height, float capsule_radius) {
-  return glm::vec3(base_position.x,
-                   base_position.y + (capsule_height + 2.0f * capsule_radius) * 0.5f,
-                   base_position.z);
-}
-
-glm::vec3
-to_base_position(const glm::vec3 &capsule_position, float capsule_height, float capsule_radius) {
-  return glm::vec3(capsule_position.x,
-                   capsule_position.y - (capsule_height + 2.0f * capsule_radius) * 0.5f,
-                   capsule_position.z);
-}
 } // namespace Util

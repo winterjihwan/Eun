@@ -15,17 +15,16 @@ void init() {
   // Maw
   AllyInfo &maw              = _allies.emplace_back();
   maw.name                   = "Maw";
-  maw.skinned_model          = "Maw";
+  maw.model_name             = "Maw";
   maw.animation_names.idle   = "Maw_Idle";
   maw.animation_names.walk   = "";
   maw.animation_names.attack = "";
   maw.audio_files.attack     = "";
   maw.damage                 = 10;
+  maw.base_position          = glm::vec3(0.0f, -2.15f, 0.0f);
   maw.base_scale             = glm::vec3(0.005f);
-  maw.capsule_radius         = 0.2f;
-  maw.capsule_height         = 0.50f;
-  maw.capsule_position =
-      Util::to_capsule_position(maw.base_position, maw.capsule_height, maw.capsule_radius);
+  maw.collider_shape         = Capsule(0.2f, 0.5f);
+  maw.collider_offset        = glm::vec3(0.0f, -0.4f, 0.0f);
 }
 
 int get_ally_count() {

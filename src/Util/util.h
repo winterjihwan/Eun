@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
+#include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
 #include <assimp/matrix4x4.h>
 #include <assimp/quaternion.h>
@@ -31,10 +32,6 @@ glm::vec3 random_dir_in_hemisphere(const glm::vec3 &normal);
 glm::mat4 lerp(const glm::mat4 &a, const glm::mat4 &b, float factor);
 glm::mat4
 transform(const glm::vec3 &position, const glm::vec3 &rotation_rad, const glm::vec3 &scale);
-glm::vec3
-to_capsule_position(const glm::vec3 &base_position, float capsule_height, float capsule_radius);
-glm::vec3
-to_base_position(const glm::vec3 &capsule_position, float capsule_height, float capsule_radius);
 
 // Geometry
 std::vector<Vertex>   generate_sphere_vertices(float radius, int segments);
@@ -47,6 +44,7 @@ std::vector<uint32_t> generate_quad_indices();
 
 // JPH
 JPH::ShapeRefC generate_capsule_shape(float capsule_height, float capsule_radius);
+JPH::ShapeRefC generate_cube_shape(float width, float height, float depth);
 
 // Assimp
 glm::mat4 to_mat4(const aiMatrix4x4 &from);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Types/Shape/Shape.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <string>
@@ -17,7 +18,7 @@ struct AllyAudioFiles {
 struct AllyInfo {
   std::string        name  = "Ally0";
   int                level = 0;
-  std::string        skinned_model;
+  std::string        model_name;
   AllyAudioFiles     audio_files;
   AllyAnimationNames animation_names;
 
@@ -30,7 +31,6 @@ struct AllyInfo {
   glm::vec3 base_scale    = glm::vec3(1.0f);
 
   // Collider
-  float     capsule_radius;
-  float     capsule_height;
-  glm::vec3 capsule_position;
+  Shape     collider_shape;
+  glm::vec3 collider_offset;
 };

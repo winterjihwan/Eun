@@ -13,8 +13,14 @@ glm::vec3 to_vec3(const JPH::Vec3 &v) {
   return glm::vec3(v.GetX(), v.GetY(), v.GetZ());
 }
 
-JPH::ShapeRefC generate_capsule_shape(float capsule_height, float capsule_radius) {
+JPH::ShapeRefC generate_capsule_shape(float capsule_radius, float capsule_height) {
   JPH::CapsuleShapeSettings shape_settings(capsule_height * 0.5f, capsule_radius);
+  return shape_settings.Create().Get();
+}
+
+JPH::ShapeRefC generate_cube_shape(float width, float height, float depth) {
+  JPH::Vec3             half_extents = JPH::Vec3(width * 0.5f, height * 0.5f, depth * 0.5f);
+  JPH::BoxShapeSettings shape_settings(half_extents);
   return shape_settings.Create().Get();
 }
 

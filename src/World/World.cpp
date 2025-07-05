@@ -73,21 +73,23 @@ void init() {
       if (acc >= 0.2f) {
         std::cout << "Entity " << entity.get_name() << '\n';
         acc = 0.0f;
+
+        spawn_ally("Maw");
       }
     };
 
     add_entity(Entity(std::move(info)));
   }
 
-  // Mannequin
+  // Police_Car
   {
     Bot &bot = _bots.emplace_back();
-    bot.init("Mannequin");
+    bot.init("Police_Car");
   }
 
   // Maw
   {
-    glm::vec3 offset_position = glm::vec3(1.0f, -3.0f, -5.0f);
+    glm::vec3 offset_position = glm::vec3(1.0f, 0.0f, -5.0f);
     spawn_ally("Maw", offset_position);
   }
 }

@@ -1,5 +1,6 @@
 #include "BotManager.h"
 #include "Types/Game/Bot/BotCommon.h"
+#include "Util/Util.h"
 
 #include <vector>
 
@@ -11,23 +12,19 @@ void init() {
 
   /* Bots */
 
-  // Mannequin
-  BotInfo &mannequin             = _bots.emplace_back();
-  mannequin.name                 = "Mannequin";
-  mannequin.skinned_model        = "Mannequin";
-  mannequin.animation_names.idle = "Mannequin_Idle";
-  mannequin.audio_files.hurt     = "";
-  mannequin.health               = 100;
-  mannequin.reward               = 10;
-  mannequin.base_position        = glm::vec3(0.0f, -3.0f, -5.0f);
-  mannequin.base_scale           = glm::vec3(.01f, .01f, .01f);
-  mannequin.capsule_radius       = 0.2f;
-  mannequin.capsule_height       = 1.5f;
-  mannequin.capsule_position =
-      glm::vec3(mannequin.base_position.x,
-                (mannequin.capsule_height + 2.0f * mannequin.capsule_radius) / 2.0f +
-                    mannequin.base_position.y,
-                mannequin.base_position.z);
+  // Police_Car
+  BotInfo &police_car       = _bots.emplace_back();
+  police_car.name           = "Police_Car";
+  police_car.model_name     = "Police_Car";
+  police_car.is_animated    = false;
+  police_car.health         = 100;
+  police_car.reward         = 10;
+  police_car.base_position  = glm::vec3(0.0f, -2.28f, -8.0f);
+  glm::quat rotation_x      = glm::angleAxis(glm::radians(-90.0f), glm::vec3(1, 0, 0));
+  glm::quat rotation_y      = glm::angleAxis(glm::radians(-90.0f), glm::vec3(0, 0, 1));
+  police_car.base_rotation  = rotation_x * rotation_y;
+  police_car.base_scale     = glm::vec3(0.4);
+  police_car.collider_shape = Cube(5.8f, 0.5f, 2.0f);
 }
 
 int get_bot_count() {
@@ -40,14 +37,16 @@ BotInfo *get_bot_info_by_name(const std::string &name) {
       return &_bots[i];
     }
   }
-  return nullptr;
+
+  assert(0);
 }
 
 BotInfo *get_bot_info_by_index(int index) {
   if (index >= 0 && index < _bots.size()) {
     return &_bots[index];
   }
-  return nullptr;
+
+  assert(0);
 }
 
 int32_t get_bot_level_from_name(const std::string &name) {
@@ -57,6 +56,7 @@ int32_t get_bot_level_from_name(const std::string &name) {
       return i;
     }
   }
-  return -1;
+
+  assert(0);
 }
 } // namespace BotManager

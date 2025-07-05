@@ -75,6 +75,10 @@
 - [ ] Dialogue System
 - [ ] Item Interaction
 - [x] AABB Pass
+- [ ] Entity AABB
+- [x] Entity for Npc
+- [x] Shape Enum using Variant
+- [ ] Fire particle effect
 - [ ] Abstract JPH Body
 - [ ] Item Hints
 - [ ] Interactable entities

@@ -5,6 +5,7 @@
 #include <string>
 
 struct Entity {
+  Entity() = default;
   Entity(EntityCreateInfo &&info);
 
   void update(float delta_time);

@@ -83,14 +83,12 @@ void init() {
     _skinned_models.emplace_back("Glock_View", "res/objects/Glock/Glock.fbx");
   }
 
-  // Mannequin
+  // Police_Car
   {
-    _skinned_models.emplace_back("Mannequin", "res/objects/Mannequin/Mannequin_Idle.fbx");
-    Animation &mannequin_idle = _animations.emplace_back();
-    mannequin_idle.init("Mannequin_Idle", "res/objects/Mannequin/Mannequin_Idle.fbx");
+    _models.emplace_back("Police_Car", "res/objects/Police_Car/Police_Car.glb");
   }
 
-  // Greece_Soldier
+  // Maw
   {
     _skinned_models.emplace_back("Maw", "res/objects/Maw/Maw_Punch.fbx");
 
