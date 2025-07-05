@@ -52,6 +52,7 @@ void                      submit_debug_lines();
 JPH::PhysicsSystem                                   &get_physics_system();
 std::unordered_map<JPH::BodyID, PFN_ContactCallback> &get_contact_callbacks();
 JPH::TempAllocatorImpl                               *get_temp_allocator();
+glm::vec3                                             get_body_position(JPH::BodyID &body_id);
 
 } // namespace Physics
 

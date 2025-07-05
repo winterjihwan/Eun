@@ -45,6 +45,7 @@ void init() {
   _shaders["Shadow"]          = Shader("shaders/shadow.vert", "shaders/shadow.frag");
   _shaders["Shadow_Anim"]     = Shader("shaders/shadow_anim.vert", "shaders/shadow.frag");
   _shaders["Texture"]         = Shader("shaders/texture.vert", "shaders/texture.frag");
+  _shaders["AABB"]            = Shader("shaders/aabb.vert", "shaders/aabb.frag");
 
   /* Framebuffers */
   _frame_buffers["G_Buffer"] = OpenGLFrameBuffer("G_Buffer", *viewport.width, *viewport.height);
@@ -71,6 +72,7 @@ void init() {
 
   init_light();
   init_skybox();
+  init_aabb();
 }
 
 void render_game() {
@@ -99,6 +101,7 @@ void render_game() {
   decal_pass();
   skybox_pass();
   ui_pass();
+  aabb_pass();
 }
 
 Shader &get_shader(const std::string &name) {

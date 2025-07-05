@@ -26,10 +26,6 @@ struct AnimEntity {
   void set_rotation(const glm::quat &rotation);
   void set_scale(const glm::vec3 &scale);
 
-  void add_translation(const glm::vec3 &delta);
-  void add_rotation(const glm::quat &delta);
-  void add_scale(const glm::vec3 &delta);
-
   const std::string   &get_name();
   glm::mat4           &get_transform();
   std::vector<Vertex> &get_vertices();

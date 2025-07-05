@@ -85,24 +85,22 @@ void init() {
     bot.init("Mannequin");
   }
 
-  // Greece_Soldier
+  // Maw
   {
     glm::vec3 offset_position = glm::vec3(1.0f, -3.0f, -5.0f);
-    spawn_ally("Greece_Soldier", offset_position);
+    spawn_ally("Maw", offset_position);
   }
 }
 
 void submit_render_items() {
   // Bots
   for (Bot &bot : _bots) {
-    AnimEntity *anim_entity = bot.get_anim_entity();
-    anim_entity->submit_render_item();
+    bot.submit_render_item();
   }
 
   // Allies
   for (Ally &ally : _allies) {
-    AnimEntity *anim_entity = ally.get_anim_entity();
-    anim_entity->submit_render_item();
+    ally.submit_render_item();
   }
 
   // Anim Entities

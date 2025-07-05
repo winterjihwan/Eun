@@ -92,16 +92,10 @@ void init() {
 
   // Greece_Soldier
   {
-    _skinned_models.emplace_back("Greece_Soldier",
-                                 "res/objects/Greece_Soldier/Greece_Soldier_Hook.fbx");
+    _skinned_models.emplace_back("Maw", "res/objects/Maw/Maw_Punch.fbx");
 
-    Animation &greece_soldier_idle = _animations.emplace_back();
-    greece_soldier_idle.init("Greece_Soldier_Idle",
-                             "res/objects/Greece_Soldier/Greece_Soldier_Idle.fbx");
-
-    Animation &greece_soldier_hook = _animations.emplace_back();
-    greece_soldier_hook.init("Greece_Soldier_Hook",
-                             "res/objects/Greece_Soldier/Greece_Soldier_Hook.fbx");
+    Animation &maw_idle = _animations.emplace_back();
+    maw_idle.init("Maw_Idle", "res/objects/Maw/Maw_Punch.fbx");
   }
 
   // Knife Animations

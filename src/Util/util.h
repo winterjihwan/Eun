@@ -22,6 +22,9 @@ std::string get_dir_from_filename(const std::string &filename);
 std::string to_string(const std::string &name, const glm::mat4 &mat);
 std::string to_string(ObjectType object_type);
 
+// Log
+void log_vec3(const glm::vec3 &v, const std::string &label);
+
 // Math
 float     random_float(float min, float max);
 glm::vec3 random_dir_in_hemisphere(const glm::vec3 &normal);
@@ -30,15 +33,15 @@ glm::mat4
 transform(const glm::vec3 &position, const glm::vec3 &rotation_rad, const glm::vec3 &scale);
 glm::vec3
 to_capsule_position(const glm::vec3 &base_position, float capsule_height, float capsule_radius);
+glm::vec3
+to_base_position(const glm::vec3 &capsule_position, float capsule_height, float capsule_radius);
 
 // Geometry
 std::vector<Vertex>   generate_sphere_vertices(float radius, int segments);
 std::vector<uint32_t> generate_sphere_indices(int segments);
-
 std::vector<Vertex>
 generate_capsule_vertices(float radius, float halfHeight, unsigned int segments);
 std::vector<uint32_t> generate_capsule_indices(unsigned int segments);
-
 std::vector<Vertex>   generate_quad_vertices(float width, float height);
 std::vector<uint32_t> generate_quad_indices();
 

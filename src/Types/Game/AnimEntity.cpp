@@ -100,21 +100,6 @@ void AnimEntity::set_scale(const glm::vec3 &scale) {
   _dirty = true;
 }
 
-void AnimEntity::add_translation(const glm::vec3 &delta) {
-  _position += delta;
-  _dirty = true;
-}
-
-void AnimEntity::add_rotation(const glm::quat &delta) {
-  _rotation = delta * _rotation;
-  _dirty    = true;
-}
-
-void AnimEntity::add_scale(const glm::vec3 &delta) {
-  _scale *= delta;
-  _dirty = true;
-}
-
 const std::string &AnimEntity::get_name() {
   return _name;
 }

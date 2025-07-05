@@ -302,6 +302,12 @@ JPH::TempAllocatorImpl *get_temp_allocator() {
   return _temp_allocator;
 }
 
+glm::vec3 get_body_position(JPH::BodyID &body_id) {
+  const JPH::BodyInterface &bi       = _physics_system.GetBodyInterface();
+  const JPH::RVec3          position = bi.GetPosition(body_id);
+  return Util::to_vec3(position);
+}
+
 std::unordered_map<JPH::BodyID, PFN_ContactCallback> &get_contact_callbacks() {
   return _contact_callbacks;
 }

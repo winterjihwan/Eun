@@ -2,6 +2,7 @@
 #include "CreateInfo.h"
 #include "Keycodes.h"
 #include "Physics/Physics.h"
+#include "Renderer/RenderDataManager.h"
 #include "Types/Game/AnimEntity.h"
 #include "Types/UID/UID.h"
 #include "Util/Util.h"
@@ -18,20 +19,32 @@ void Npc::init(NpcCreateInfo &&info) {
   _anim_entity.set_scale(info.scale);
 
   // Physics
-  JPH::ShapeRefC shape    = Util::generate_capsule_shape(info.capsule_height, info.capsule_radius);
+  _capsule_height         = info.capsule_height;
+  _capsule_radius         = info.capsule_radius;
+  JPH::ShapeRefC shape    = Util::generate_capsule_shape(_capsule_height, _capsule_radius);
   glm::vec3      position = info.capsule_position;
   glm::quat      rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
   _body = Physics::register_kinematic_collider(shape, position, rotation, info.object_type, _uid);
-  _aabb = Physics::get_aabb(_body);
+  _aabb = AABB(Physics::get_aabb(_body));
 }
 
 void Npc::update(float delta_time) {
   _anim_entity.update(delta_time);
+
+  // Position
+  glm::vec3 capsule_position = Physics::get_body_position(_body);
+  _anim_entity.set_position(
+      Util::to_base_position(capsule_position, _capsule_height, _capsule_radius));
 }
 
-void Npc::set_velocity() {
-  Physics::set_body_velocity(_body, glm::vec3(0.0f));
-  _aabb = Physics::get_aabb(_body);
+void Npc::submit_render_item() {
+  RenderDataManager::submit_anim_entity(&_anim_entity);
+  RenderDataManager::submit_aabb(&_aabb);
+}
+
+void Npc::set_velocity(glm::vec3 velocity) {
+  Physics::set_body_velocity(_body, velocity);
+  _aabb = AABB(Physics::get_aabb(_body));
 }
 
 AnimEntity *Npc::get_anim_entity() {
@@ -50,6 +63,10 @@ glm::vec3 Npc::get_position() {
   return _anim_entity.get_transform()[3];
 }
 
-JPH::BodyID Npc::get_body() {
-  return _body;
+JPH::BodyID *Npc::get_body() {
+  return &_body;
+}
+
+AABB *Npc::get_aabb() {
+  return &_aabb;
 }

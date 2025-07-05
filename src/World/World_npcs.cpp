@@ -6,7 +6,7 @@ namespace World {
 
 void spawn_ally(const std::string &name, const glm::vec3 &position) {
   Ally ally;
-  ally.init("Greece_Soldier", position);
+  ally.init(name, position);
 
   add_ally(std::move(ally));
 }

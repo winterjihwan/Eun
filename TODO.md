@@ -14,7 +14,7 @@
 - [x] Asset Manager  
 - [x] Separate Animation to clips  
 - [ ] Advanced Weapon
-     - [ ] Debug Pass
+     - [x] Debug Pass
      - [x] Collider
      - [x] Raycast
      - [ ] Muzzle Flash
@@ -74,6 +74,8 @@
 - [ ] Combine Manager Logics
 - [ ] Dialogue System
 - [ ] Item Interaction
+- [x] AABB Pass
+- [ ] Abstract JPH Body
 - [ ] Item Hints
 - [ ] Interactable entities
 - [x] G-buffer

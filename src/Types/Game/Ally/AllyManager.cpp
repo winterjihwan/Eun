@@ -12,20 +12,20 @@ void init() {
 
   /* Allies */
 
-  // Greece_Soldier
-  AllyInfo &greece_soldier              = _allies.emplace_back();
-  greece_soldier.name                   = "Greece_Soldier";
-  greece_soldier.skinned_model          = "Greece_Soldier";
-  greece_soldier.animation_names.idle   = "Greece_Soldier_Idle";
-  greece_soldier.animation_names.walk   = "";
-  greece_soldier.animation_names.attack = "";
-  greece_soldier.audio_files.attack     = "";
-  greece_soldier.damage                 = 10;
-  greece_soldier.base_scale             = glm::vec3(0.005f);
-  greece_soldier.capsule_radius         = 0.1f;
-  greece_soldier.capsule_height         = 0.75f;
-  greece_soldier.capsule_position       = Util::to_capsule_position(
-      greece_soldier.base_position, greece_soldier.capsule_height, greece_soldier.capsule_radius);
+  // Maw
+  AllyInfo &maw              = _allies.emplace_back();
+  maw.name                   = "Maw";
+  maw.skinned_model          = "Maw";
+  maw.animation_names.idle   = "Maw_Idle";
+  maw.animation_names.walk   = "";
+  maw.animation_names.attack = "";
+  maw.audio_files.attack     = "";
+  maw.damage                 = 10;
+  maw.base_scale             = glm::vec3(0.005f);
+  maw.capsule_radius         = 0.2f;
+  maw.capsule_height         = 0.50f;
+  maw.capsule_position =
+      Util::to_capsule_position(maw.base_position, maw.capsule_height, maw.capsule_radius);
 }
 
 int get_ally_count() {

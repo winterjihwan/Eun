@@ -5,6 +5,7 @@ std::vector<AnimEntity *>      _anim_entities;
 std::vector<Entity *>          _entities;
 std::vector<Decal *>           _decals;
 std::vector<BloodVolumetric *> _blood_volumetrics;
+std::vector<AABB *>            _aabbs;
 
 void begin_frame() {
   // DID YOU FORGET ME
@@ -12,6 +13,7 @@ void begin_frame() {
   _entities.clear();
   _decals.clear();
   _blood_volumetrics.clear();
+  _aabbs.clear();
 }
 
 void update() {
@@ -34,6 +36,10 @@ void submit_blood_volumetric(BloodVolumetric *blood_volumetric) {
   _blood_volumetrics.push_back(blood_volumetric);
 }
 
+void submit_aabb(AABB *aabb) {
+  _aabbs.push_back(aabb);
+}
+
 const std::vector<AnimEntity *> &get_anim_entities() {
   return _anim_entities;
 }
@@ -48,5 +54,9 @@ const std::vector<Decal *> &get_decals() {
 
 const std::vector<BloodVolumetric *> &get_blood_volumetrics() {
   return _blood_volumetrics;
+}
+
+const std::vector<AABB *> &get_aabbs() {
+  return _aabbs;
 }
 } // namespace RenderDataManager
