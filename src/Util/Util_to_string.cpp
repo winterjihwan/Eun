@@ -23,14 +23,16 @@ std::string to_string(ObjectType object_type) {
     return "NONE";
   case ObjectType::MAP:
     return "MAP";
+  case ObjectType::PLATFORM:
+    return "PLATFORM";
   case ObjectType::GAME_OBJECT:
     return "GAME_OBJECT";
-  case ObjectType::BOT:
-    return "BOT";
-  case ObjectType::ALLY:
-    return "ALLY";
+  case ObjectType::BUILDING:
+    return "BUILDING";
   case ObjectType::DECAL:
     return "DECAL";
+  case ObjectType::UNIT:
+    return "UNIT";
   default:
     assert(0);
   }

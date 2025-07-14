@@ -1,4 +1,5 @@
 #include "Types.h"
+#include "Types/Shape/Shape.h"
 #include <Jolt/Jolt.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -43,6 +44,7 @@ std::vector<Vertex>   generate_quad_vertices(float width, float height);
 std::vector<uint32_t> generate_quad_indices();
 
 // JPH
+JPH::ShapeRefC to_jph_shape(Shape &shape);
 JPH::ShapeRefC generate_capsule_shape(float capsule_height, float capsule_radius);
 JPH::ShapeRefC generate_cube_shape(float width, float height, float depth);
 

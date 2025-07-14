@@ -19,7 +19,11 @@ void init() {
 }
 
 void update(float delta_time) {
-  if (Input::key_pressed(EUN_KEY_TAB)) {
+  if (Input::key_pressed(EUN_KEY_1)) {
+    // Not Allowed in RTS
+    if (Game::is_game_mode(GameMode::RTS)) {
+      return;
+    }
     Audio::play_audio("UI_Select.wav", 1.0f);
     toggle_editor_open_state();
   }
@@ -46,14 +50,14 @@ void update_hover() {
   // Inverse Projection / View
   Camera   *camera     = Game::get_camera();
   glm::mat4 projection = camera->projection();
-  glm::mat4 view       = camera->view_matrix();
+  glm::mat4 view       = camera->view();
 
   glm::vec4 ray_eye = glm::inverse(projection) * ray_clip;
   ray_eye.z         = -1.0f;
   ray_eye.w         = 0.0f;
 
   glm::vec3 ray_dir_world = glm::normalize(glm::vec3(glm::inverse(view) * ray_eye));
-  glm::vec3 ray_origin    = Game::get_camera()->get_pos();
+  glm::vec3 ray_origin    = Game::get_camera()->get_position();
 
   // Raycast
   std::optional<RayHitInfo> hit = Physics::raycast(ray_origin, ray_dir_world, 100.0f);
@@ -129,8 +133,10 @@ void close_editor() {
 void toggle_editor_open_state() {
   _is_open = !_is_open;
   if (_is_open) {
+    Game::set_game_mode(GameMode::EDITOR);
     open_editor();
   } else {
+    Game::set_game_mode(GameMode::TPS);
     close_editor();
   }
 }

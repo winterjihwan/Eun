@@ -32,13 +32,13 @@ struct Camera {
   void first_person_view(const glm::vec3 &watch);
   void third_person_view(const glm::vec3 &watch);
 
-  glm::mat4 view_matrix();
+  glm::mat4 view();
   glm::mat4 projection();
 
   void process_mouse_movement(float xoffset, float yoffset, GLboolean constrainPitch = true);
   void process_mouse_scroll(float yoffset);
 
-  glm::vec3 get_pos();
+  glm::vec3 get_position();
   glm::vec3 get_front();
   glm::vec3 get_right();
   glm::vec3 get_up();

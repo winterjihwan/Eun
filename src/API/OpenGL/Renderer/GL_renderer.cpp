@@ -4,6 +4,7 @@
 #include "Backend/Backend.h"
 #include "Core/Game.h"
 #include "Defines.h"
+#include "RTS/RTS.h"
 #include "Types.h"
 #include "Types/Game/AnimEntity.h"
 #include "Types/Renderer/Shader.h"
@@ -77,11 +78,16 @@ void init() {
 
 void render_game() {
   OpenGLFrameBuffer &g_buffer = _frame_buffers["G_Buffer"];
-  Camera            *camera   = Game::get_camera();
 
   // Per Frame Uniforms
-  _projection = camera->projection();
-  _view       = camera->view_matrix();
+  if (Game::is_game_mode(GameMode::RTS)) {
+    _projection = RTS::projection();
+    _view       = RTS::view();
+  } else {
+    Camera *camera = Game::get_camera();
+    _projection    = camera->projection();
+    _view          = camera->view();
+  }
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

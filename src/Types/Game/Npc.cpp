@@ -39,26 +39,21 @@ void Npc::init(NpcCreateInfo &&info) {
   }
 
   // Physics
-  _collider_offset = info.collider_offset;
-  JPH::ShapeRefC shape;
-  if (Capsule *capsule = std::get_if<Capsule>(&info.collider_shape)) {
-    shape = Util::generate_capsule_shape(capsule->r, capsule->h);
-  } else if (Cube *cube = std::get_if<Cube>(&info.collider_shape)) {
-    shape = Util::generate_cube_shape(cube->w, cube->h, cube->d);
-  }
-  glm::vec3 position = info.position + _collider_offset;
-  glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+  _collider_offset        = info.collider_offset;
+  JPH::ShapeRefC shape    = Util::to_jph_shape(info.collider_shape);
+  glm::vec3      position = info.position + _collider_offset;
+  glm::quat      rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
   _body = Physics::register_kinematic_collider(shape, position, rotation, info.object_type, _uid);
   _aabb = AABB(Physics::get_aabb(_body));
 }
 
 void Npc::update(float delta_time) {
-  std::visit([delta_time](auto &ent) { ent.update(delta_time); }, _entity);
+  std::visit([delta_time](auto &entity) { entity.update(delta_time); }, _entity);
 
   // Position
   if (AnimEntity *anim = std::get_if<AnimEntity>(&_entity)) {
     glm::vec3 position = Physics::get_body_position(_body);
-    anim->set_position(position + _collider_offset);
+    anim->set_position(position - _collider_offset);
   }
 
   // Physics

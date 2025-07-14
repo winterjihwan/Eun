@@ -13,6 +13,17 @@ glm::vec3 to_vec3(const JPH::Vec3 &v) {
   return glm::vec3(v.GetX(), v.GetY(), v.GetZ());
 }
 
+JPH::ShapeRefC to_jph_shape(Shape &shape) {
+  if (Capsule *capsule = std::get_if<Capsule>(&shape)) {
+    return generate_capsule_shape(capsule->r, capsule->h);
+  }
+  if (Cube *cube = std::get_if<Cube>(&shape)) {
+    return generate_cube_shape(cube->w, cube->h, cube->d);
+  }
+
+  assert(0);
+}
+
 JPH::ShapeRefC generate_capsule_shape(float capsule_radius, float capsule_height) {
   JPH::CapsuleShapeSettings shape_settings(capsule_height * 0.5f, capsule_radius);
   return shape_settings.Create().Get();

@@ -1,14 +1,16 @@
 #include "Game.h"
 #include "Backend/GLFW.h"
-#include "Editor/Editor.h"
+#include "Input/Input.h"
+#include "RTS/RTS.h"
 #include "UI/UIBackend.h"
 #include "World/World.h"
 #include <GLFW/glfw3.h>
 
 namespace Game {
-Player _player;
-float  _delta_time = 0.0f;
-float  _last_frame = 0.0f;
+GameMode _game_mode;
+Player   _player;
+float    _delta_time = 0.0f;
+float    _last_frame = 0.0f;
 
 // TODO: Move camera out of here
 Camera _camera;
@@ -21,7 +23,10 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
 void init() {
   _player.init(PLAYER_SPAWN_POS);
-  _camera = Camera(_player.get_pos());
+
+  // TPS
+  _game_mode = GameMode::TPS;
+  _camera    = Camera(_player.get_pos());
 
   GLFW::register_mouse_callback(mouse_callback);
   GLFW::register_scroll_callback(scroll_callback);
@@ -34,8 +39,24 @@ void update() {
   _delta_time        = currentFrame - _last_frame;
   _last_frame        = currentFrame;
 
-  _player.update(_delta_time, _camera);
-  _camera.update(_player.get_pos());
+  // Select Game Mode
+  if (Input::key_pressed(EUN_KEY_TAB)) {
+    if (is_game_mode(GameMode::TPS)) {
+      set_game_mode(GameMode::RTS);
+      RTS::open_rts();
+    } else {
+      set_game_mode(GameMode::TPS);
+      RTS::close_rts();
+    }
+  }
+
+  // Update Game Mode
+  if (is_game_mode(GameMode::TPS)) {
+    _player.update(_delta_time, _camera);
+    _camera.update(_player.get_pos());
+  } else if (is_game_mode(GameMode::RTS)) {
+    RTS::update(_delta_time);
+  }
 
   World::update(_delta_time);
 
@@ -61,6 +82,18 @@ Camera *get_camera() {
   return &_camera;
 }
 
+void set_game_mode(GameMode game_mode) {
+  _game_mode = game_mode;
+}
+
+bool is_game_mode(GameMode game_mode) {
+  return _game_mode == game_mode;
+}
+
+GameMode get_game_mode() {
+  return _game_mode;
+}
+
 void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
   float xpos = static_cast<float>(xposIn);
   float ypos = static_cast<float>(yposIn);
@@ -78,7 +111,7 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
   _lastY = ypos;
 
   // HACK kind of...
-  if (!Editor::is_open()) {
+  if (is_game_mode(GameMode::TPS)) {
     _camera.process_mouse_movement(xoffset, yoffset);
   }
 }

@@ -88,12 +88,12 @@ void init() {
     _models.emplace_back("Police_Car", "res/objects/Police_Car/Police_Car.glb");
   }
 
-  // Maw
+  // Dark_Knight
   {
-    _skinned_models.emplace_back("Maw", "res/objects/Maw/Maw_Punch.fbx");
+    _skinned_models.emplace_back("Dark_Knight", "res/objects/Dark_Knight/Dark_Knight.fbx");
 
-    Animation &maw_idle = _animations.emplace_back();
-    maw_idle.init("Maw_Idle", "res/objects/Maw/Maw_Punch.fbx");
+    Animation &dark_knight_idle = _animations.emplace_back();
+    dark_knight_idle.init("Dark_Knight_Idle", "res/objects/Dark_Knight/Dark_Knight_Kick.fbx");
   }
 
   // Knife Animations

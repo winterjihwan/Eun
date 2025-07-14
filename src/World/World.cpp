@@ -4,8 +4,8 @@
 #include "Defines.h"
 #include "Enums.h"
 #include "Keycodes.h"
-#include "Types/Game/Ally/Ally.h"
 #include "Types/Game/BloodVolumetric.h"
+#include "Types/Game/Unit/Unit.h"
 #include <vector>
 
 namespace World {
@@ -13,8 +13,8 @@ std::vector<AnimEntity>      _anim_entities;
 std::vector<Entity>          _entities;
 std::vector<Bullet>          _bullets;
 std::vector<Decal>           _decals;
-std::vector<Bot>             _bots;
-std::vector<Ally>            _allies;
+std::vector<Building>        _buildings;
+std::vector<Unit>            _units;
 std::vector<BloodVolumetric> _blood_volumetrics;
 
 void init() {
@@ -22,8 +22,8 @@ void init() {
   _entities.reserve(64);
   _bullets.reserve(32);
   _decals.reserve(32);
-  _bots.reserve(8);
-  _allies.reserve(64);
+  _buildings.reserve(8);
+  _units.reserve(64);
   _blood_volumetrics.reserve(32);
 
   // Plane
@@ -74,7 +74,7 @@ void init() {
         std::cout << "Entity " << entity.get_name() << '\n';
         acc = 0.0f;
 
-        spawn_ally("Maw");
+        spawn_unit("Dark_Knight");
       }
     };
 
@@ -83,26 +83,26 @@ void init() {
 
   // Police_Car
   {
-    Bot &bot = _bots.emplace_back();
+    Building &bot = _buildings.emplace_back();
     bot.init("Police_Car");
   }
 
-  // Maw
+  // Dark_Knight
   {
     glm::vec3 offset_position = glm::vec3(1.0f, 0.0f, -5.0f);
-    spawn_ally("Maw", offset_position);
+    spawn_unit("Dark_Knight", offset_position);
   }
 }
 
 void submit_render_items() {
-  // Bots
-  for (Bot &bot : _bots) {
-    bot.submit_render_item();
+  // Buildings
+  for (Building &building : _buildings) {
+    building.submit_render_item();
   }
 
-  // Allies
-  for (Ally &ally : _allies) {
-    ally.submit_render_item();
+  // Units
+  for (Unit &unit : _units) {
+    unit.submit_render_item();
   }
 
   // Anim Entities
@@ -136,8 +136,8 @@ Entity *add_entity(Entity &&entity) {
   return &_entities.back();
 }
 
-void add_ally(Ally &&ally) {
-  _allies.push_back(std::move(ally));
+void add_unit(Unit &&unit) {
+  _units.push_back(std::move(unit));
 }
 
 void add_bullet(Bullet &&bullet) {
@@ -168,25 +168,26 @@ Entity *get_entity_by_object_id(uint64_t object_id) {
   assert(0);
 }
 
-Bot *get_bot_by_name(const std::string &name) {
-  for (Bot &bot : _bots) {
-    if (name == bot.get_name()) {
-      return &bot;
+Building *get_building_by_name(const std::string &name) {
+  for (Building &building : _buildings) {
+    if (name == building.get_name()) {
+      return &building;
     }
   }
 
-  std::cout << "World::get_bot_by_name() failed, no npc with name: " << name << std::endl;
+  std::cout << "World::get_building_by_name() failed, no building with name: " << name << std::endl;
   assert(0);
 }
 
-Bot *get_bot_by_object_id(uint64_t object_id) {
-  for (Bot &bot : _bots) {
-    if (bot.get_id() == object_id) {
-      return &bot;
+Building *get_building_by_object_id(uint64_t object_id) {
+  for (Building &building : _buildings) {
+    if (building.get_id() == object_id) {
+      return &building;
     }
   }
 
-  std::cout << "World::get_bot_by_object_id() failed, no npc with id: " << object_id << std::endl;
+  std::cout << "World::get_building_by_object_id() failed, no building with id: " << object_id
+            << std::endl;
   assert(0);
 }
 } // namespace World

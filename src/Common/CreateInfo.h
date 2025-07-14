@@ -31,7 +31,7 @@ struct NpcCreateInfo {
   glm::vec3  position    = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::quat  rotation    = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
   glm::vec3  scale       = glm::vec3(1.0f, 1.0f, 1.0f);
-  ObjectType object_type = ObjectType::ALLY;
+  ObjectType object_type = ObjectType::UNIT;
 
   NpcState npc_state = NpcState::IDLE;
 
@@ -40,12 +40,12 @@ struct NpcCreateInfo {
   glm::vec3 collider_offset;
 };
 
-struct BotCreateInfo : public NpcCreateInfo {
+struct BuildingCreateInfo : public NpcCreateInfo {
   float health = 0.0f;
   int   reward = 0;
 };
 
-struct AllyCreateInfo : public NpcCreateInfo {
+struct UnitCreateInfo : public NpcCreateInfo {
   float damage = 0.0f;
 };
 

@@ -1,5 +1,11 @@
 #pragma once
 
+enum class GameMode {
+  TPS = 0,
+  RTS,
+  EDITOR,
+};
+
 enum class WeaponAction {
   IDLE = 0,
   DRAW,
@@ -33,8 +39,8 @@ enum class ObjectType {
   MAP,
   PLATFORM,
   GAME_OBJECT,
-  ALLY,
-  BOT,
+  UNIT,
+  BUILDING,
   DECAL,
 };
 

@@ -68,6 +68,12 @@
 - [ ] Light Water Simulation
 - [ ] SpriteSheet
 - [ ] Ambience for shadows
+- [ ] RTS Game Mode
+    - [ ] Ortho Camera
+    - [ ] Game Mode State
+    - [ ] Mouse Map Edge Hover
+    - [ ] Mini Map
+    - [ ] Drag and Select
 - [ ] FPS Governor
 - [ ] Custom Map
 - [ ] Map Editor
@@ -80,6 +86,11 @@
 - [x] Shape Enum using Variant
 - [ ] Fire particle effect
 - [ ] Abstract JPH Body
+- [ ] RTS
+    - [ ] Glow on Selection
+    - [ ] Move on Selection
+    - [ ] Unit Move Animation
+    - [ ] Attack upon in boundary
 - [ ] Item Hints
 - [ ] Interactable entities
 - [x] G-buffer

@@ -62,7 +62,7 @@ void Camera::third_person_view(const glm::vec3 &watch) {
   _position        = watch + offset;
 }
 
-glm::mat4 Camera::view_matrix() {
+glm::mat4 Camera::view() {
   return _view;
 }
 
@@ -71,7 +71,7 @@ glm::mat4 Camera::projection() {
       glm::radians(get_zoom()), (float)VIEWPORT_WIDTH / (float)VIEWPORT_HEIGHT, NEAR, FAR);
 }
 
-glm::vec3 Camera::get_pos() {
+glm::vec3 Camera::get_position() {
   return _position;
 }
 

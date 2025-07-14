@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "Core/Game.h"
 #include "Defines.h"
-#include "Editor/Editor.h"
 #include "Enums.h"
 #include "Keycodes.h"
 #include "Physics/Physics.h"
@@ -19,7 +18,7 @@ void Player::init(glm::vec3 position) {
 }
 
 void Player::update(float delta_time, Camera camera) {
-  if (Editor::is_open()) {
+  if (!Game::is_game_mode(GameMode::TPS)) {
     return;
   }
 
