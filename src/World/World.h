@@ -27,6 +27,7 @@ std::vector<Bullet> &get_bullets();
 Entity              *get_entity_by_object_id(uint64_t object_id);
 Building            *get_building_by_name(const std::string &name);
 Building            *get_building_by_object_id(uint64_t object_id);
+Unit                *get_unit_by_object_id(uint64_t object_id);
 
 // Npcs
 void spawn_unit(const std::string &name, const glm::vec3 &position = glm::vec3(0.0f));

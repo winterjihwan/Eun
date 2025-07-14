@@ -4,6 +4,7 @@
 
 namespace RTS {
 void update(float dt);
+void submit_render_items();
 
 glm::mat4 projection();
 glm::mat4 view();

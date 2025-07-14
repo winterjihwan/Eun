@@ -190,4 +190,15 @@ Building *get_building_by_object_id(uint64_t object_id) {
             << std::endl;
   assert(0);
 }
+
+Unit *get_unit_by_object_id(uint64_t object_id) {
+  for (Unit &unit : _units) {
+    if (unit.get_id() == object_id) {
+      return &unit;
+    }
+  }
+
+  std::cout << "World::get_unit_by_object_id() failed, no unit with id: " << object_id << std::endl;
+  assert(0);
+}
 } // namespace World

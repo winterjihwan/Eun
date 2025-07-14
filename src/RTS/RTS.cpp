@@ -8,6 +8,8 @@
 #include "Input/Input.h"
 #include "Keycodes.h"
 #include "Physics/Physics.h"
+#include "Renderer/RenderDataManager.h"
+#include "World/World.h"
 
 namespace RTS {
 bool        _is_open              = false;
@@ -82,6 +84,20 @@ void update_selection() {
 
     std::cout << "Selected: " << Util::to_string(_selected_object_type) << " "
               << _selected_object_id << std::endl;
+  }
+}
+
+void submit_render_items() {
+  // On Select, Highlight
+
+  if (_selected_object_type == ObjectType::UNIT) {
+    Unit *unit = World::get_unit_by_object_id(_selected_object_id);
+    RenderDataManager::submit_aabb(unit->get_aabb());
+  }
+
+  if (_selected_object_type == ObjectType::BUILDING) {
+    Building *building = World::get_building_by_object_id(_selected_object_id);
+    RenderDataManager::submit_aabb(building->get_aabb());
   }
 }
 

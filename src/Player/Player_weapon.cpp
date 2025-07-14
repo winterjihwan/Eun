@@ -157,63 +157,16 @@ void Player::perform_stab(float damage) {
     World::add_decal(Decal(info));
   }
 
-  // // Blood
-  // if (data->physics_type == PhysicsType::RIGID_DYNAMIC && data->object_type == ObjectType::BOT) {
-  //   Audio::play_audio("Knife_Stab.wav", 1.0f);
-  //
-  //   // TODO: Separate Function?
-  //   // Damage Bot
-  //   Bot *bot  = World::get_bot_by_object_id(data->object_id);
-  //   bool dead = bot->take_damage(damage);
-  //   if (dead) {
-  //     _minerals += bot->get_reward();
-  //   }
-  //
-  //   // Blood Volumetric
-  //   static unsigned int blood_volumetric_index = 1;
-  //   if (++blood_volumetric_index > 6)
-  //     blood_volumetric_index = 1;
-  //
-  //   BloodVolumetricCreateInfo info;
-  //   info.position          = Util::to_vec3(hit->hit_pos);
-  //   info.rotation          = glm::vec3(0.0f);
-  //   info.front             = camera->get_front();
-  //   info.exr_texture_index = blood_volumetric_index;
-  //   info.model = AssetManager::get_model_by_name(std::format("Blood_{}",
-  //   blood_volumetric_index));
-  //
-  //   World::add_blood_volumetric(BloodVolumetric(info));
-  //
-  //   // Blood Decal Raycast
-  //   JPH::Vec3 blood_origin      = hit->hit_pos + 0.02f * hit->hit_normal;
-  //   JPH::Vec3 blood_dir         = JPH::Vec3(0.0f, -1.0f, 0.0f);
-  //   float     blood_splash_dist = 10.0f;
-  //
-  //   auto decal_hit = Physics::raycast(blood_origin, blood_dir, blood_splash_dist);
-  //   if (!decal_hit || !decal_hit->user_data) {
-  //     return;
-  //   }
-  //
-  //   if (decal_hit->user_data->object_type != ObjectType::MAP) {
-  //     return;
-  //   }
-  //
-  //   static unsigned int _blood_stain_index = 1;
-  //   if (++_blood_stain_index > 4)
-  //     _blood_stain_index = 1;
-  //
-  //   glm::vec3 offset =
-  //       glm::vec3(Util::random_float(-0.3f, 0.3f), 0.0f, Util::random_float(-0.3f, 0.3f));
-  //
-  //   DecalCreateInfo blood_info;
-  //   blood_info.hit_position = Util::to_vec3(decal_hit->hit_pos) + offset;
-  //   blood_info.hit_normal   = Util::to_vec3(decal_hit->hit_normal);
-  //   blood_info.type         = DecalType::BLOOD;
-  //   blood_info.mesh =
-  //       AssetManager::get_mesh_by_name(std::format("Blood_Stain_{}", _blood_stain_index));
-  //
-  //   World::add_decal(Decal(blood_info));
-  // }
+  // Building Interaction
+  if (data->physics_type == PhysicsType::RIGID_DYNAMIC &&
+      data->object_type == ObjectType::BUILDING) {
+    // Damage Building
+    Building *bot  = World::get_building_by_object_id(data->object_id);
+    bool      dead = bot->take_damage(damage);
+    if (dead) {
+      _minerals += bot->get_reward();
+    }
+  }
 }
 
 WeaponState *Player::get_weapon_state_by_name(const std::string &name) {

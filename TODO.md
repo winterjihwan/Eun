@@ -87,10 +87,12 @@
 - [ ] Fire particle effect
 - [ ] Abstract JPH Body
 - [ ] RTS
-    - [ ] Glow on Selection
+    - [x] Glow on Selection
     - [ ] Move on Selection
     - [ ] Unit Move Animation
     - [ ] Attack upon in boundary
+    - [ ] Unit Selection Display
+    - [ ] Drag and Select
 - [ ] Item Hints
 - [ ] Interactable entities
 - [x] G-buffer

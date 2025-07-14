@@ -66,7 +66,6 @@ void Npc::submit_render_item() {
   } else if (Entity *entity = std::get_if<Entity>(&_entity)) {
     RenderDataManager::submit_entity(entity);
   }
-  RenderDataManager::submit_aabb(&_aabb);
 }
 
 void Npc::set_velocity(glm::vec3 velocity) {

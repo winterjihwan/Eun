@@ -56,6 +56,7 @@ void update() {
     _camera.update(_player.get_pos());
   } else if (is_game_mode(GameMode::RTS)) {
     RTS::update(_delta_time);
+    RTS::submit_render_items();
   }
 
   World::update(_delta_time);
