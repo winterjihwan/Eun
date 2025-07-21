@@ -100,6 +100,10 @@ void AnimEntity::set_scale(const glm::vec3 &scale) {
   _dirty = true;
 }
 
+glm::vec3 AnimEntity::get_position() {
+  return _position;
+}
+
 const std::string &AnimEntity::get_name() {
   return _name;
 }

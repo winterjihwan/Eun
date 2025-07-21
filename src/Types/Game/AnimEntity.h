@@ -27,6 +27,7 @@ struct AnimEntity {
   void set_scale(const glm::vec3 &scale);
 
   const std::string   &get_name();
+  glm::vec3            get_position();
   glm::mat4           &get_transform();
   std::vector<Vertex> &get_vertices();
   std::vector<uint>   &get_indices();

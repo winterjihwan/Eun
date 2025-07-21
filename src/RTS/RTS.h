@@ -12,6 +12,7 @@ glm::vec3 get_camera_position();
 
 void update_hover();
 void update_selection();
+void update_move();
 
 void open_rts();
 void close_rts();
