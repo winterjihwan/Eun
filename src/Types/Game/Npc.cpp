@@ -50,6 +50,21 @@ void Npc::init(NpcCreateInfo &&info) {
 void Npc::update(float delta_time) {
   std::visit([delta_time](auto &entity) { entity.update(delta_time); }, _entity);
 
+  // Move
+  if (_move_xz) {
+    glm::vec3 pos    = Physics::get_body_position(_body);
+    glm::vec2 pos_xz = glm::vec2(pos.x, pos.z);
+    glm::vec2 dir_xz = _move_xz.value() - pos_xz;
+
+    if (glm::length(dir_xz) < 0.1f) {
+      stop();
+    } else {
+      dir_xz        = glm::normalize(dir_xz);
+      glm::vec3 dir = glm::vec3(dir_xz.x, 0.0f, dir_xz.y);
+      set_velocity(dir * 5.0f);
+    }
+  }
+
   // Position
   if (AnimEntity *anim = std::get_if<AnimEntity>(&_entity)) {
     glm::vec3 position = Physics::get_body_position(_body);
@@ -71,6 +86,15 @@ void Npc::submit_render_item() {
 void Npc::set_velocity(glm::vec3 velocity) {
   Physics::set_body_velocity(_body, velocity);
   _aabb = AABB(Physics::get_aabb(_body));
+}
+
+void Npc::move_xz(glm::vec2 xz) {
+  _move_xz = xz;
+}
+
+void Npc::stop() {
+  set_velocity(glm::vec3(0.0f));
+  _move_xz = std::nullopt;
 }
 
 AnimEntity *Npc::get_anim_entity() {

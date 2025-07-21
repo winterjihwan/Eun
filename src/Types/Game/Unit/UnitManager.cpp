@@ -16,8 +16,8 @@ void init() {
   dark_knight.name                   = "Dark_Knight";
   dark_knight.model_name             = "Dark_Knight";
   dark_knight.animation_names.idle   = "Dark_Knight_Idle";
-  dark_knight.animation_names.walk   = "";
-  dark_knight.animation_names.attack = "";
+  dark_knight.animation_names.walk   = "Dark_Knight_Walk";
+  dark_knight.animation_names.attack = "Dark_Knight_Kick";
   dark_knight.audio_files.attack     = "";
   dark_knight.damage                 = 10;
   dark_knight.base_position          = glm::vec3(0.0f, PLATFORM_HEIGHT, 0.0f);

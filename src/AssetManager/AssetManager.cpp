@@ -93,7 +93,13 @@ void init() {
     _skinned_models.emplace_back("Dark_Knight", "res/objects/Dark_Knight/Dark_Knight.fbx");
 
     Animation &dark_knight_idle = _animations.emplace_back();
-    dark_knight_idle.init("Dark_Knight_Idle", "res/objects/Dark_Knight/Dark_Knight_Kick.fbx");
+    dark_knight_idle.init("Dark_Knight_Idle", "res/objects/Dark_Knight/Dark_Knight_Idle.fbx");
+
+    Animation &dark_knight_attack = _animations.emplace_back();
+    dark_knight_attack.init("Dark_Knight_Kick", "res/objects/Dark_Knight/Dark_Knight_Kick.fbx");
+
+    Animation &dark_knight_walk = _animations.emplace_back();
+    dark_knight_walk.init("Dark_Knight_Walk", "res/objects/Dark_Knight/Dark_Knight_Walk.fbx");
   }
 
   // Knife Animations

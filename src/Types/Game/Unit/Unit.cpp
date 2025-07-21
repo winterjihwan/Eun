@@ -24,3 +24,19 @@ void Unit::init(const std::string &name, glm::vec3 offset_position) {
     anim_entity->loop_animation(_animation_names.idle);
   }
 }
+
+void Unit::move_xz(glm::vec2 xz) {
+  Npc::move_xz(xz);
+
+  if (AnimEntity *anim_entity = get_anim_entity()) {
+    anim_entity->loop_animation(_animation_names.walk);
+  }
+}
+
+void Unit::stop() {
+  set_velocity(glm::vec3(0.0f));
+
+  if (AnimEntity *anim_entity = get_anim_entity()) {
+    anim_entity->loop_animation(_animation_names.idle);
+  }
+}

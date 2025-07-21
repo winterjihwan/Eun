@@ -13,15 +13,14 @@
 #include <optional>
 
 namespace RTS {
-bool                     _is_open             = false;
-OrthoCamera              _camera              = OrthoCamera(-10.0f, 10.0f, -10.0f, 10.0f);
-ObjectType               _hovered_object_type = ObjectType::NONE;
-uint64_t                 _hovered_object_id   = 0;
-glm::vec2                _hovered_xz          = glm::vec2(0.0f);
-std::optional<glm::vec2> _move_target;
-ObjectType               _selected_object_type = ObjectType::NONE;
-uint64_t                 _selected_object_id   = 0;
-std::optional<Unit *>    _unit;
+bool                  _is_open              = false;
+OrthoCamera           _camera               = OrthoCamera(-10.0f, 10.0f, -10.0f, 10.0f);
+ObjectType            _hovered_object_type  = ObjectType::NONE;
+uint64_t              _hovered_object_id    = 0;
+glm::vec2             _hovered_xz           = glm::vec2(0.0f);
+ObjectType            _selected_object_type = ObjectType::NONE;
+uint64_t              _selected_object_id   = 0;
+std::optional<Unit *> _unit;
 
 void update(float delta_time) {
   if (!is_open()) {
@@ -47,7 +46,6 @@ void update(float delta_time) {
 
   update_hover();
   update_selection();
-  update_move();
 }
 
 void update_hover() {
@@ -96,36 +94,17 @@ void update_selection() {
     std::cout << "Selected: " << Util::to_string(_selected_object_type) << " "
               << _selected_object_id << std::endl;
 
-    if (_selected_object_type == ObjectType::UNIT && _selected_object_id != 0)
+    if (_selected_object_type == ObjectType::UNIT && _selected_object_id != 0) {
       _unit = World::get_unit_by_object_id(_selected_object_id);
-    else
+    } else {
       _unit = std::nullopt;
+    }
   }
 
   // Map Click
   if (_unit && Input::right_mouse_pressed() && _hovered_object_type == ObjectType::MAP) {
-    _move_target = _hovered_xz;
+    _unit.value()->move_xz(_hovered_xz);
   }
-}
-
-void update_move() {
-  if (!_unit || !_move_target) {
-    return;
-  }
-
-  glm::vec3 unit_pos  = _unit.value()->get_anim_entity()->get_position();
-  glm::vec2 unit_pos2 = glm::vec2(unit_pos.x, unit_pos.z);
-  glm::vec2 dir2      = _move_target.value() - unit_pos2;
-
-  if (glm::length(dir2) < 0.1f) {
-    _unit.value()->set_velocity(glm::vec3(0.0f));
-    _move_target = std::nullopt;
-    return;
-  }
-
-  dir2          = glm::normalize(dir2);
-  glm::vec3 dir = glm::vec3(dir2.x, 0.0f, dir2.y);
-  _unit.value()->set_velocity(dir * 5.0f);
 }
 
 void submit_render_items() {
@@ -164,12 +143,6 @@ void open_rts() {
 void close_rts() {
   Input::disable_cursor();
   _is_open = false;
-
-  // Unit Halt
-  if (_unit) {
-    _unit.value()->set_velocity(glm::vec3(0.0f));
-    _move_target = std::nullopt;
-  }
 }
 
 bool is_open() {

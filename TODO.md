@@ -88,11 +88,17 @@
 - [ ] Abstract JPH Body
 - [ ] RTS
     - [x] Glow on Selection
-    - [ ] Move on Selection
-    - [ ] Unit Move Animation
+    - [x] Move on Selection
+    - [x] Unit Move Animation
     - [ ] Attack upon in boundary
     - [ ] Unit Selection Display
     - [ ] Drag and Select
+- [ ] Enhancement
+    - [ ] Enhancement Floor Interaction
+    - [ ] Enhancement Probability
+    - [ ] Sound Effects
+- [ ] Enhancement
+- [ ] Enhancement
 - [ ] Item Hints
 - [ ] Interactable entities
 - [x] G-buffer
