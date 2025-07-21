@@ -30,6 +30,10 @@ void Player::update(float delta_time, Camera camera) {
   update_weapon_view(delta_time);
 }
 
+void Player::add_minerals(float amount) {
+  _minerals += amount;
+}
+
 glm::vec3 Player::get_pos() {
   JPH::RVec3 pos    = _character->GetPosition();
   glm::vec3  result = glm::vec3(pos.GetX(), pos.GetY() + PLAYER_HEIGHT * 0.5f, pos.GetZ());

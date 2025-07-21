@@ -68,12 +68,6 @@
 - [ ] Light Water Simulation
 - [ ] SpriteSheet
 - [ ] Ambience for shadows
-- [ ] RTS Game Mode
-    - [ ] Ortho Camera
-    - [ ] Game Mode State
-    - [ ] Mouse Map Edge Hover
-    - [ ] Mini Map
-    - [ ] Drag and Select
 - [ ] FPS Governor
 - [ ] Custom Map
 - [ ] Map Editor
@@ -90,7 +84,7 @@
     - [x] Glow on Selection
     - [x] Move on Selection
     - [x] Unit Move Animation
-    - [ ] Attack upon in boundary
+    - [x] Attack upon in boundary
     - [ ] Unit Selection Display
     - [ ] Drag and Select
 - [ ] Enhancement

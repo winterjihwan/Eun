@@ -19,6 +19,9 @@ struct Player {
   // Flashlight
   bool get_flashlight_on();
 
+  // Game
+  void add_minerals(float amount);
+
   // Weapon
   WeaponState *get_weapon_state_by_name(const std::string &name);
   WeaponState *get_current_weapon_state();

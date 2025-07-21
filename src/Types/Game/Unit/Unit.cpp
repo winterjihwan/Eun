@@ -1,5 +1,7 @@
 #include "Unit.h"
+#include "Core/Game.h"
 #include "CreateInfo.h"
+#include "Player/Player.h"
 #include "Types/Game/Unit/UnitManager.h"
 #include "Util/Util.h"
 #include "World/World.h"
@@ -28,14 +30,16 @@ void Unit::init(const std::string &name, glm::vec3 offset_position) {
 
 void Unit::update(float delta_time) {
   Npc::update(delta_time);
-
-  if (_state == Unit::State::Attacking) {
-  }
 }
 
 void Unit::attack(Building &building) {
   if (AnimEntity *anim = get_anim_entity()) {
     anim->loop_animation(_animation_names.attack);
+  }
+
+  bool destroyed = building.take_damage(_damage);
+  if (destroyed) {
+    Game::get_player()->add_minerals(building.get_reward());
   }
 }
 
