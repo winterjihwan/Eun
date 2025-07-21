@@ -23,11 +23,12 @@ void        add_bullet(Bullet &&bullet);
 void        add_decal(Decal &&decal);
 void        add_blood_volumetric(BloodVolumetric &&blood_volumetric);
 
-std::vector<Bullet> &get_bullets();
-Entity              *get_entity_by_object_id(uint64_t object_id);
-Building            *get_building_by_name(const std::string &name);
-Building            *get_building_by_object_id(uint64_t object_id);
-Unit                *get_unit_by_object_id(uint64_t object_id);
+std::vector<Bullet>   &get_bullets();
+Entity                *get_entity_by_object_id(uint64_t object_id);
+Building              *get_building_by_name(const std::string &name);
+Building              *get_building_by_object_id(uint64_t object_id);
+std::vector<Building> &get_buildings();
+Unit                  *get_unit_by_object_id(uint64_t object_id);
 
 // Npcs
 void spawn_unit(const std::string &name, const glm::vec3 &position = glm::vec3(0.0f));

@@ -30,4 +30,12 @@ transform(const glm::vec3 &position, const glm::vec3 &rotation_rad, const glm::v
   return transform;
 }
 
+glm::quat look_rotation_y(const glm::vec2 &dir_xz) {
+  if (glm::length(dir_xz) < 0.0001f)
+    return glm::quat(1, 0, 0, 0);
+
+  glm::vec2 dir   = glm::normalize(dir_xz);
+  float     angle = std::atan2(dir.x, dir.y);
+  return glm::angleAxis(angle, glm::vec3(0, 1, 0));
+}
 } // namespace Util

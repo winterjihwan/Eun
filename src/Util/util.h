@@ -33,6 +33,7 @@ glm::vec3 random_dir_in_hemisphere(const glm::vec3 &normal);
 glm::mat4 lerp(const glm::mat4 &a, const glm::mat4 &b, float factor);
 glm::mat4
 transform(const glm::vec3 &position, const glm::vec3 &rotation_rad, const glm::vec3 &scale);
+glm::quat look_rotation_y(const glm::vec2 &dir_xz);
 
 // Geometry
 std::vector<Vertex>   generate_sphere_vertices(float radius, int segments);

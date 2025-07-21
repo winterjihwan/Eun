@@ -65,10 +65,15 @@ void Npc::update(float delta_time) {
     }
   }
 
-  // Position
+  // Appearance
   if (AnimEntity *anim = std::get_if<AnimEntity>(&_entity)) {
     glm::vec3 position = Physics::get_body_position(_body);
     anim->set_position(position - _collider_offset);
+
+    if (_move_xz) {
+      glm::vec2 dir_xz = _move_xz.value() - glm::vec2(position.x, position.z);
+      anim->set_rotation(Util::look_rotation_y(dir_xz));
+    }
   }
 
   // Physics
@@ -115,4 +120,8 @@ JPH::BodyID *Npc::get_body() {
 
 AABB *Npc::get_aabb() {
   return &_aabb;
+}
+
+glm::vec3 Npc::get_position() {
+  return Physics::get_body_position(_body) - _collider_offset;
 }

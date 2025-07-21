@@ -191,6 +191,10 @@ Building *get_building_by_object_id(uint64_t object_id) {
   assert(0);
 }
 
+std::vector<Building> &get_buildings() {
+  return _buildings;
+}
+
 Unit *get_unit_by_object_id(uint64_t object_id) {
   for (Unit &unit : _units) {
     if (unit.get_id() == object_id) {

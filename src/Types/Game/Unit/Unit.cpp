@@ -2,6 +2,7 @@
 #include "CreateInfo.h"
 #include "Types/Game/Unit/UnitManager.h"
 #include "Util/Util.h"
+#include "World/World.h"
 
 void Unit::init(const std::string &name, glm::vec3 offset_position) {
   UnitInfo *info = UnitManager::get_unit_info_by_name(name);
@@ -25,6 +26,25 @@ void Unit::init(const std::string &name, glm::vec3 offset_position) {
   }
 }
 
+void Unit::update(float delta_time) {
+  Npc::update(delta_time);
+
+  if (_state == Unit::State::Attacking) {
+  }
+}
+
+void Unit::attack(Building &building) {
+  if (AnimEntity *anim = get_anim_entity()) {
+    anim->loop_animation(_animation_names.attack);
+  }
+}
+
+void Unit::idle() {
+  if (AnimEntity *anim_entity = get_anim_entity()) {
+    anim_entity->loop_animation(_animation_names.idle);
+  }
+}
+
 void Unit::move_xz(glm::vec2 xz) {
   Npc::move_xz(xz);
 
@@ -36,7 +56,13 @@ void Unit::move_xz(glm::vec2 xz) {
 void Unit::stop() {
   set_velocity(glm::vec3(0.0f));
 
-  if (AnimEntity *anim_entity = get_anim_entity()) {
-    anim_entity->loop_animation(_animation_names.idle);
+  // Auto Attack
+  for (Building &building : World::get_buildings()) {
+    if (building.get_aabb()->expanded_contains(get_position(), ATTACK_RANGE)) {
+      attack(building);
+      return;
+    }
   }
+
+  idle();
 }

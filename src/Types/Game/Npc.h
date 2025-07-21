@@ -23,6 +23,7 @@ struct Npc {
   uint64_t          &get_id();
   JPH::BodyID       *get_body();
   AABB              *get_aabb();
+  glm::vec3          get_position();
 
 protected:
   std::string                      _name = "Npc";

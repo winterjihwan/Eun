@@ -21,9 +21,9 @@ constexpr unsigned int SHADOW_WIDTH  = 4096;
 constexpr unsigned int SHADOW_HEIGHT = 4096;
 
 // Player
-const float         PLAYER_HEIGHT    = 1.65f;
-const glm::vec3     PLAYER_SPAWN_POS = glm::vec3(0.0f, PLAYER_HEIGHT, 0.0f);
-const float         GRAVITY          = -15.75f;
+constexpr float     PLAYER_HEIGHT    = 1.65f;
+constexpr glm::vec3 PLAYER_SPAWN_POS = glm::vec3(0.0f, PLAYER_HEIGHT, 0.0f);
+constexpr float     GRAVITY          = -15.75f;
 constexpr glm::vec3 DOWN_DIRECTION   = glm::vec3(0.0f, -1.0f, 0.0f);
 
 // Camera
@@ -34,6 +34,9 @@ const float ZOOM        = 45.0f;
 
 // Audio
 #define AUDIO_BASE_PATH "res/audio/"
+
+// Unit
+constexpr float ATTACK_RANGE = 1.0f;
 
 // Animation
 #define MAX_BONE_INFLUENCE 8

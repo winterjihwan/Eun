@@ -10,6 +10,9 @@ struct AABB {
   glm::vec3 get_center();
   glm::vec3 get_extent();
 
+  bool contains(const glm::vec3 &point);
+  bool expanded_contains(glm::vec3 point, float radius);
+
 private:
   JPH::AABox _handle;
 };
