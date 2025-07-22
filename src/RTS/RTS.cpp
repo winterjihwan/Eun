@@ -111,8 +111,13 @@ void submit_render_items() {
   // On Select, Highlight
 
   if (_selected_object_type == ObjectType::UNIT) {
-    Unit *unit = World::get_unit_by_object_id(_selected_object_id);
-    RenderDataManager::submit_aabb(unit->get_aabb());
+    Unit *unit = World::try_get_unit_by_object_id(_selected_object_id);
+
+    if (unit) {
+      RenderDataManager::submit_aabb(unit->get_aabb());
+    } else {
+      // Enhanced (Dead)
+    }
   }
 
   if (_selected_object_type == ObjectType::BUILDING) {

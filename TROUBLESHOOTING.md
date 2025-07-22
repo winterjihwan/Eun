@@ -111,3 +111,8 @@ There were two errors
     JoinIdenticalVertices, SplitLargeMeshes would mess around the vertices that needs special treatment  
     when proccesing in the CPU side which is too buggy  
 2. Quaternion not being normalized  
+
+13. 2025.07.22  
+Trying to implement Unit interaction with enhance pads  
+Using collision detection vs per frame raycasting  
+Choosing the right one in terms of overhead is really difficult  

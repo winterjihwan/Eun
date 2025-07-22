@@ -12,6 +12,7 @@
 #include "Renderer/RenderDataManager.h"
 #include "Renderer/Renderer.h"
 #include "Types/Game/Building/BuildingManager.h"
+#include "Types/Game/Enhance/Enhance.h"
 #include "Types/Game/Unit/UnitManager.h"
 #include "Types/Game/Weapon/WeaponManager.h"
 #include "UI/UIBackend.h"
@@ -29,6 +30,7 @@ bool init() {
   Renderer::init();
   HotReload::init();
   Physics::init();
+  Enhance::init();
   AssetManager::init();
   UIBackend::init();
   TimerManager::init();
@@ -57,6 +59,7 @@ void update_game() {
   }
   Editor::update(delta_time);
   Physics::update(delta_time);
+  Enhance::update(delta_time);
   Game::update();
   World::submit_render_items();
   TimerManager::update(delta_time);

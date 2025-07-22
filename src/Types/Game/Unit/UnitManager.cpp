@@ -20,10 +20,28 @@ void init() {
   dark_knight.animation_names.attack = "Dark_Knight_Kick";
   dark_knight.audio_files.attack     = "";
   dark_knight.damage                 = 10;
+  dark_knight.attack_cooldown        = 1.5f;
+  dark_knight.enhance_chance         = 0.9f;
   dark_knight.base_position          = glm::vec3(0.0f, PLATFORM_HEIGHT, 0.0f);
   dark_knight.base_scale             = glm::vec3(0.005f);
   dark_knight.collider_shape         = Capsule(0.2f, 0.5f);
   dark_knight.collider_offset        = glm::vec3(0.0f, 0.4f, 0.0f);
+
+  // Demon_Fairy
+  UnitInfo &demon_fairy              = _units.emplace_back();
+  demon_fairy.name                   = "Demon_Fairy";
+  demon_fairy.model_name             = "Demon_Fairy";
+  demon_fairy.animation_names.idle   = "Demon_Fairy_Idle";
+  demon_fairy.animation_names.walk   = "Demon_Fairy_Walk";
+  demon_fairy.animation_names.attack = "Demon_Fairy_Cast";
+  demon_fairy.audio_files.attack     = "";
+  demon_fairy.damage                 = 10;
+  demon_fairy.attack_cooldown        = 1.5f;
+  demon_fairy.enhance_chance         = 0.9f;
+  demon_fairy.base_position          = glm::vec3(0.0f, PLATFORM_HEIGHT, 0.0f);
+  demon_fairy.base_scale             = glm::vec3(0.005f);
+  demon_fairy.collider_shape         = Capsule(0.2f, 0.5f);
+  demon_fairy.collider_offset        = glm::vec3(0.0f, 0.4f, 0.0f);
 }
 
 int get_unit_count() {

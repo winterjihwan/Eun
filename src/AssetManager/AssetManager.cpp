@@ -102,6 +102,20 @@ void init() {
     dark_knight_walk.init("Dark_Knight_Walk", "res/objects/Dark_Knight/Dark_Knight_Walk.fbx");
   }
 
+  // Demon_Fairy
+  {
+    _skinned_models.emplace_back("Demon_Fairy", "res/objects/Demon_Fairy/Demon_Fairy.fbx");
+
+    Animation &demon_fairy_idle = _animations.emplace_back();
+    demon_fairy_idle.init("Demon_Fairy_Idle", "res/objects/Demon_Fairy/Demon_Fairy_Idle.fbx");
+
+    Animation &demon_fairy_attack = _animations.emplace_back();
+    demon_fairy_attack.init("Demon_Fairy_Cast", "res/objects/Demon_Fairy/Demon_Fairy_Cast.fbx");
+
+    Animation &demon_fairy_walk = _animations.emplace_back();
+    demon_fairy_walk.init("Demon_Fairy_Walk", "res/objects/Demon_Fairy/Demon_Fairy_Walk.fbx");
+  }
+
   // Knife Animations
   {
     Animation &knife_swing_0 = _animations.emplace_back();

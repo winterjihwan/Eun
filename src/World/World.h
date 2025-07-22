@@ -29,6 +29,8 @@ Building              *get_building_by_name(const std::string &name);
 Building              *get_building_by_object_id(uint64_t object_id);
 std::vector<Building> &get_buildings();
 Unit                  *get_unit_by_object_id(uint64_t object_id);
+Unit                  *try_get_unit_by_object_id(uint64_t object_id);
+std::vector<Unit>     &get_units();
 
 // Npcs
 void spawn_unit(const std::string &name, const glm::vec3 &position = glm::vec3(0.0f));

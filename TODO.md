@@ -88,13 +88,16 @@
     - [ ] Unit Selection Display
     - [ ] Drag and Select
 - [ ] Enhancement
-    - [ ] Enhancement Floor Interaction
+    - [x] Enhancement Floor Interaction
     - [ ] Enhancement Probability
     - [ ] Sound Effects
-- [ ] Enhancement
-- [ ] Enhancement
+    - [ ] Unit Destruction
+- [ ] Shop Glass Effect Units
 - [ ] Item Hints
 - [ ] Interactable entities
+- [ ] Population
+- [ ] Attack Visual Effect
+- [ ] Particle System
 - [x] G-buffer
 - [x] Framebuffer Lighting
 - [x] Deferred Rendering

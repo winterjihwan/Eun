@@ -52,6 +52,9 @@ void update(float delta_time) {
       it++;
     }
   }
+
+  // Kill Units
+  std::erase_if(_units, [](Unit &unit) { return unit.is_dead(); });
 }
 
 void process_bullets() {

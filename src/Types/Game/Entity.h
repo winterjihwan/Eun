@@ -34,8 +34,9 @@ private:
   std::variant<Model *, Mesh *>        _renderable;
   uint64_t                             _object_id;
   ObjectType                           _object_type;
-  std::function<void(Entity &, float)> _on_update = 0;
-  std::function<void(Entity &, float)> _on_stand  = 0;
+  std::function<void(Entity &, float)> _on_update     = 0;
+  std::function<void(Entity &, float)> _on_stand      = 0;
+  std::function<void(Entity &, float)> _on_unit_enter = 0;
 
   // Physics
   JPH::BodyID _body;

@@ -29,6 +29,8 @@ std::string to_string(ObjectType object_type) {
     return "GAME_OBJECT";
   case ObjectType::BUILDING:
     return "BUILDING";
+  case ObjectType::ENHANCE:
+    return "ENHANCE";
   case ObjectType::DECAL:
     return "DECAL";
   case ObjectType::UNIT:

@@ -38,6 +38,7 @@ enum class ObjectType {
   PLAYER,
   MAP,
   PLATFORM,
+  ENHANCE,
   GAME_OBJECT,
   UNIT,
   BUILDING,

@@ -5,6 +5,7 @@
 #include "Enums.h"
 #include "Keycodes.h"
 #include "Types/Game/BloodVolumetric.h"
+#include "Types/Game/Enhance/Enhance.h"
 #include "Types/Game/Unit/Unit.h"
 #include <vector>
 
@@ -57,14 +58,13 @@ void init() {
     add_entity(Entity(std::move(info)));
   }
 
-  // Blue Beacon
+  // Shop Beacon
   {
-
     Mesh *mesh = AssetManager::get_mesh_by_name("Blue");
 
     EntityCreateInfo info;
     info.name        = mesh->name;
-    info.renderable  = AssetManager::get_mesh_by_name("Blue");
+    info.renderable  = mesh;
     info.position    = glm::vec3(3.8f, PLATFORM_HEIGHT, 4.5f);
     info.rotation    = glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     info.object_type = ObjectType::PLATFORM;
@@ -77,6 +77,24 @@ void init() {
         spawn_unit("Dark_Knight");
       }
     };
+
+    add_entity(Entity(std::move(info)));
+  }
+
+  // Enhance Stage
+  {
+    Mesh *mesh = AssetManager::get_mesh_by_name("Blue");
+
+    glm::vec2 &xz    = Enhance::get_xz();
+    glm::vec3 &scale = Enhance::get_scale();
+
+    EntityCreateInfo info;
+    info.name        = mesh->name;
+    info.renderable  = mesh;
+    info.position    = glm::vec3(xz.x, PLATFORM_HEIGHT, xz.y);
+    info.rotation    = glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    info.scale       = scale;
+    info.object_type = ObjectType::ENHANCE;
 
     add_entity(Entity(std::move(info)));
   }
@@ -195,6 +213,16 @@ std::vector<Building> &get_buildings() {
   return _buildings;
 }
 
+Unit *try_get_unit_by_object_id(uint64_t object_id) {
+  for (Unit &unit : _units) {
+    if (unit.get_id() == object_id) {
+      return &unit;
+    }
+  }
+
+  return nullptr;
+}
+
 Unit *get_unit_by_object_id(uint64_t object_id) {
   for (Unit &unit : _units) {
     if (unit.get_id() == object_id) {
@@ -204,5 +232,9 @@ Unit *get_unit_by_object_id(uint64_t object_id) {
 
   std::cout << "World::get_unit_by_object_id() failed, no unit with id: " << object_id << std::endl;
   assert(0);
+}
+
+std::vector<Unit> &get_units() {
+  return _units;
 }
 } // namespace World

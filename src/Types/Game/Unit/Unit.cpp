@@ -10,7 +10,9 @@ void Unit::init(const std::string &name, glm::vec3 offset_position) {
   UnitInfo *info = UnitManager::get_unit_info_by_name(name);
 
   _damage          = info->damage;
+  _attack_cooldown = info->attack_cooldown;
   _animation_names = info->animation_names;
+  _enhance_chance  = info->enhance_chance;
 
   NpcCreateInfo npc_info;
   npc_info.name            = info->name;
@@ -30,11 +32,13 @@ void Unit::init(const std::string &name, glm::vec3 offset_position) {
 
 void Unit::update(float delta_time) {
   Npc::update(delta_time);
+
+  _attack_timer += delta_time;
 }
 
 void Unit::attack(Building &building) {
   if (AnimEntity *anim = get_anim_entity()) {
-    anim->loop_animation(_animation_names.attack);
+    anim->play_animation(_animation_names.attack);
   }
 
   bool destroyed = building.take_damage(_damage);
@@ -63,10 +67,25 @@ void Unit::stop() {
   // Auto Attack
   for (Building &building : World::get_buildings()) {
     if (building.get_aabb()->expanded_contains(get_position(), ATTACK_RANGE)) {
-      attack(building);
+      if (_attack_timer >= _attack_cooldown) {
+        attack(building);
+        _attack_timer = 0.0f;
+      }
       return;
     }
   }
 
   idle();
+}
+
+void Unit::die() {
+  _dead = true;
+}
+
+bool Unit::is_dead() {
+  return _dead;
+}
+
+float Unit::get_enhance_chance() {
+  return _enhance_chance;
 }

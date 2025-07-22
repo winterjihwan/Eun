@@ -24,6 +24,8 @@ struct UnitInfo {
 
   // Game
   float damage;
+  float attack_cooldown;
+  float enhance_chance;
 
   // Transform
   glm::vec3 base_position = glm::vec3(0.0f);
