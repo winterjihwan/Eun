@@ -19,6 +19,7 @@ void ui_pass();
 void light_pass();
 void shadow_pass();
 void aabb_pass();
+void crystal_pass();
 
 Shader            &get_shader(const std::string &name);
 OpenGLFrameBuffer &get_frame_buffer(const std::string &name);

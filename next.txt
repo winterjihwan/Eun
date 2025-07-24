@@ -1,0 +1,12 @@
+- Better Visuals -
+1. Better Enhance platform
+2. Better Shop
+3. Glass Units
+4. Unit Attack Range
+5. Demon Fairy Attack Effect
+6. Unit Sounds
+7. Sound Perspective
+8. Sun Post Processing
+9. Wind / Snow Post Processing
+10. Health Bar
+11. Text

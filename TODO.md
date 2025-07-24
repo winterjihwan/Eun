@@ -89,7 +89,7 @@
     - [ ] Drag and Select
 - [ ] Enhancement
     - [x] Enhancement Floor Interaction
-    - [ ] Enhancement Probability
+    - [x] Enhancement Probability
     - [ ] Sound Effects
     - [ ] Unit Destruction
 - [ ] Shop Glass Effect Units

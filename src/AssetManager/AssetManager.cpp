@@ -62,19 +62,29 @@ void init() {
     _meshes.emplace_back(quad_v, quad_i, laminate_floor, "Plane");
   }
 
-  // TODO: Replace with beacon
-  // Blue
+  // Greek Tile
   {
     std::vector<Vertex>   quad_v = Util::generate_quad_vertices(1.0f, 1.0f);
     std::vector<uint32_t> quad_i = Util::generate_quad_indices();
-    Texture *blue = &_textures.emplace_back(GL_TEXTURE_2D, "res/textures/Blue.jpg", "Blue");
+    Texture              *blue =
+        &_textures.emplace_back(GL_TEXTURE_2D, "res/textures/Greek_Tile.jpg", "Greek_Tile");
 
-    _meshes.emplace_back(quad_v, quad_i, blue, "Blue");
+    _meshes.emplace_back(quad_v, quad_i, blue, "Greek_Tile");
+  }
+
+  // Platform
+  {
+    _models.emplace_back("Platform", "res/objects/Platform/Platform.fbx");
   }
 
   // Shop
   {
     _models.emplace_back("Shop", "res/objects/Shop/source/Shop.glb");
+  }
+
+  // Pillar
+  {
+    _models.emplace_back("Pillar", "res/objects/Pillar/Pillar.fbx");
   }
 
   // Weapon View

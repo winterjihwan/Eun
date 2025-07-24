@@ -3,7 +3,6 @@
 #include "CreateInfo.h"
 #include "Keycodes.h"
 #include "Physics/Physics.h"
-#include "Renderer/RenderDataManager.h"
 #include "Types/Game/AnimEntity.h"
 #include "Types/UID/UID.h"
 #include "Util/Util.h"
@@ -82,9 +81,9 @@ void Npc::update(float delta_time) {
 
 void Npc::submit_render_item() {
   if (AnimEntity *anim_entity = std::get_if<AnimEntity>(&_entity)) {
-    RenderDataManager::submit_anim_entity(anim_entity);
+    anim_entity->submit_render_item();
   } else if (Entity *entity = std::get_if<Entity>(&_entity)) {
-    RenderDataManager::submit_entity(entity);
+    entity->submit_render_item();
   }
 }
 

@@ -49,18 +49,45 @@ void init() {
     EntityCreateInfo info;
     info.name        = model->name;
     info.renderable  = model;
-    info.position    = glm::vec3(5.0f, -2.0f, -3.0f);
-    glm::quat rot_x  = glm::angleAxis(glm::radians(90.0f), glm::vec3(1, 0, 0));
-    glm::quat rot_y  = glm::angleAxis(glm::radians(-90.0f), glm::vec3(0, 1, 0));
-    info.rotation    = rot_y * rot_x;
+    info.position    = glm::vec3(7.3f, -2.0f, -7.35f);
+    info.rotation    = glm::angleAxis(glm::radians(90.0f), glm::vec3(1, 0, 0));
     info.object_type = ObjectType::GAME_OBJECT;
 
     add_entity(Entity(std::move(info)));
   }
 
+  // Pillars
+  {
+    Model *pillar = AssetManager::get_model_by_name("Pillar");
+
+    EntityCreateInfo info;
+    info.name        = pillar->name;
+    info.renderable  = pillar;
+    info.position    = glm::vec3(-7.975f, -2.0f, 0.0f);
+    info.rotation    = glm::angleAxis(glm::radians(90.0f), glm::vec3(0, 1, 0));
+    info.object_type = ObjectType::GAME_OBJECT;
+    add_entity(Entity(std::move(info)));
+  }
+
+  // Platforms
+  {
+    Model *platform = AssetManager::get_model_by_name("Platform");
+
+    EntityCreateInfo info;
+    info.name        = platform->name;
+    info.renderable  = platform;
+    info.position    = glm::vec3(3.8f, PLATFORM_HEIGHT, 5.5f);
+    info.rotation    = glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    info.object_type = ObjectType::GAME_OBJECT;
+    add_entity(Entity(std::move(info)));
+
+    info.position = glm::vec3(2.3f, PLATFORM_HEIGHT, 5.5f);
+    add_entity(Entity(std::move(info)));
+  }
+
   // Shop Beacon
   {
-    Mesh *mesh = AssetManager::get_mesh_by_name("Blue");
+    Mesh *mesh = AssetManager::get_mesh_by_name("Greek_Tile");
 
     EntityCreateInfo info;
     info.name        = mesh->name;
@@ -70,20 +97,27 @@ void init() {
     info.object_type = ObjectType::PLATFORM;
     info.on_stand    = [acc = 0.0f](Entity &entity, float delta_time) mutable {
       acc += delta_time;
-      if (acc >= 0.2f) {
-        std::cout << "Entity " << entity.get_name() << '\n';
+      if (acc >= 1.0f) {
         acc = 0.0f;
-
         spawn_unit("Dark_Knight");
       }
     };
+    add_entity(Entity(std::move(info)));
 
+    info.position = glm::vec3(2.3f, PLATFORM_HEIGHT, 4.5f);
+    info.on_stand = [acc = 0.0f](Entity &entity, float delta_time) mutable {
+      acc += delta_time;
+      if (acc >= 1.0f) {
+        acc = 0.0f;
+        spawn_unit("Demon_Fairy");
+      }
+    };
     add_entity(Entity(std::move(info)));
   }
 
   // Enhance Stage
   {
-    Mesh *mesh = AssetManager::get_mesh_by_name("Blue");
+    Mesh *mesh = AssetManager::get_mesh_by_name("Greek_Tile");
 
     glm::vec2 &xz    = Enhance::get_xz();
     glm::vec3 &scale = Enhance::get_scale();

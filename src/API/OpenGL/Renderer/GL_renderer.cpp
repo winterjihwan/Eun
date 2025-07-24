@@ -47,6 +47,7 @@ void init() {
   _shaders["Shadow_Anim"]     = Shader("shaders/shadow_anim.vert", "shaders/shadow.frag");
   _shaders["Texture"]         = Shader("shaders/texture.vert", "shaders/texture.frag");
   _shaders["AABB"]            = Shader("shaders/aabb.vert", "shaders/aabb.frag");
+  _shaders["Crystal"]         = Shader("shaders/crystal.vert", "shaders/crystal.frag");
 
   /* Framebuffers */
   _frame_buffers["G_Buffer"] = OpenGLFrameBuffer("G_Buffer", *viewport.width, *viewport.height);
@@ -108,6 +109,7 @@ void render_game() {
   skybox_pass();
   ui_pass();
   aabb_pass();
+  crystal_pass();
 }
 
 Shader &get_shader(const std::string &name) {
