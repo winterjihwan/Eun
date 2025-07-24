@@ -115,6 +115,30 @@ void init() {
     add_entity(Entity(std::move(info)));
   }
 
+  // Display Units
+  {
+    Model *dark_knight =
+        static_cast<Model *>(AssetManager::get_skinned_model_by_name("Dark_Knight"));
+
+    EntityCreateInfo info;
+    info.name         = dark_knight->name;
+    info.renderable   = dark_knight;
+    info.position     = glm::vec3(3.8f, PLATFORM_HEIGHT, 5.5f);
+    info.rotation     = glm::angleAxis(glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    info.scale        = glm::vec3(0.005f);
+    info.object_type  = ObjectType::GAME_OBJECT;
+    info.crystal      = true;
+    info.skip_physics = true;
+    add_entity(Entity(std::move(info)));
+
+    Model *demon_fairy =
+        static_cast<Model *>(AssetManager::get_skinned_model_by_name("Demon_Fairy"));
+    info.renderable   = demon_fairy;
+    info.position     = glm::vec3(2.3f, PLATFORM_HEIGHT, 5.5f);
+    info.skip_physics = true;
+    add_entity(Entity(std::move(info)));
+  }
+
   // Enhance Stage
   {
     Mesh *mesh = AssetManager::get_mesh_by_name("Greek_Tile");

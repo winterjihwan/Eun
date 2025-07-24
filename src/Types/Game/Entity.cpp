@@ -17,6 +17,7 @@ Entity::Entity(EntityCreateInfo &&info) {
   _object_id   = UID::get_next();
   _on_update   = info.on_update;
   _on_stand    = info.on_stand;
+  _crystal     = info.crystal;
 
   // Collider
   if (!info.skip_physics) {
@@ -42,7 +43,11 @@ void Entity::update(float delta_time) {
 }
 
 void Entity::submit_render_item() {
-  RenderDataManager::submit_entity(this);
+  if (_crystal) {
+    RenderDataManager::submit_crystal_entity(this);
+  } else {
+    RenderDataManager::submit_entity(this);
+  }
 }
 
 void Entity::on_stand(float delta_time) {

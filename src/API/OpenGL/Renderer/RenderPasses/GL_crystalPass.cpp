@@ -18,7 +18,7 @@ void crystal_pass() {
   shader_crystal.setMat4("u_view", _view);
   shader_crystal.setVec3("u_camera_pos", Game::get_camera()->get_position());
 
-  std::vector<Entity *> crystal_entities = RenderDataManager::get_glass_entities();
+  std::vector<Entity *> crystal_entities = RenderDataManager::get_crystal_entities();
   for (Entity *entity : crystal_entities) {
     glm::mat4 &model = entity->get_transform();
     shader_crystal.setMat4("u_model", model);

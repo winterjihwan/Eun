@@ -67,6 +67,7 @@ struct EntityCreateInfo {
   glm::vec3                            scale         = glm::vec3(1.0f);
   ObjectType                           object_type   = ObjectType::NONE;
   bool                                 skip_physics  = false;
+  bool                                 crystal       = false;
   std::function<void(Entity &, float)> on_update     = nullptr;
   std::function<void(Entity &, float)> on_stand      = nullptr;
   std::function<void(Entity &, float)> on_unit_enter = nullptr;

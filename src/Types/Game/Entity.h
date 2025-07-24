@@ -48,4 +48,7 @@ private:
   glm::vec3         _scale    = glm::vec3(1.0f);
   mutable glm::mat4 _transform_cache;
   mutable bool      _dirty = true;
+
+  // Crystal
+  bool _crystal = false;
 };
