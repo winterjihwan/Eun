@@ -6,6 +6,7 @@
 #include "Keycodes.h"
 #include "Types/Game/BloodVolumetric.h"
 #include "Types/Game/Enhance/Enhance.h"
+#include "Types/Game/Particle.h"
 #include "Types/Game/Unit/Unit.h"
 #include <vector>
 
@@ -17,6 +18,7 @@ std::vector<Decal>           _decals;
 std::vector<Building>        _buildings;
 std::vector<Unit>            _units;
 std::vector<BloodVolumetric> _blood_volumetrics;
+std::vector<ParticleSystem>  _particle_systems;
 
 void init() {
   _anim_entities.reserve(10);
@@ -26,6 +28,7 @@ void init() {
   _buildings.reserve(8);
   _units.reserve(64);
   _blood_volumetrics.reserve(32);
+  _particle_systems.reserve(8);
 
   // Plane
   {
@@ -199,6 +202,10 @@ void submit_render_items() {
   // Decals
   for (Decal &decal : _decals) {
     decal.submit_render_item();
+  }
+
+  for (ParticleSystem &particle_system : _particle_systems) {
+    particle_system.submit_render_item();
   }
 }
 

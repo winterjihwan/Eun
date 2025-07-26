@@ -8,7 +8,7 @@ struct Unit : public Npc {
   Unit() = default;
 
   void init(const std::string &name, glm::vec3 position);
-  void update(float delta_time);
+  void update(float delta_time) override;
 
   void idle();
   void attack(Building &building);

@@ -20,6 +20,7 @@ void light_pass();
 void shadow_pass();
 void aabb_pass();
 void crystal_pass();
+void particle_pass();
 
 Shader            &get_shader(const std::string &name);
 OpenGLFrameBuffer &get_frame_buffer(const std::string &name);

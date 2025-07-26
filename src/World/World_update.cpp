@@ -7,6 +7,7 @@
 #include "Types/Game/BloodVolumetric.h"
 #include "Types/Game/Building/Building.h"
 #include "Types/Game/Decal.h"
+#include "Types/Game/Particle.h"
 #include "Types/Game/Unit/Unit.h"
 #include "Util/Util.h"
 #include "World.h"
@@ -19,6 +20,7 @@ extern std::vector<Decal>           _decals;
 extern std::vector<Building>        _buildings;
 extern std::vector<Unit>            _units;
 extern std::vector<BloodVolumetric> _blood_volumetrics;
+extern std::vector<ParticleSystem>  _particle_systems;
 
 void update(float delta_time) {
   process_bullets();
@@ -51,6 +53,10 @@ void update(float delta_time) {
       it->update(delta_time);
       it++;
     }
+  }
+
+  for (ParticleSystem &particle_system : _particle_systems) {
+    particle_system.update(delta_time);
   }
 
   // Kill Units

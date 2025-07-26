@@ -10,9 +10,9 @@ struct Npc {
   Npc()          = default;
   virtual ~Npc() = default;
 
-  void init(NpcCreateInfo &&npc_create_info);
-  void update(float delta_time);
-  void submit_render_item();
+  void         init(NpcCreateInfo &&npc_create_info);
+  virtual void update(float delta_time);
+  virtual void submit_render_item();
 
   void         set_velocity(glm::vec3 velocity);
   virtual void move_xz(glm::vec2 xz);

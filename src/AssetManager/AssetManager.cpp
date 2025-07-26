@@ -72,6 +72,11 @@ void init() {
     _meshes.emplace_back(quad_v, quad_i, blue, "Greek_Tile");
   }
 
+  // Fire
+  {
+    _textures.emplace_back(GL_TEXTURE_2D, "res/textures/Fire.png", "Fire");
+  }
+
   // Platform
   {
     _models.emplace_back("Platform", "res/objects/Platform/Platform.fbx");

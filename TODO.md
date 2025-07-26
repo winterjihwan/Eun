@@ -50,13 +50,13 @@
     - [ ] Unit Health Bar
     - [x] Player Minerals
     - [ ] Player Mineral Texture
-- [ ] Game Logics
+- [x] Game Logics
     - [x] Npc Kill Reward
-    - [ ] Buy Unit
-        - [ ] Buy Beacon
-        - [ ] Spawn Point
-    - [ ] Unit Auto Attack
-    - [ ] Unit Enhance
+    - [x] Buy Unit
+        - [x] Buy Beacon
+        - [x] Spawn Point
+    - [x] Unit Auto Attack
+    - [x] Unit Enhance
 - [x] Npc Ally, Enemy
 - [x] Better Kinematic Physics
 - [ ] Npc Manager

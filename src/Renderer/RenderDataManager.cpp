@@ -7,6 +7,7 @@ std::vector<Decal *>           _decals;
 std::vector<BloodVolumetric *> _blood_volumetrics;
 std::vector<AABB *>            _aabbs;
 std::vector<Entity *>          _crystal_entities;
+std::vector<ParticleSystem *>  _particle_systems;
 
 void begin_frame() {
   // DID YOU FORGET ME
@@ -16,6 +17,7 @@ void begin_frame() {
   _blood_volumetrics.clear();
   _aabbs.clear();
   _crystal_entities.clear();
+  _particle_systems.clear();
 }
 
 void update() {
@@ -46,6 +48,10 @@ void submit_crystal_entity(Entity *crystal_entity) {
   _crystal_entities.push_back(crystal_entity);
 }
 
+void submit_particle_system(ParticleSystem *particle_system) {
+  _particle_systems.push_back(particle_system);
+}
+
 const std::vector<AnimEntity *> &get_anim_entities() {
   return _anim_entities;
 }
@@ -68,5 +74,9 @@ const std::vector<AABB *> &get_aabbs() {
 
 const std::vector<Entity *> &get_crystal_entities() {
   return _crystal_entities;
+}
+
+const std::vector<ParticleSystem *> &get_particle_systems() {
+  return _particle_systems;
 }
 } // namespace RenderDataManager

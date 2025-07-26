@@ -35,9 +35,9 @@ void init() {
   demon_fairy.animation_names.walk   = "Demon_Fairy_Walk";
   demon_fairy.animation_names.attack = "Demon_Fairy_Cast";
   demon_fairy.audio_files.attack     = "";
-  demon_fairy.damage                 = 10;
-  demon_fairy.attack_cooldown        = 1.5f;
-  demon_fairy.enhance_chance         = 0.9f;
+  demon_fairy.damage                 = 20;
+  demon_fairy.attack_cooldown        = 2.0f;
+  demon_fairy.enhance_chance         = 0.7f;
   demon_fairy.base_position          = glm::vec3(0.0f, PLATFORM_HEIGHT, 0.0f);
   demon_fairy.base_scale             = glm::vec3(0.005f);
   demon_fairy.collider_shape         = Capsule(0.2f, 0.5f);

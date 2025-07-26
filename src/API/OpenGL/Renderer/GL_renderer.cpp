@@ -20,9 +20,9 @@ std::unordered_map<std::string, OpenGLCubemapView> _cubemap_views;
 std::vector<AnimEntity>                            _anim_entities;
 
 // Uniforms
-constexpr glm::vec3 LIGHT_POS  = glm::vec3(-5.0f, 5.0f, -5.0f);
+constexpr glm::vec3 LIGHT_POS  = glm::vec3(-20.0f, 20.0f, -20.0f);
 constexpr float     LIGHT_NEAR = 1.0f;
-constexpr float     LIGHT_FAR  = 75.0f;
+constexpr float     LIGHT_FAR  = 100.0f;
 glm::mat4           _projection;
 glm::mat4           _view;
 glm::mat4           _light_space;
@@ -48,6 +48,7 @@ void init() {
   _shaders["Texture"]         = Shader("shaders/texture.vert", "shaders/texture.frag");
   _shaders["AABB"]            = Shader("shaders/aabb.vert", "shaders/aabb.frag");
   _shaders["Crystal"]         = Shader("shaders/crystal.vert", "shaders/crystal.frag");
+  _shaders["Particle"]        = Shader("shaders/particle.vert", "shaders/particle.frag");
 
   /* Framebuffers */
   _frame_buffers["G_Buffer"] = OpenGLFrameBuffer("G_Buffer", *viewport.width, *viewport.height);
@@ -68,7 +69,7 @@ void init() {
   _frame_buffers["Shadow"].unbind();
 
   /* Base Uniforms */
-  glm::mat4 light_projection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, LIGHT_NEAR, LIGHT_FAR);
+  glm::mat4 light_projection = glm::ortho(-30.0f, 30.0f, -30.0f, 30.0f, LIGHT_NEAR, LIGHT_FAR);
   glm::mat4 light_view       = glm::lookAt(LIGHT_POS, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
   _light_space               = light_projection * light_view;
 
@@ -110,6 +111,7 @@ void render_game() {
   ui_pass();
   aabb_pass();
   crystal_pass();
+  particle_pass();
 }
 
 Shader &get_shader(const std::string &name) {

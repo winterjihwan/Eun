@@ -1,5 +1,7 @@
 #include "Building.h"
+#include "AssetManager/AssetManager.h"
 #include "CreateInfo.h"
+#include "Renderer/RenderDataManager.h"
 #include "Types/Game/Building/BuildingManager.h"
 
 void Building::init(const std::string &name) {
@@ -26,10 +28,34 @@ void Building::init(const std::string &name) {
   if (AnimEntity *anim_entity = get_anim_entity()) {
     anim_entity->loop_animation(_animation_names.idle);
   }
+
+  // Particle System
+  _particle_system.set_bounds(&_aabb);
+  _particle_system.init(AssetManager::get_texture_by_name("Fire"), 0);
+}
+
+void Building::update(float delta_time) {
+  Npc::update(delta_time);
+  _particle_system.update(delta_time);
+}
+
+void Building::submit_render_item() {
+  Npc::submit_render_item();
+  RenderDataManager::submit_particle_system(&_particle_system);
 }
 
 bool Building::take_damage(float damage) {
   _current_health -= damage;
+  if (_current_health < 0.0f)
+    _current_health = 0.0f;
+
+  float health_ratio = _current_health / _health;
+  if (health_ratio <= 0.2f) {
+    _particle_system.set_particle_count(10);
+  } else {
+    _particle_system.set_particle_count(0);
+  }
+
   if (_current_health <= 0.0f) {
     _current_health = _health;
     return true;
