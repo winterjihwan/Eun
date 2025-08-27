@@ -12,7 +12,7 @@ void Player::update_weapon_knife(float delta_time) {
 void Player::stab() {
   // Animation
   WeaponInfo *weapon_info = get_current_weapon_info();
-  _weapon_view.play_animation(weapon_info->animation_names.stab);
+  _weapon_view.loop_animation(weapon_info->animation_names.stab[0]);
   _weapon_action = WeaponAction::STAB;
 
   float damage = weapon_info->damage;

@@ -1,5 +1,6 @@
 #include "Building.h"
 #include "AssetManager/AssetManager.h"
+#include "Core/Game.h"
 #include "CreateInfo.h"
 #include "Renderer/RenderDataManager.h"
 #include "Types/Game/Building/BuildingManager.h"
@@ -32,16 +33,30 @@ void Building::init(const std::string &name) {
   // Particle System
   _particle_system.set_bounds(&_aabb);
   _particle_system.init(AssetManager::get_texture_by_name("Fire"), 0);
+
+  // Hint
+  _hint.init(info->name, [this]() {
+    char buffer[32];
+    snprintf(buffer, sizeof(buffer), "[%.0f / %.0f]", _current_health, _health);
+    return std::string(buffer);
+  });
 }
 
 void Building::update(float delta_time) {
   Npc::update(delta_time);
+
+  // Particle System
   _particle_system.update(delta_time);
+
+  // Hint
+  _hint.set_position(get_position());
+  _hint.update(Game::get_camera()->view(), Game::get_camera()->projection());
 }
 
 void Building::submit_render_item() {
   Npc::submit_render_item();
   RenderDataManager::submit_particle_system(&_particle_system);
+  _hint.render();
 }
 
 bool Building::take_damage(float damage) {

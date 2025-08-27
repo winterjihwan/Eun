@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Types/Game/Building/BuildingCommon.h"
+#include "Types/Game/Hint.h"
 #include "Types/Game/Npc.h"
 #include "Types/Game/Particle.h"
 
@@ -19,4 +20,5 @@ private:
   int                    _reward         = 0.0f;
   BuildingAnimationNames _animation_names;
   ParticleSystem         _particle_system;
+  Hint                   _hint;
 };

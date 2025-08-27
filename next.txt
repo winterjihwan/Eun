@@ -1,7 +1,4 @@
 - Better Visuals -
-1. Better Enhance platform
-2. Better Shop
-3. Glass Units
 4. Unit Attack Range
 5. Demon Fairy Attack Effect
 6. Unit Sounds
@@ -12,3 +9,6 @@
 11. Text
 
 - Done - 
+1. Better Enhance platform
+2. Better Shop
+3. Glass Units
